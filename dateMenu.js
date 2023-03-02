@@ -6,16 +6,16 @@ const {
     GObject, Pango, Shell, St,
 } = imports.gi;
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-
 const Util = imports.misc.util;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
-const Calendar = Me.imports.calendar;
 const System = imports.system;
 
 const { loadInterfaceXML } = imports.misc.fileUtils;
+
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const Calendar = Me.imports.calendar;
 
 const NC_ = (context, str) => `${context}\u0004${str}`;
 const T_ = Shell.util_translate_time_string;
@@ -525,9 +525,12 @@ class DateMenuButton extends PanelMenu.Button {
 
         // Done with hbox for calendar and event list
 
+        this._clockDisplay.set_text('PCal')
+        /*
         this._clock = new GnomeDesktop.WallClock();
         this._clock.bind_property('clock', this._clockDisplay, 'text', GObject.BindingFlags.SYNC_CREATE);
         this._clock.connect('notify::timezone', this._updateTimeZone.bind(this));
+        */
 
         Main.sessionMode.connect('updated', this._sessionUpdated.bind(this));
         this._sessionUpdated();

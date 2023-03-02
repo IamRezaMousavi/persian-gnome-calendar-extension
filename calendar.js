@@ -3,13 +3,6 @@
 
 const { Clutter, Gio, GLib, GObject, Shell, St } = imports.gi;
 
-const Main = imports.ui.main;
-const MessageList = imports.ui.messageList;
-const MessageTray = imports.ui.messageTray;
-const Mpris = imports.ui.mpris;
-const PopupMenu = imports.ui.popupMenu;
-const Util = imports.misc.util;
-
 const { loadInterfaceXML } = imports.misc.fileUtils;
 
 var SHOW_WEEKDATE_KEY = 'show-weekdate';
@@ -32,7 +25,7 @@ function sameDay(dateA, dateB) {
 
 function _isWorkDay(date) {
     /* Translators: Enter 0-6 (Sunday-Saturday) for non-work days. Examples: "0" (Sunday) "6" (Saturday) "06" (Sunday and Saturday). */
-    let days = C_('calendar-no-work', "06");
+    let days = C_('calendar-no-work', "5");
     return !days.includes(date.getDay().toString());
 }
 
@@ -399,7 +392,8 @@ var Calendar = GObject.registerClass({
     Signals: { 'selected-date-changed': { param_types: [GLib.DateTime.$gtype] } },
 }, class Calendar extends St.Widget {
     _init() {
-        this._weekStart = Shell.util_get_week_start();
+        // this._weekStart = Shell.util_get_week_start();
+        this._weekStart = 6;
         this._settings = new Gio.Settings({ schema_id: 'org.gnome.desktop.calendar' });
 
         this._settings.connect(`changed::${SHOW_WEEKDATE_KEY}`, this._onSettingsChange.bind(this));
@@ -672,7 +666,7 @@ var Calendar = GObject.registerClass({
             if (_isWorkDay(iter))
                 styleClass += ' calendar-work-day';
             else
-                styleClass += ' calendar-nonwork-day';
+                styleClass += ' pcalendar-nonwork-day';
 
             // Hack used in lieu of border-collapse - see gnome-shell.css
             if (row == 2)
