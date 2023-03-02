@@ -1,0 +1,8 @@
+{
+  "name": "Persian Gnome Calendar",
+  "description": "Show Persian calendar in the top panel",
+  "uuid": "persian-gnome-calendar@iamrezamousavi.gmail.com",
+  "shell-version": [
+    "43"
+  ]
+}
