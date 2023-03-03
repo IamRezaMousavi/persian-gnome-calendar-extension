@@ -1,13 +1,9 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
-/* exported Calendar, DBusEventSource */
+/* exported Calendar*/
 
 const { Clutter, Gio, GLib, GObject, Shell, St } = imports.gi;
 
-const { loadInterfaceXML } = imports.misc.fileUtils;
-
 var SHOW_WEEKDATE_KEY = 'show-weekdate';
-
-var MESSAGE_ICON_SIZE = -1; // pick up from CSS
 
 var NC_ = (context, str) => `${context}\u0004${str}`;
 
@@ -27,21 +23,6 @@ function _isWorkDay(date) {
     /* Translators: Enter 0-6 (Sunday-Saturday) for non-work days. Examples: "0" (Sunday) "6" (Saturday) "06" (Sunday and Saturday). */
     let days = C_('calendar-no-work', "5");
     return !days.includes(date.getDay().toString());
-}
-
-function _getBeginningOfDay(date) {
-    let ret = new Date(date.getTime());
-    ret.setHours(0);
-    ret.setMinutes(0);
-    ret.setSeconds(0);
-    ret.setMilliseconds(0);
-    return ret;
-}
-
-function _getEndOfDay(date) {
-    const ret = _getBeginningOfDay(date);
-    ret.setDate(ret.getDate() + 1);
-    return ret;
 }
 
 function _getCalendarDayAbbreviation(dayNumber) {
@@ -80,54 +61,19 @@ var CalendarEvent = class CalendarEvent {
 };
 
 // Interface for appointments/events - e.g. the contents of a calendar
-//
-
-var EventSourceBase = GObject.registerClass({
-    GTypeFlags: GObject.TypeFlags.ABSTRACT,
-    Properties: {
-        'has-calendars': GObject.ParamSpec.boolean(
-            'has-calendars', 'has-calendars', 'has-calendars',
-            GObject.ParamFlags.READABLE,
-            false),
-        'is-loading': GObject.ParamSpec.boolean(
-            'is-loading', 'is-loading', 'is-loading',
-            GObject.ParamFlags.READABLE,
-            false),
-    },
-    Signals: { 'changed': {} },
-}, class EventSourceBase extends GObject.Object {
-    get isLoading() {
-        throw new GObject.NotImplementedError(`isLoading in ${this.constructor.name}`);
-    }
-
-    get hasCalendars() {
-        throw new GObject.NotImplementedError(`hasCalendars in ${this.constructor.name}`);
-    }
-
-    destroy() {
-    }
-
-    requestRange(_begin, _end) {
-        throw new GObject.NotImplementedError(`requestRange in ${this.constructor.name}`);
-    }
-
-    getEvents(_begin, _end) {
-        throw new GObject.NotImplementedError(`getEvents in ${this.constructor.name}`);
-    }
-
-    hasEvents(_day) {
-        throw new GObject.NotImplementedError(`hasEvents in ${this.constructor.name}`);
-    }
-});
 
 var EmptyEventSource = GObject.registerClass(
-class EmptyEventSource extends EventSourceBase {
+class EmptyEventSource extends GObject.Object {
+    _init() {
+        super._init();
+        let changed = false;
+    }
     get isLoading() {
         return false;
     }
 
     get hasCalendars() {
-        return false;
+        return true;
     }
 
     requestRange(_begin, _end) {
@@ -140,251 +86,6 @@ class EmptyEventSource extends EventSourceBase {
 
     hasEvents(_day) {
         return false;
-    }
-});
-
-const CalendarServerIface = loadInterfaceXML('org.gnome.Shell.CalendarServer');
-
-const CalendarServerInfo  = Gio.DBusInterfaceInfo.new_for_xml(CalendarServerIface);
-
-function CalendarServer() {
-    return new Gio.DBusProxy({
-        g_connection: Gio.DBus.session,
-        g_interface_name: CalendarServerInfo.name,
-        g_interface_info: CalendarServerInfo,
-        g_name: 'org.gnome.Shell.CalendarServer',
-        g_object_path: '/org/gnome/Shell/CalendarServer',
-    });
-}
-
-function _datesEqual(a, b) {
-    if (a < b)
-        return false;
-    else if (a > b)
-        return false;
-    return true;
-}
-
-/**
- * Checks whether an event overlaps a given interval
- *
- * @param {Date} e0 Beginning of the event
- * @param {Date} e1 End of the event
- * @param {Date} i0 Beginning of the interval
- * @param {Date} i1 End of the interval
- * @returns {boolean} Whether there was an overlap
- */
-function _eventOverlapsInterval(e0, e1, i0, i1) {
-    // This also ensures zero-length events are included
-    if (e0 >= i0 && e1 < i1)
-        return true;
-
-    if (e1 <= i0)
-        return false;
-    if (i1 <= e0)
-        return false;
-
-    return true;
-}
-
-// an implementation that reads data from a session bus service
-var DBusEventSource = GObject.registerClass(
-class DBusEventSource extends EventSourceBase {
-    _init() {
-        super._init();
-        this._resetCache();
-        this._isLoading = false;
-
-        this._initialized = false;
-        this._dbusProxy = new CalendarServer();
-        this._initProxy();
-    }
-
-    async _initProxy() {
-        let loaded = false;
-
-        try {
-            await this._dbusProxy.init_async(GLib.PRIORITY_DEFAULT, null);
-            loaded = true;
-        } catch (e) {
-            // Ignore timeouts and install signals as normal, because with high
-            // probability the service will appear later on, and we will get a
-            // NameOwnerChanged which will finish loading
-            //
-            // (But still _initialized to false, because the proxy does not know
-            // about the HasCalendars property and would cause an exception trying
-            // to read it)
-            if (!e.matches(Gio.DBusError, Gio.DBusError.TIMED_OUT)) {
-                log(`Error loading calendars: ${e.message}`);
-                return;
-            }
-        }
-
-        this._dbusProxy.connectSignal('EventsAddedOrUpdated',
-            this._onEventsAddedOrUpdated.bind(this));
-        this._dbusProxy.connectSignal('EventsRemoved',
-            this._onEventsRemoved.bind(this));
-        this._dbusProxy.connectSignal('ClientDisappeared',
-            this._onClientDisappeared.bind(this));
-
-        this._dbusProxy.connect('notify::g-name-owner', () => {
-            if (this._dbusProxy.g_name_owner)
-                this._onNameAppeared();
-            else
-                this._onNameVanished();
-        });
-
-        this._dbusProxy.connect('g-properties-changed', () => {
-            this.notify('has-calendars');
-        });
-
-        this._initialized = loaded;
-        if (loaded) {
-            this.notify('has-calendars');
-            this._onNameAppeared();
-        }
-    }
-
-    destroy() {
-        this._dbusProxy.run_dispose();
-    }
-
-    get hasCalendars() {
-        if (this._initialized)
-            return this._dbusProxy.HasCalendars;
-        else
-            return false;
-    }
-
-    get isLoading() {
-        return this._isLoading;
-    }
-
-    _resetCache() {
-        this._events = new Map();
-        this._lastRequestBegin = null;
-        this._lastRequestEnd = null;
-    }
-
-    _removeMatching(uidPrefix) {
-        let changed = false;
-        for (const id of this._events.keys()) {
-            if (id.startsWith(uidPrefix))
-                changed = this._events.delete(id) || changed;
-        }
-        return changed;
-    }
-
-    _onNameAppeared() {
-        this._initialized = true;
-        this._resetCache();
-        this._loadEvents(true);
-    }
-
-    _onNameVanished() {
-        this._resetCache();
-        this.emit('changed');
-    }
-
-    _onEventsAddedOrUpdated(dbusProxy, nameOwner, argArray) {
-        const [appointments = []] = argArray;
-        let changed = false;
-        const handledRemovals = new Set();
-
-        for (let n = 0; n < appointments.length; n++) {
-            const [id, summary, startTime, endTime] = appointments[n];
-            const date = new Date(startTime * 1000);
-            const end = new Date(endTime * 1000);
-            let event = new CalendarEvent(id, date, end, summary);
-            /* It's a recurring event */
-            if (!id.endsWith('\n')) {
-                const parentId = id.substr(0, id.lastIndexOf('\n') + 1);
-                if (!handledRemovals.has(parentId)) {
-                    handledRemovals.add(parentId);
-                    this._removeMatching(parentId);
-                }
-            }
-            this._events.set(event.id, event);
-
-            changed = true;
-        }
-
-        if (changed)
-            this.emit('changed');
-    }
-
-    _onEventsRemoved(dbusProxy, nameOwner, argArray) {
-        const [ids = []] = argArray;
-
-        let changed = false;
-        for (const id of ids)
-            changed = this._removeMatching(id) || changed;
-
-        if (changed)
-            this.emit('changed');
-    }
-
-    _onClientDisappeared(dbusProxy, nameOwner, argArray) {
-        let [sourceUid = ''] = argArray;
-        sourceUid += '\n';
-
-        if (this._removeMatching(sourceUid))
-            this.emit('changed');
-    }
-
-    _loadEvents(forceReload) {
-        // Ignore while loading
-        if (!this._initialized)
-            return;
-
-        if (this._curRequestBegin && this._curRequestEnd) {
-            if (forceReload) {
-                this._events.clear();
-                this.emit('changed');
-            }
-            this._dbusProxy.SetTimeRangeAsync(
-                this._curRequestBegin.getTime() / 1000,
-                this._curRequestEnd.getTime() / 1000,
-                forceReload,
-                Gio.DBusCallFlags.NONE).catch(logError);
-        }
-    }
-
-    requestRange(begin, end) {
-        if (!(_datesEqual(begin, this._lastRequestBegin) && _datesEqual(end, this._lastRequestEnd))) {
-            this._lastRequestBegin = begin;
-            this._lastRequestEnd = end;
-            this._curRequestBegin = begin;
-            this._curRequestEnd = end;
-            this._loadEvents(true);
-        }
-    }
-
-    *_getFilteredEvents(begin, end) {
-        for (const event of this._events.values()) {
-            if (_eventOverlapsInterval(event.date, event.end, begin, end))
-                yield event;
-        }
-    }
-
-    getEvents(begin, end) {
-        let result = [...this._getFilteredEvents(begin, end)];
-
-        result.sort((event1, event2) => {
-            // sort events by end time on ending day
-            let d1 = event1.date < begin && event1.end <= end ? event1.end : event1.date;
-            let d2 = event2.date < begin && event2.end <= end ? event2.end : event2.date;
-            return d1.getTime() - d2.getTime();
-        });
-        return result;
-    }
-
-    hasEvents(day) {
-        let dayBegin = _getBeginningOfDay(day);
-        let dayEnd = _getEndOfDay(day);
-
-        const { done } = this._getFilteredEvents(dayBegin, dayEnd).next();
-        return !done;
     }
 });
 
@@ -432,14 +133,16 @@ var Calendar = GObject.registerClass({
     }
 
     setEventSource(eventSource) {
-        if (!(eventSource instanceof EventSourceBase))
+        if (!(eventSource instanceof EmptyEventSource))
             throw new Error('Event source is not valid type');
 
         this._eventSource = eventSource;
+        /*
         this._eventSource.connect('changed', () => {
             this._rebuildCalendar();
             this._update();
         });
+        */
         this._rebuildCalendar();
         this._update();
     }
@@ -663,11 +366,13 @@ var Calendar = GObject.registerClass({
             let hasEvents = this._eventSource.hasEvents(iter);
             let styleClass = 'calendar-day-base calendar-day';
 
-            if (_isWorkDay(iter))
-                styleClass += ' calendar-work-day';
-            else
-                styleClass += ' pcalendar-nonwork-day';
-
+            let isSameMonthWithSelected = iter.getMonth() == this._selectedDate.getMonth();
+            if (isSameMonthWithSelected) {
+                if (_isWorkDay(iter))
+                    styleClass += ' calendar-work-day';
+                else
+                    styleClass += ' pcalendar-nonwork-day';
+            }
             // Hack used in lieu of border-collapse - see gnome-shell.css
             if (row == 2)
                 styleClass = `calendar-day-top ${styleClass}`;
@@ -680,7 +385,7 @@ var Calendar = GObject.registerClass({
 
             if (sameDay(now, iter))
                 styleClass += ' calendar-today';
-            else if (iter.getMonth() != this._selectedDate.getMonth())
+            else if (!isSameMonthWithSelected)
                 styleClass += ' calendar-other-month-day';
 
             if (hasEvents)
@@ -697,18 +402,6 @@ var Calendar = GObject.registerClass({
             layout.attach(button, col, row, 1, 1);
 
             this._buttons.push(button);
-
-            if (this._useWeekdate && iter.getDay() == 4) {
-                const label = new St.Label({
-                    text: iter.toLocaleFormat('%V'),
-                    style_class: 'calendar-week-number',
-                    can_focus: true,
-                });
-                let weekFormat = Shell.util_translate_time_string(N_("Week %V"));
-                label.clutter_text.y_align = Clutter.ActorAlign.CENTER;
-                label.accessible_name = iter.toLocaleFormat(weekFormat);
-                layout.attach(label, rtl ? 7 : 0, row, 1, 1);
-            }
 
             iter.setDate(iter.getDate() + 1);
 

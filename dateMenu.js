@@ -11,8 +11,6 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const System = imports.system;
 
-const { loadInterfaceXML } = imports.misc.fileUtils;
-
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Calendar = Me.imports.calendar;
@@ -20,11 +18,7 @@ const Calendar = Me.imports.calendar;
 const NC_ = (context, str) => `${context}\u0004${str}`;
 const T_ = Shell.util_translate_time_string;
 
-const MAX_FORECASTS = 5;
 const EN_CHAR = '\u2013';
-
-const ClocksIntegrationIface = loadInterfaceXML('org.gnome.Shell.ClocksIntegration');
-const ClocksProxy = Gio.DBusProxy.makeProxyWrapper(ClocksIntegrationIface);
 
 function _isToday(date) {
     let now = new Date();
@@ -143,11 +137,11 @@ class EventsSection extends St.Button {
     }
 
     setEventSource(eventSource) {
-        if (!(eventSource instanceof Calendar.EventSourceBase))
+        if (!(eventSource instanceof Calendar.EmptyEventSource))
             throw new Error('Event source is not valid type');
 
         this._eventSource = eventSource;
-        this._eventSource.connect('changed', this._reloadEvents.bind(this));
+        // this._eventSource.connect('changed', this._reloadEvents.bind(this));
         this._eventSource.connect('notify::has-calendars',
             this._sync.bind(this));
         this._sync();
@@ -269,7 +263,7 @@ class EventsSection extends St.Button {
             }));
             this._eventsList.add_child(box);
         }
-
+        
         if (this._eventsList.get_n_children() === 0) {
             const placeholder = new St.Label({
                 text: _('No Events'),
@@ -537,7 +531,7 @@ class DateMenuButton extends PanelMenu.Button {
     }
 
     _getEventSource() {
-        return new Calendar.DBusEventSource();
+        return new Calendar.EmptyEventSource();
     }
 
     _setEventSource(eventSource) {
@@ -560,13 +554,7 @@ class DateMenuButton extends PanelMenu.Button {
     }
 
     _sessionUpdated() {
-        let eventSource;
-        let showEvents = Main.sessionMode.showCalendarEvents;
-        if (showEvents)
-            eventSource = this._getEventSource();
-        else
-            eventSource = new Calendar.EmptyEventSource();
-
+        let eventSource = this._getEventSource();
         this._setEventSource(eventSource);
 
         // Displays are not actually expected to launch Settings when activated
