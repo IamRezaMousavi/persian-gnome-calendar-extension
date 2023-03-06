@@ -3,6 +3,10 @@
 
 const { Clutter, Gio, GLib, GObject, Shell, St } = imports.gi;
 
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
+const EventSource = Me.imports.eventSource;
+
 var SHOW_WEEKDATE_KEY = 'show-weekdate';
 
 var NC_ = (context, str) => `${context}\u0004${str}`;
@@ -49,46 +53,6 @@ function _getCalendarDayAbbreviation(dayNumber) {
     return Shell.util_translate_time_string(abbreviations[dayNumber]);
 }
 
-// Abstraction for an appointment/event in a calendar
-
-var CalendarEvent = class CalendarEvent {
-    constructor(id, date, end, summary) {
-        this.id = id;
-        this.date = date;
-        this.end = end;
-        this.summary = summary;
-    }
-};
-
-// Interface for appointments/events - e.g. the contents of a calendar
-
-var EmptyEventSource = GObject.registerClass(
-class EmptyEventSource extends GObject.Object {
-    _init() {
-        super._init();
-        let changed = false;
-    }
-    get isLoading() {
-        return false;
-    }
-
-    get hasCalendars() {
-        return true;
-    }
-
-    requestRange(_begin, _end) {
-    }
-
-    getEvents(_begin, _end) {
-        let result = [];
-        return result;
-    }
-
-    hasEvents(_day) {
-        return false;
-    }
-});
-
 var Calendar = GObject.registerClass({
     Signals: { 'selected-date-changed': { param_types: [GLib.DateTime.$gtype] } },
 }, class Calendar extends St.Widget {
@@ -133,16 +97,14 @@ var Calendar = GObject.registerClass({
     }
 
     setEventSource(eventSource) {
-        if (!(eventSource instanceof EmptyEventSource))
+        if (!(eventSource instanceof EventSource.EventSource))
             throw new Error('Event source is not valid type');
 
         this._eventSource = eventSource;
-        /*
         this._eventSource.connect('changed', () => {
             this._rebuildCalendar();
             this._update();
         });
-        */
         this._rebuildCalendar();
         this._update();
     }
@@ -353,9 +315,6 @@ var Calendar = GObject.registerClass({
             });
             let rtl = button.get_text_direction() == Clutter.TextDirection.RTL;
 
-            if (this._eventSource instanceof EmptyEventSource)
-                button.reactive = false;
-
             button._date = new Date(iter);
             button.connect('clicked', () => {
                 this._shouldDateGrabFocus = true;
@@ -364,6 +323,7 @@ var Calendar = GObject.registerClass({
             });
 
             let hasEvents = this._eventSource.hasEvents(iter);
+            let isHoliday = this._eventSource.isHoliday(iter);
             let styleClass = 'calendar-day-base calendar-day';
 
             let isSameMonthWithSelected = iter.getMonth() == this._selectedDate.getMonth();
@@ -390,6 +350,12 @@ var Calendar = GObject.registerClass({
 
             if (hasEvents)
                 styleClass += ' calendar-day-with-events';
+            
+            if (isHoliday)
+                if (isSameMonthWithSelected)
+                    styleClass += ' pcalendar-nonwork-day';
+                else
+                    styleClass += ' pcalendar-other-month-nonwork-day';
 
             button.style_class = styleClass;
 

@@ -14,6 +14,7 @@ const System = imports.system;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Calendar = Me.imports.calendar;
+const EventSource = Me.imports.eventSource;
 
 const NC_ = (context, str) => `${context}\u0004${str}`;
 const T_ = Shell.util_translate_time_string;
@@ -109,7 +110,7 @@ class EventsSection extends St.Button {
         this._calendarApp = null;
 
         this._title = new St.Label({
-            style_class: 'events-title',
+            style_class: 'pevents-title',
         });
         this.child.add_child(this._title);
 
@@ -137,11 +138,11 @@ class EventsSection extends St.Button {
     }
 
     setEventSource(eventSource) {
-        if (!(eventSource instanceof Calendar.EmptyEventSource))
+        if (!(eventSource instanceof EventSource.EventSource))
             throw new Error('Event source is not valid type');
 
         this._eventSource = eventSource;
-        // this._eventSource.connect('changed', this._reloadEvents.bind(this));
+        this._eventSource.connect('changed', this._reloadEvents.bind(this));
         this._eventSource.connect('notify::has-calendars',
             this._sync.bind(this));
         this._sync();
@@ -238,13 +239,14 @@ class EventsSection extends St.Button {
     }
 
     _reloadEvents() {
+        /*
         if (this._eventSource.isLoading || this._reloading)
             return;
 
+        */
         this._reloading = true;
 
         [...this._eventsList].forEach(c => c.destroy());
-
         const events =
             this._eventSource.getEvents(this._startDate, this._endDate);
 
@@ -253,21 +255,28 @@ class EventsSection extends St.Button {
                 style_class: 'event-box',
                 vertical: true,
             });
+
+            let pstyle = 'pevent-summary';
+            if (event.isHoliday)
+                pstyle += ' pevent-summary-holyday';
+
             box.add(new St.Label({
                 text: event.summary,
-                style_class: 'event-summary',
+                style_class: pstyle,
             }));
+            /*
             box.add(new St.Label({
                 text: this._formatEventTime(event),
                 style_class: 'event-time',
             }));
+            */
             this._eventsList.add_child(box);
         }
         
         if (this._eventsList.get_n_children() === 0) {
             const placeholder = new St.Label({
                 text: _('No Events'),
-                style_class: 'event-placeholder',
+                style_class: 'event-placeholder pevent-placeholder',
             });
             this._eventsList.add_child(placeholder);
         }
@@ -381,11 +390,13 @@ class FreezableBinLayout extends Clutter.BinLayout {
     }
 
     set frozen(v) {
+        /*
         if (this._frozen == v)
             return;
 
         this._frozen = v;
         if (!this._frozen)
+        */
             this.layout_changed();
     }
 
@@ -472,7 +483,8 @@ class DateMenuButton extends PanelMenu.Button {
         this._calendar = new Calendar.Calendar();
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
             let date = _gDateTimeToDate(datetime);
-            layout.frozen = !_isToday(date);
+            // layout.frozen = !_isToday(date);
+            layout.frozen = false;
             this._eventsItem.setDate(date);
         });
         this._date = new TodayButton(this._calendar);
@@ -531,7 +543,7 @@ class DateMenuButton extends PanelMenu.Button {
     }
 
     _getEventSource() {
-        return new Calendar.EmptyEventSource();
+        return new EventSource.EventSource();
     }
 
     _setEventSource(eventSource) {
