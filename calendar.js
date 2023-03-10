@@ -6,7 +6,7 @@ const { Clutter, Gio, GLib, GObject, Shell, St } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const {persianDate, HijriDate, eventSource} = Me.imports;
+const {persianDate, hijriDate, eventSource} = Me.imports;
 const EventSource = eventSource.EventSource;
 const PersianDate = persianDate.PersianDate;
 

@@ -13,7 +13,7 @@ const System = imports.system;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const {calendar, persianDate, HijriDate, eventSource} = Me.imports;
+const {calendar, persianDate, hijriDate, eventSource} = Me.imports;
 const Calendar = calendar.Calendar;
 const EventSource = eventSource.EventSource;
 const PersianDate = persianDate.PersianDate;

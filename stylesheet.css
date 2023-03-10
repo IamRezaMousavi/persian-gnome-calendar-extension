@@ -1,9 +1,9 @@
 .pcalendar-nonwork-day,
 .pevent-summary-holyday {
-    color: rgb(221, 75, 75);
+    color: rgb(245, 127, 145);
 }
 .pcalendar-other-month-nonwork-day {
-    color: rgba(221, 75, 75, 0.50);
+    color: rgba(245, 127, 145, 0.50);
     opacity: 0.5;
 }
 .pdate-label,
