@@ -45,6 +45,9 @@ var PersianDate = class PersianDate extends Date {
         super.setFullYear(year);
         this._createPersianDate();
     }
+    toPersianString(option) {
+        return this.toLocaleDateString('fa-ir', option);
+    }
 }
 
 const g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];

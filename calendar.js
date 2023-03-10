@@ -73,7 +73,7 @@ var Calendar = GObject.registerClass({
          * "%OB" is the new format specifier introduced in glibc 2.27,
          * in most cases you should not change it.
          */
-        this._headerFormatWithoutYear = _('%OB');
+        this._headerFormatWithoutYear = {month: 'long'};
         /**
          * Translators: The header displaying the month name and the year
          * number, when this is a month of a different year.  You can
@@ -83,7 +83,7 @@ var Calendar = GObject.registerClass({
          * in most cases you should not use the old "%B" here unless you
          * absolutely know what you are doing.
          */
-        this._headerFormat = _('%OB %Y');
+        this._headerFormat = {year: 'numeric', month: 'long'};
 
         // Start off with the current date
         this._selectedDate = new PersianDate();
@@ -151,7 +151,7 @@ var Calendar = GObject.registerClass({
         this._backButton.connect('clicked', this._onPrevMonthButtonClicked.bind(this));
 
         this._monthLabel = new St.Label({
-            style_class: 'calendar-month-label',
+            style_class: 'calendar-month-label pcalendar-month-label',
             can_focus: true,
             x_align: Clutter.ActorAlign.CENTER,
             x_expand: true,
@@ -390,9 +390,9 @@ var Calendar = GObject.registerClass({
         let now = new PersianDate();
 
         if (sameYear(this._selectedDate, now))
-            this._monthLabel.text = this._selectedDate.toLocaleFormat(this._headerFormatWithoutYear);
+            this._monthLabel.text = this._selectedDate.toPersianString(this._headerFormatWithoutYear);
         else
-            this._monthLabel.text = this._selectedDate.toLocaleFormat(this._headerFormat);
+            this._monthLabel.text = this._selectedDate.toPersianString(this._headerFormat);
 
         if (!this._calendarBegin || !sameMonth(this._selectedDate, this._calendarBegin) || !sameDay(now, this._markedAsToday))
             this._rebuildCalendar();

@@ -10,11 +10,16 @@
 }
 .pevents-title {
     text-align: right;
+    direction: rtl;
 }
 .pevent-placeholder {
     text-align: right;
+    direction: rtl
 }
 .pcalendar-other-month-nonwork-day {
     color: rgba(255, 0, 0, 0.50);
     opacity: 0.5;
+}
+.pcalendar-month-label {
+    direction: rtl;
 }
