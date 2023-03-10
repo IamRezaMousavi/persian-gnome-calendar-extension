@@ -31,7 +31,7 @@ function _isToday(date) {
 }
 
 function _gDateTimeToDate(datetime) {
-    return new Date(datetime.to_unix() * 1000 + datetime.get_microsecond() / 1000);
+    return new PersianDate(datetime.to_unix() * 1000 + datetime.get_microsecond() / 1000);
 }
 
 var TodayButton = GObject.registerClass(
@@ -51,12 +51,11 @@ class TodayButton extends St.Button {
         this.add_actor(hbox);
 
         this._dayLabel = new St.Label({
-            style_class: 'day-label',
-            x_align: Clutter.ActorAlign.START,
+            style_class: 'day-label pday-label'
         });
         hbox.add_actor(this._dayLabel);
 
-        this._dateLabel = new St.Label({ style_class: 'date-label' });
+        this._dateLabel = new St.Label({ style_class: 'date-label pdate-label' });
         hbox.add_actor(this._dateLabel);
 
         this._calendar = calendar;
@@ -72,22 +71,23 @@ class TodayButton extends St.Button {
     }
 
     setDate(date) {
-        this._dayLabel.set_text(date.toLocaleFormat('%A'));
+        this._dayLabel.set_text(date.toPersianString({weekday: 'long'}));
 
         /* Translators: This is the date format to use when the calendar popup is
          * shown - it is shown just below the time in the top bar (e.g.,
          * "Tue 9:29 AM").  The string itself should become a full date, e.g.,
          * "February 17 2015".
          */
-        let dateFormat = Shell.util_translate_time_string(N_("%B %-d %Y"));
-        this._dateLabel.set_text(date.toLocaleFormat(dateFormat));
+        // let dateFormat = Shell.util_translate_time_string(N_("%B %-d %Y"));
+        let dateFormat = {month: 'long', day: 'numeric', year: 'numeric'};
+        this._dateLabel.set_text(date.toPersianString(dateFormat));
 
         /* Translators: This is the accessible name of the date button shown
          * below the time in the shell; it should combine the weekday and the
          * date, e.g. "Tuesday February 17 2015".
          */
-        dateFormat = Shell.util_translate_time_string(N_("%A %B %e %Y"));
-        this.accessible_name = date.toLocaleFormat(dateFormat);
+        dateFormat = {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'};
+        this.accessible_name = date.toPersianString(dateFormat);
     }
 });
 
@@ -131,9 +131,9 @@ class EventsSection extends St.Button {
 
     setDate(date) {
         this._startDate =
-            new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            new PersianDate(date.getFullYear(), date.getMonth(), date.getDate());
         this._endDate =
-            new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+            new PersianDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
         this._updateTitle();
         this._reloadEvents();
@@ -152,92 +152,24 @@ class EventsSection extends St.Button {
 
     _updateTitle() {
         /* Translators: Shown on calendar heading when selected day occurs on current year */
-        const sameYearFormat = T_(NC_('calendar heading', '%B %-d'));
+        const sameYearFormat = {month: 'long', day: 'numeric'};
 
         /* Translators: Shown on calendar heading when selected day occurs on different year */
-        const otherYearFormat = T_(NC_('calendar heading', '%B %-d %Y'));
+        const otherYearFormat = {month: 'long', day: 'numeric', year: 'numeric'};
 
         const timeSpanDay = GLib.TIME_SPAN_DAY / 1000;
         const now = new PersianDate();
 
         if (this._startDate <= now && now < this._endDate)
-            this._title.text = _('Today');
+            this._title.text = _('امروز');
         else if (this._endDate <= now && now - this._endDate < timeSpanDay)
-            this._title.text = _('Yesterday');
+            this._title.text = _('دیروز');
         else if (this._startDate > now && this._startDate - now <= timeSpanDay)
-            this._title.text = _('Tomorrow');
-        else if (this._startDate.getFullYear() === now.getFullYear())
-            this._title.text = this._startDate.toLocaleFormat(sameYearFormat);
+            this._title.text = _('فردا');
+        else if (this._startDate.getPersianYear() === now.getPersianYear())
+            this._title.text = this._startDate.toPersianString(sameYearFormat);
         else
-            this._title.text = this._startDate.toLocaleFormat(otherYearFormat);
-    }
-
-    _isAtMidnight(eventTime) {
-        return eventTime.getHours() === 0 && eventTime.getMinutes() === 0 && eventTime.getSeconds() === 0;
-    }
-
-    _formatEventTime(event) {
-        const eventStart = event.date;
-        let eventEnd = event.end;
-
-        const allDay =
-            eventStart.getTime() === this._startDate.getTime() && eventEnd.getTime() === this._endDate.getTime();
-
-        const startsBeforeToday = eventStart < this._startDate;
-        const endsAfterToday = eventEnd > this._endDate;
-
-        const startTimeOnly = Util.formatTime(eventStart, { timeOnly: true });
-        const endTimeOnly = Util.formatTime(eventEnd, { timeOnly: true });
-
-        const rtl = Clutter.get_default_text_direction() === Clutter.TextDirection.RTL;
-
-        let title;
-        if (allDay) {
-            /* Translators: Shown in calendar event list for all day events
-             * Keep it short, best if you can use less then 10 characters
-             */
-            title = C_('event list time', 'All Day');
-        } else if (startsBeforeToday || endsAfterToday) {
-            const now = new PersianDate();
-            const thisYear = now.getFullYear();
-
-            const startsAtMidnight = this._isAtMidnight(eventStart);
-            const endsAtMidnight = this._isAtMidnight(eventEnd);
-
-            const startYear = eventStart.getFullYear();
-
-            if (endsAtMidnight) {
-                eventEnd = new Date(eventEnd);
-                eventEnd.setDate(eventEnd.getDate() - 1);
-            }
-
-            const endYear = eventEnd.getFullYear();
-
-            let format;
-            if (startYear === thisYear && thisYear === endYear)
-                /* Translators: Shown in calendar event list as the start/end of events
-                 * that only show day and month
-                 */
-                format = T_(N_('%m/%d'));
-            else
-                format = '%x';
-
-            const startDateOnly = eventStart.toLocaleFormat(format);
-            const endDateOnly = eventEnd.toLocaleFormat(format);
-
-            if (startsAtMidnight && endsAtMidnight)
-                title = `${rtl ? endDateOnly : startDateOnly} ${EN_CHAR} ${rtl ? startDateOnly : endDateOnly}`;
-            else if (rtl)
-                title = `${endTimeOnly} ${endDateOnly} ${EN_CHAR} ${startTimeOnly} ${startDateOnly}`;
-            else
-                title = `${startDateOnly} ${startTimeOnly} ${EN_CHAR} ${endDateOnly} ${endTimeOnly}`;
-        } else if (eventStart === eventEnd) {
-            title = startTimeOnly;
-        } else {
-            title = `${rtl ? endTimeOnly : startTimeOnly} ${EN_CHAR} ${rtl ? startTimeOnly : endTimeOnly}`;
-        }
-
-        return title;
+            this._title.text = this._startDate.toPersianString(otherYearFormat);
     }
 
     _reloadEvents() {
@@ -266,18 +198,13 @@ class EventsSection extends St.Button {
                 text: event.summary,
                 style_class: pstyle,
             }));
-            /*
-            box.add(new St.Label({
-                text: this._formatEventTime(event),
-                style_class: 'event-time',
-            }));
-            */
+            
             this._eventsList.add_child(box);
         }
         
         if (this._eventsList.get_n_children() === 0) {
             const placeholder = new St.Label({
-                text: _('No Events'),
+                text: _('بدون رویداد'),
                 style_class: 'event-placeholder pevent-placeholder',
             });
             this._eventsList.add_child(placeholder);
@@ -392,14 +319,7 @@ class FreezableBinLayout extends Clutter.BinLayout {
     }
 
     set frozen(v) {
-        /*
-        if (this._frozen == v)
-            return;
-
-        this._frozen = v;
-        if (!this._frozen)
-        */
-            this.layout_changed();
+        this.layout_changed();
     }
 
     vfunc_get_preferred_width(container, forHeight) {
@@ -449,9 +369,9 @@ class DateMenuButton extends PanelMenu.Button {
 
         super._init(0.5);
 
-        this._clockDisplay = new St.Label({ style_class: 'clock' });
-        this._clockDisplay.clutter_text.y_align = Clutter.ActorAlign.CENTER;
-        this._clockDisplay.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
+        this._calendarDisplay = new St.Label({ style_class: 'clock' });
+        this._calendarDisplay.clutter_text.y_align = Clutter.ActorAlign.CENTER;
+        this._calendarDisplay.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
 
         this._indicator = new MessagesIndicator();
 
@@ -466,10 +386,10 @@ class DateMenuButton extends PanelMenu.Button {
 
         let box = new St.BoxLayout({ style_class: 'clock-display-box' });
         box.add_actor(indicatorPad);
-        box.add_actor(this._clockDisplay);
+        box.add_actor(this._calendarDisplay);
         box.add_actor(this._indicator);
 
-        this.label_actor = this._clockDisplay;
+        this.label_actor = this._calendarDisplay;
         this.add_actor(box);
         this.add_style_class_name('clock-display');
 
@@ -533,12 +453,9 @@ class DateMenuButton extends PanelMenu.Button {
 
         // Done with hbox for calendar and event list
 
-        this._clockDisplay.set_text('PCal')
-        /*
+        this._updateCalendarDisplay();
         this._clock = new GnomeDesktop.WallClock();
-        this._clock.bind_property('clock', this._clockDisplay, 'text', GObject.BindingFlags.SYNC_CREATE);
-        this._clock.connect('notify::timezone', this._updateTimeZone.bind(this));
-        */
+        this._clock.connect('notify::clock', this._updateCalendarDisplay.bind(this));
 
         Main.sessionMode.connect('updated', this._sessionUpdated.bind(this));
         this._sessionUpdated();
@@ -557,7 +474,11 @@ class DateMenuButton extends PanelMenu.Button {
 
         this._eventSource = eventSource;
     }
-
+    _updateCalendarDisplay() {
+        let Display_Format = {day: 'numeric', month: 'long', year: 'numeric'};
+        let date = new PersianDate().toPersianString(Display_Format);
+        this._calendarDisplay.set_text(date);
+    }
     _updateTimeZone() {
         // SpiderMonkey caches the time zone so we must explicitly clear it
         // before we can update the calendar, see

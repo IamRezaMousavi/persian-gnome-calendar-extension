@@ -46,6 +46,7 @@ var PersianDate = class PersianDate extends Date {
         this._createPersianDate();
     }
     toPersianString(option) {
+        // or can use 'fa-ir-u-nu-latn' to replace latin number with persian
         return this.toLocaleDateString('fa-ir', option);
     }
 }

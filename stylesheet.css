@@ -1,25 +1,25 @@
-.pcalendar-nonwork-day {
-    color: red;
-}
-.pevent-summary {
-    text-align: right;
-    font-size: 70%;
-}
+.pcalendar-nonwork-day,
 .pevent-summary-holyday {
-    color: red;
-}
-.pevents-title {
-    text-align: right;
-    direction: rtl;
-}
-.pevent-placeholder {
-    text-align: right;
-    direction: rtl
+    color: rgb(221, 75, 75);
 }
 .pcalendar-other-month-nonwork-day {
-    color: rgba(255, 0, 0, 0.50);
+    color: rgba(221, 75, 75, 0.50);
     opacity: 0.5;
 }
+.pdate-label,
+.pevents-title {
+    font-size: 120%;
+}
+.pday-label,
+.pevent-summary {
+    font-size: 80%;
+}
+.pday-label,
+.pdate-label,
+.pevents-title,
+.pevent-placeholder,
+.pevent-summary,
 .pcalendar-month-label {
+    text-align: right;
     direction: rtl;
 }
