@@ -13,8 +13,10 @@ const System = imports.system;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const Calendar = Me.imports.calendar;
-const EventSource = Me.imports.eventSource;
+const {calendar, persianDate, HijriDate, eventSource} = Me.imports;
+const Calendar = calendar.Calendar;
+const EventSource = eventSource.EventSource;
+const PersianDate = persianDate.PersianDate;
 
 const NC_ = (context, str) => `${context}\u0004${str}`;
 const T_ = Shell.util_translate_time_string;
@@ -22,7 +24,7 @@ const T_ = Shell.util_translate_time_string;
 const EN_CHAR = '\u2013';
 
 function _isToday(date) {
-    let now = new Date();
+    let now = new PersianDate();
     return now.getYear() == date.getYear() &&
            now.getMonth() == date.getMonth() &&
            now.getDate() == date.getDate();
@@ -66,7 +68,7 @@ class TodayButton extends St.Button {
     }
 
     vfunc_clicked() {
-        this._calendar.setDate(new Date(), false);
+        this._calendar.setDate(new PersianDate(), false);
     }
 
     setDate(date) {
@@ -138,7 +140,7 @@ class EventsSection extends St.Button {
     }
 
     setEventSource(eventSource) {
-        if (!(eventSource instanceof EventSource.EventSource))
+        if (!(eventSource instanceof EventSource))
             throw new Error('Event source is not valid type');
 
         this._eventSource = eventSource;
@@ -156,7 +158,7 @@ class EventsSection extends St.Button {
         const otherYearFormat = T_(NC_('calendar heading', '%B %-d %Y'));
 
         const timeSpanDay = GLib.TIME_SPAN_DAY / 1000;
-        const now = new Date();
+        const now = new PersianDate();
 
         if (this._startDate <= now && now < this._endDate)
             this._title.text = _('Today');
@@ -196,7 +198,7 @@ class EventsSection extends St.Button {
              */
             title = C_('event list time', 'All Day');
         } else if (startsBeforeToday || endsAfterToday) {
-            const now = new Date();
+            const now = new PersianDate();
             const thisYear = now.getFullYear();
 
             const startsAtMidnight = this._isAtMidnight(eventStart);
@@ -480,7 +482,7 @@ class DateMenuButton extends PanelMenu.Button {
         hbox = new St.BoxLayout({ name: 'calendarArea' });
         bin.add_actor(hbox);
 
-        this._calendar = new Calendar.Calendar();
+        this._calendar = new Calendar();
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
             let date = _gDateTimeToDate(datetime);
             // layout.frozen = !_isToday(date);
@@ -492,7 +494,7 @@ class DateMenuButton extends PanelMenu.Button {
         this.menu.connect('open-state-changed', (menu, isOpen) => {
             // Whenever the menu is opened, select today
             if (isOpen) {
-                let now = new Date();
+                let now = new PersianDate();
                 this._calendar.setDate(now);
                 this._date.setDate(now);
                 this._eventsItem.setDate(now);
@@ -543,7 +545,7 @@ class DateMenuButton extends PanelMenu.Button {
     }
 
     _getEventSource() {
-        return new EventSource.EventSource();
+        return new EventSource();
     }
 
     _setEventSource(eventSource) {

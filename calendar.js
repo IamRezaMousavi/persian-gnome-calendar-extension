@@ -5,22 +5,25 @@ const { Clutter, Gio, GLib, GObject, Shell, St } = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const EventSource = Me.imports.eventSource;
+
+const {persianDate, HijriDate, eventSource} = Me.imports;
+const EventSource = eventSource.EventSource;
+const PersianDate = persianDate.PersianDate;
 
 var SHOW_WEEKDATE_KEY = 'show-weekdate';
 
 var NC_ = (context, str) => `${context}\u0004${str}`;
 
 function sameYear(dateA, dateB) {
-    return dateA.getYear() == dateB.getYear();
+    return dateA.getPersianYear() == dateB.getPersianYear();
 }
 
 function sameMonth(dateA, dateB) {
-    return sameYear(dateA, dateB) && (dateA.getMonth() == dateB.getMonth());
+    return sameYear(dateA, dateB) && (dateA.getPersianMonth() == dateB.getPersianMonth());
 }
 
 function sameDay(dateA, dateB) {
-    return sameMonth(dateA, dateB) && (dateA.getDate() == dateB.getDate());
+    return sameMonth(dateA, dateB) && (dateA.getPersianDate() == dateB.getPersianDate());
 }
 
 function _isWorkDay(date) {
@@ -83,7 +86,7 @@ var Calendar = GObject.registerClass({
         this._headerFormat = _('%OB %Y');
 
         // Start off with the current date
-        this._selectedDate = new Date();
+        this._selectedDate = new PersianDate();
 
         this._shouldDateGrabFocus = false;
 
@@ -97,7 +100,7 @@ var Calendar = GObject.registerClass({
     }
 
     setEventSource(eventSource) {
-        if (!(eventSource instanceof EventSource.EventSource))
+        if (!(eventSource instanceof EventSource))
             throw new Error('Event source is not valid type');
 
         this._eventSource = eventSource;
@@ -170,9 +173,8 @@ var Calendar = GObject.registerClass({
         // We need to figure out the abbreviated localized names for the days of the week;
         // we do this by just getting the next 7 days starting from right now and then putting
         // them in the right cell in the table. It doesn't matter if we add them in order
-        let iter = new Date(this._selectedDate);
-        iter.setSeconds(0); // Leap second protection. Hah!
-        iter.setHours(12);
+        let iter = new PersianDate(this._selectedDate);
+
         for (let i = 0; i < 7; i++) {
             // Could use iter.toLocaleFormat('%a') but that normally gives three characters
             // and we want, ideally, a single character for e.g. S M T W T F S
@@ -211,20 +213,20 @@ var Calendar = GObject.registerClass({
     }
 
     _onPrevMonthButtonClicked() {
-        let newDate = new Date(this._selectedDate);
+        let newDate = new PersianDate(this._selectedDate);
         let oldMonth = newDate.getMonth();
         if (oldMonth == 0) {
             newDate.setMonth(11);
             newDate.setFullYear(newDate.getFullYear() - 1);
             if (newDate.getMonth() != 11) {
-                let day = 32 - new Date(newDate.getFullYear() - 1, 11, 32).getDate();
-                newDate = new Date(newDate.getFullYear() - 1, 11, day);
+                let day = 32 - new PersianDate(newDate.getFullYear() - 1, 11, 32).getDate();
+                newDate = new PersianDate(newDate.getFullYear() - 1, 11, day);
             }
         } else {
             newDate.setMonth(oldMonth - 1);
             if (newDate.getMonth() != oldMonth - 1) {
-                let day = 32 - new Date(newDate.getFullYear(), oldMonth - 1, 32).getDate();
-                newDate = new Date(newDate.getFullYear(), oldMonth - 1, day);
+                let day = 32 - new PersianDate(newDate.getFullYear(), oldMonth - 1, 32).getDate();
+                newDate = new PersianDate(newDate.getFullYear(), oldMonth - 1, day);
             }
         }
 
@@ -234,20 +236,20 @@ var Calendar = GObject.registerClass({
     }
 
     _onNextMonthButtonClicked() {
-        let newDate = new Date(this._selectedDate);
+        let newDate = new PersianDate(this._selectedDate);
         let oldMonth = newDate.getMonth();
         if (oldMonth == 11) {
             newDate.setMonth(0);
             newDate.setFullYear(newDate.getFullYear() + 1);
             if (newDate.getMonth() != 0) {
-                let day = 32 - new Date(newDate.getFullYear() + 1, 0, 32).getDate();
-                newDate = new Date(newDate.getFullYear() + 1, 0, day);
+                let day = 32 - new PersianDate(newDate.getFullYear() + 1, 0, 32).getDate();
+                newDate = new PersianDate(newDate.getFullYear() + 1, 0, day);
             }
         } else {
             newDate.setMonth(oldMonth + 1);
             if (newDate.getMonth() != oldMonth + 1) {
-                let day = 32 - new Date(newDate.getFullYear(), oldMonth + 1, 32).getDate();
-                newDate = new Date(newDate.getFullYear(), oldMonth + 1, day);
+                let day = 32 - new PersianDate(newDate.getFullYear(), oldMonth + 1, 32).getDate();
+                newDate = new PersianDate(newDate.getFullYear(), oldMonth + 1, day);
             }
         }
 
@@ -264,7 +266,7 @@ var Calendar = GObject.registerClass({
     }
 
     _rebuildCalendar() {
-        let now = new Date();
+        let now = new PersianDate();
 
         // Remove everything but the topBox and the weekday labels
         let children = this.get_children();
@@ -290,10 +292,14 @@ var Calendar = GObject.registerClass({
         // Actually computing the number of weeks is complex, but we know that the
         // problematic categories (2 and 4) always start on week start, and that
         // all months at the end have 6 weeks.
-        let beginDate = new Date(
-            this._selectedDate.getFullYear(), this._selectedDate.getMonth(), 1);
+        let beginDate = new PersianDate(this._selectedDate);
+        beginDate.setPersianDate(
+            this._selectedDate.getPersianYear(),
+            this._selectedDate.getPersianMonth(),
+            1
+        );
 
-        this._calendarBegin = new Date(beginDate);
+        this._calendarBegin = new PersianDate(beginDate);
         this._markedAsToday = now;
 
         let daysToWeekStart = (7 + beginDate.getDay() - this._weekStart) % 7;
@@ -303,19 +309,19 @@ var Calendar = GObject.registerClass({
         beginDate.setDate(beginDate.getDate() - (weekPadding + daysToWeekStart));
 
         let layout = this.layout_manager;
-        let iter = new Date(beginDate);
+        let iter = new PersianDate(beginDate);
         let row = 2;
         // nRows here means 6 weeks + one header + one navbar
         let nRows = 8;
         while (row < nRows) {
             let button = new St.Button({
                 // xgettext:no-javascript-format
-                label: iter.toLocaleFormat(C_('date day number format', '%d')),
+                label: iter.getPersianDate().toString(),
                 can_focus: true,
             });
             let rtl = button.get_text_direction() == Clutter.TextDirection.RTL;
 
-            button._date = new Date(iter);
+            button._date = new PersianDate(iter);
             button.connect('clicked', () => {
                 this._shouldDateGrabFocus = true;
                 this.setDate(button._date);
@@ -326,7 +332,7 @@ var Calendar = GObject.registerClass({
             let isHoliday = this._eventSource.isHoliday(iter);
             let styleClass = 'calendar-day-base calendar-day';
 
-            let isSameMonthWithSelected = iter.getMonth() == this._selectedDate.getMonth();
+            let isSameMonthWithSelected = iter.getPersianMonth() == this._selectedDate.getPersianMonth();
             if (isSameMonthWithSelected) {
                 if (_isWorkDay(iter))
                     styleClass += ' calendar-work-day';
@@ -381,7 +387,7 @@ var Calendar = GObject.registerClass({
     }
 
     _update() {
-        let now = new Date();
+        let now = new PersianDate();
 
         if (sameYear(this._selectedDate, now))
             this._monthLabel.text = this._selectedDate.toLocaleFormat(this._headerFormatWithoutYear);
