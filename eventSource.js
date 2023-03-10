@@ -36,9 +36,10 @@ var EventSource = GObject.registerClass({
         let gEvents = this._gregorianEvents.getEvents(_begin);
         let pEvents = this._persianEvents.getEvents(_begin);
         let hEvents = this._hijriEvents.getEvents(_begin);
-        this._result = this._result.concat(gEvents);
-        this._result = this._result.concat(pEvents);
+        
         this._result = this._result.concat(hEvents);
+        this._result = this._result.concat(pEvents);
+        this._result = this._result.concat(gEvents);
         return this._result;
     }
 
