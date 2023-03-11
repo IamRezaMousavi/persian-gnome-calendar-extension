@@ -13,6 +13,7 @@ $ make install
 ```
 
 ## ToDo
+- [ ] change month with persian cal
 - [ ] add schema
 - [ ] add prefs
 - [ ] add some error handling

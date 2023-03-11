@@ -125,13 +125,6 @@ var Calendar = GObject.registerClass({
         this.emit('selected-date-changed', datetime);
     }
 
-    updateTimeZone() {
-        // The calendar need to be rebuilt after a time zone update because
-        // the date might have changed.
-        this._rebuildCalendar();
-        this._update();
-    }
-
     _buildHeader() {
         let layout = this.layout_manager;
         let offsetCols = this._useWeekdate ? 1 : 0;
@@ -380,10 +373,6 @@ var Calendar = GObject.registerClass({
             if (iter.getDay() == this._weekStart)
                 row++;
         }
-
-        // Signal to the event source that we are interested in events
-        // only from this date range
-        this._eventSource.requestRange(beginDate, iter);
     }
 
     _update() {

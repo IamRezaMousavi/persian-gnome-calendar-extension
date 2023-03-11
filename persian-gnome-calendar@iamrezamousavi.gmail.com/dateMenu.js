@@ -6,10 +6,8 @@ const {
     GObject, Pango, Shell, St,
 } = imports.gi;
 
-const Util = imports.misc.util;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
-const System = imports.system;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -17,11 +15,6 @@ const {calendar, persianDate, hijriDate, eventSource} = Me.imports;
 const Calendar = calendar.Calendar;
 const EventSource = eventSource.EventSource;
 const PersianDate = persianDate.PersianDate;
-
-const NC_ = (context, str) => `${context}\u0004${str}`;
-const T_ = Shell.util_translate_time_string;
-
-const EN_CHAR = '\u2013';
 
 function _isToday(date) {
     let now = new PersianDate();
@@ -144,10 +137,6 @@ class EventsSection extends St.Button {
             throw new Error('Event source is not valid type');
 
         this._eventSource = eventSource;
-        this._eventSource.connect('changed', this._reloadEvents.bind(this));
-        this._eventSource.connect('notify::has-calendars',
-            this._sync.bind(this));
-        this._sync();
     }
 
     _updateTitle() {
@@ -173,13 +162,6 @@ class EventsSection extends St.Button {
     }
 
     _reloadEvents() {
-        /*
-        if (this._eventSource.isLoading || this._reloading)
-            return;
-
-        */
-        this._reloading = true;
-
         [...this._eventsList].forEach(c => c.destroy());
         const events =
             this._eventSource.getEvents(this._startDate, this._endDate);
@@ -209,9 +191,6 @@ class EventsSection extends St.Button {
             });
             this._eventsList.add_child(placeholder);
         }
-
-        this._reloading = false;
-        this._sync();
     }
 
     vfunc_clicked() {
@@ -235,111 +214,6 @@ class EventsSection extends St.Button {
         } else {
             this._calendarApp = null;
         }
-
-        return this._sync();
-    }
-
-    _sync() {
-        this.visible = this._eventSource && this._eventSource.hasCalendars;
-        this.reactive = this._calendarApp !== null;
-    }
-});
-
-
-
-var MessagesIndicator = GObject.registerClass(
-class MessagesIndicator extends St.Icon {
-    _init() {
-        super._init({
-            icon_size: 16,
-            visible: false,
-            y_expand: true,
-            y_align: Clutter.ActorAlign.CENTER,
-        });
-
-        this._sources = [];
-        this._count = 0;
-
-        this._settings = new Gio.Settings({
-            schema_id: 'org.gnome.desktop.notifications',
-        });
-        this._settings.connect('changed::show-banners', this._sync.bind(this));
-
-        Main.messageTray.connect('source-added', this._onSourceAdded.bind(this));
-        Main.messageTray.connect('source-removed', this._onSourceRemoved.bind(this));
-        Main.messageTray.connect('queue-changed', this._updateCount.bind(this));
-
-        let sources = Main.messageTray.getSources();
-        sources.forEach(source => this._onSourceAdded(null, source));
-
-        this._sync();
-
-        this.connect('destroy', () => {
-            this._settings.run_dispose();
-            this._settings = null;
-        });
-    }
-
-    _onSourceAdded(tray, source) {
-        source.connect('notify::count', this._updateCount.bind(this));
-        this._sources.push(source);
-        this._updateCount();
-    }
-
-    _onSourceRemoved(tray, source) {
-        this._sources.splice(this._sources.indexOf(source), 1);
-        this._updateCount();
-    }
-
-    _updateCount() {
-        let count = 0;
-        this._sources.forEach(source => (count += source.unseenCount));
-        this._count = count - Main.messageTray.queueCount;
-
-        this._sync();
-    }
-
-    _sync() {
-        let doNotDisturb = !this._settings.get_boolean('show-banners');
-        this.icon_name = doNotDisturb
-            ? 'notifications-disabled-symbolic'
-            : 'message-indicator-symbolic';
-        this.visible = doNotDisturb || this._count > 0;
-    }
-});
-
-var FreezableBinLayout = GObject.registerClass(
-class FreezableBinLayout extends Clutter.BinLayout {
-    _init() {
-        super._init();
-
-        this._frozen = false;
-        this._savedWidth = [NaN, NaN];
-        this._savedHeight = [NaN, NaN];
-    }
-
-    set frozen(v) {
-        this.layout_changed();
-    }
-
-    vfunc_get_preferred_width(container, forHeight) {
-        if (!this._frozen || this._savedWidth.some(isNaN))
-            return super.vfunc_get_preferred_width(container, forHeight);
-        return this._savedWidth;
-    }
-
-    vfunc_get_preferred_height(container, forWidth) {
-        if (!this._frozen || this._savedHeight.some(isNaN))
-            return super.vfunc_get_preferred_height(container, forWidth);
-        return this._savedHeight;
-    }
-
-    vfunc_allocate(container, allocation) {
-        super.vfunc_allocate(container, allocation);
-
-        let [width, height] = allocation.get_size();
-        this._savedWidth = [width, width];
-        this._savedHeight = [height, height];
     }
 });
 
@@ -373,27 +247,13 @@ class DateMenuButton extends PanelMenu.Button {
         this._calendarDisplay.clutter_text.y_align = Clutter.ActorAlign.CENTER;
         this._calendarDisplay.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
 
-        this._indicator = new MessagesIndicator();
-
-        const indicatorPad = new St.Widget();
-        this._indicator.bind_property('visible',
-            indicatorPad, 'visible',
-            GObject.BindingFlags.SYNC_CREATE);
-        indicatorPad.add_constraint(new Clutter.BindConstraint({
-            source: this._indicator,
-            coordinate: Clutter.BindCoordinate.SIZE,
-        }));
-
         let box = new St.BoxLayout({ style_class: 'clock-display-box' });
-        box.add_actor(indicatorPad);
         box.add_actor(this._calendarDisplay);
-        box.add_actor(this._indicator);
-
         this.label_actor = this._calendarDisplay;
         this.add_actor(box);
         this.add_style_class_name('clock-display');
 
-        let layout = new FreezableBinLayout();
+        let layout = new Clutter.BinLayout();
         let bin = new St.Widget({ layout_manager: layout });
         // For some minimal compatibility with PopupMenuItem
         bin._delegate = this;
@@ -405,8 +265,6 @@ class DateMenuButton extends PanelMenu.Button {
         this._calendar = new Calendar();
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
             let date = _gDateTimeToDate(datetime);
-            // layout.frozen = !_isToday(date);
-            layout.frozen = false;
             this._eventsItem.setDate(date);
         });
         this._date = new TodayButton(this._calendar);
@@ -457,8 +315,7 @@ class DateMenuButton extends PanelMenu.Button {
         this._clock = new GnomeDesktop.WallClock();
         this._clock.connect('notify::clock', this._updateCalendarDisplay.bind(this));
 
-        Main.sessionMode.connect('updated', this._sessionUpdated.bind(this));
-        this._sessionUpdated();
+        this._setEventSource(new EventSource());
     }
 
     _getEventSource() {
@@ -478,23 +335,5 @@ class DateMenuButton extends PanelMenu.Button {
         let Display_Format = {day: 'numeric', month: 'long', year: 'numeric'};
         let date = new PersianDate().toPersianString(Display_Format);
         this._calendarDisplay.set_text(date);
-    }
-    _updateTimeZone() {
-        // SpiderMonkey caches the time zone so we must explicitly clear it
-        // before we can update the calendar, see
-        // https://bugzilla.gnome.org/show_bug.cgi?id=678507
-        System.clearDateCaches();
-
-        this._calendar.updateTimeZone();
-    }
-
-    _sessionUpdated() {
-        let eventSource = this._getEventSource();
-        this._setEventSource(eventSource);
-
-        // Displays are not actually expected to launch Settings when activated
-        // but the corresponding app (clocks, weather); however we can consider
-        // that display-specific settings, so re-use "allowSettings" here ...
-        this._displaysSection.visible = Main.sessionMode.allowSettings;
     }
 });

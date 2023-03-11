@@ -20,16 +20,6 @@ var EventSource = GObject.registerClass({
         this._persianEvents = new PersianEvents();
         this._hijriEvents = new HijriEvents();
     }
-    get isLoading() {
-        return false;
-    }
-
-    get hasCalendars() {
-        return true;
-    }
-
-    requestRange(_begin, _end) {
-    }
 
     getEvents(_begin, _end) {
         this._result = [];
