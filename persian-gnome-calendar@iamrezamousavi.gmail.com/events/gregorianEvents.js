@@ -1,4 +1,10 @@
-// 
+/*
+ * see https://en.wikipedia.org/wiki/International_Days_UNESCO
+ * or see Farsi page https://fa.wikipedia.org/wiki/%D8%B1%D9%88%D8%B2%D9%87%D8%A7%DB%8C_%D8%AC%D9%87%D8%A7%D9%86%DB%8C_%DB%8C%D9%88%D9%86%D8%B3%DA%A9%D9%88
+ * And
+ * see https://www.farhang.gov.ir/ershad_content/media/image/2020/09/1004261_orig.pdf
+*/
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const CalendarEvent = Me.imports.events.calendarEvent.CalendarEvent;

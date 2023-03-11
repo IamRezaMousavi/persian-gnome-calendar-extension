@@ -1,4 +1,4 @@
-// 
+// Interface for Calendar Events
 
 var CalendarEvent = class CalendarEvent {
     constructor(summary, isHoliday) {

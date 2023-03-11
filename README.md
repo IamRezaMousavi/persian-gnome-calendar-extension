@@ -14,6 +14,7 @@ $ make install
 
 ## ToDo
 - [ ] change month with persian cal
+- [ ] send notif when today changed
 - [ ] add schema
 - [ ] add prefs
 - [ ] add some error handling
