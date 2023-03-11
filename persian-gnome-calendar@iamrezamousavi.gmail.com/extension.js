@@ -52,7 +52,7 @@ class Extension {
     enable() {
         log(`enabling ${Me.metadata.name}`);
         this._indicator = new Indicator();
-        Main.panel.addToStatusArea(this._uuid, this._indicator);
+        Main.panel.addToStatusArea(this._uuid, this._indicator, 0, 'center');
     }
 
     disable() {
