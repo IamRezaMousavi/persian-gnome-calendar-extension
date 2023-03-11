@@ -1,4 +1,4 @@
-UUID := persian-gnome-calendar@iamrezamousavi.gmail.com
+UUID := persian-calendar@iamrezamousavi.gmail.com
 EXTENSION_PATH := ~/.local/share/gnome-shell/extensions
 
 

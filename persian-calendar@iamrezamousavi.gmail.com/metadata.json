@@ -1,11 +1,11 @@
 {
-  "name": "Persian Gnome Calendar",
+  "name": "Persian Calendar",
   "original-authors": "IamRezaMousavi",
-  "description": "Show Persian calendar in the top panel",
+  "description": "Fork of Gnome Calendar with Persian taste",
   "shell-version": [
     "43"
   ],
   "url": "https://github.com/IamRezaMousavi/persian-gnome-calendar-extension",
-  "uuid": "persian-gnome-calendar@iamrezamousavi.gmail.com",
+  "uuid": "persian-calendar@iamrezamousavi.gmail.com",
   "version": 1
 }

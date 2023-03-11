@@ -1,6 +1,6 @@
 # persian-gnome-calendar-extension
 
-A Persian Calendar extension like your default Gnome cal
+Fork of Gnome Calendar with Persian taste
 
 ![Screenshot](./Screenshot.png)
 
