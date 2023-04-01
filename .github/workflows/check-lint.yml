@@ -1,0 +1,14 @@
+name: check-lint
+
+on: [push, pull_request]
+
+jobs:
+  lints:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install modules
+      run: npm install eslint
+    - name: Run Lint
+      run: |
+        ./node_modules/.bin/eslint persian-gnome-calendar@iamrezamousavi.gmail.com
