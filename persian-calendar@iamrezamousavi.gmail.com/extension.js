@@ -20,7 +20,7 @@
 
 const GETTEXT_DOMAIN = 'my-indicator-extension';
 
-const { GObject, St } = imports.gi;
+const {GObject, St} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
@@ -35,12 +35,7 @@ const DateMenu = Me.imports.dateMenu;
 const DateMenuButton = DateMenu.DateMenuButton;
 
 const Indicator = GObject.registerClass(
-class Indicator extends DateMenuButton {
-    _init() {
-        super._init();
-        
-    }
-});
+class Indicator extends DateMenuButton {});
 
 class Extension {
     constructor(uuid) {

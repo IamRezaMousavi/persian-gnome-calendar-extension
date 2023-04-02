@@ -57,15 +57,16 @@ var HijriEvents = class HijriEvents extends CalendarEvents {
         this._events.set('12-18', [new CalendarEvent('عید غدیر خم', true)]);
         this._events.set('12-20', [new CalendarEvent('ولادت امام موسی کاظم (ع)', false)]);
     }
+
     getEvents(day) {
         let hDate = HijriDate.fromGregorian(
             day.getFullYear(),
             day.getMonth() + 1,
-            day.getDate()
+            day.getDate(),
         );
-        let events = this._events.get(hDate.month + '-' + hDate.day);
-        if (events instanceof Array)
+        let events = this._events.get(`${hDate.month}-${hDate.day}`);
+        if (Array.isArray(events))
             return events;
         return [];
     }
-}
+};

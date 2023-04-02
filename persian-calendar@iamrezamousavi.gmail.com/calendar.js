@@ -1,12 +1,13 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 /* exported Calendar*/
 
-const { Clutter, Gio, GLib, GObject, Shell, St } = imports.gi;
+const {Clutter, Gio, GLib, GObject, Shell, St} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
+const _ = ExtensionUtils.gettext;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const {persianDate, hijriDate, eventSource} = Me.imports;
+const {persianDate, eventSource} = Me.imports;
 const EventSource = eventSource.EventSource;
 const PersianDate = persianDate.PersianDate;
 
@@ -15,20 +16,21 @@ var SHOW_WEEKDATE_KEY = 'show-weekdate';
 var NC_ = (context, str) => `${context}\u0004${str}`;
 
 function sameYear(dateA, dateB) {
-    return dateA.getPersianYear() == dateB.getPersianYear();
+    return dateA.getPersianYear() === dateB.getPersianYear();
 }
 
 function sameMonth(dateA, dateB) {
-    return sameYear(dateA, dateB) && (dateA.getPersianMonth() == dateB.getPersianMonth());
+    return sameYear(dateA, dateB) && (dateA.getPersianMonth() === dateB.getPersianMonth());
 }
 
 function sameDay(dateA, dateB) {
-    return sameMonth(dateA, dateB) && (dateA.getPersianDate() == dateB.getPersianDate());
+    return sameMonth(dateA, dateB) && (dateA.getPersianDate() === dateB.getPersianDate());
 }
 
 function _isWorkDay(date) {
     /* Translators: Enter 0-6 (Sunday-Saturday) for non-work days. Examples: "0" (Sunday) "6" (Saturday) "06" (Sunday and Saturday). */
-    let days = C_('calendar-no-work', "5");
+    /* calendar-no-work */
+    let days = '5';
     return !days.includes(date.getDay().toString());
 }
 
@@ -39,30 +41,30 @@ function _getCalendarDayAbbreviation(dayNumber) {
          * NOTE: These grid abbreviations are always shown together
          * and in order, e.g. "S M T W T F S".
          */
-        NC_("grid sunday", "S"),
+        NC_('grid sunday', 'S'),
         /* Translators: Calendar grid abbreviation for Monday */
-        NC_("grid monday", "M"),
+        NC_('grid monday', 'M'),
         /* Translators: Calendar grid abbreviation for Tuesday */
-        NC_("grid tuesday", "T"),
+        NC_('grid tuesday', 'T'),
         /* Translators: Calendar grid abbreviation for Wednesday */
-        NC_("grid wednesday", "W"),
+        NC_('grid wednesday', 'W'),
         /* Translators: Calendar grid abbreviation for Thursday */
-        NC_("grid thursday", "T"),
+        NC_('grid thursday', 'T'),
         /* Translators: Calendar grid abbreviation for Friday */
-        NC_("grid friday", "F"),
+        NC_('grid friday', 'F'),
         /* Translators: Calendar grid abbreviation for Saturday */
-        NC_("grid saturday", "S"),
+        NC_('grid saturday', 'S'),
     ];
     return Shell.util_translate_time_string(abbreviations[dayNumber]);
 }
 
 var Calendar = GObject.registerClass({
-    Signals: { 'selected-date-changed': { param_types: [GLib.DateTime.$gtype] } },
+    Signals: {'selected-date-changed': {param_types: [GLib.DateTime.$gtype]}},
 }, class Calendar extends St.Widget {
     _init() {
         // this._weekStart = Shell.util_get_week_start();
         this._weekStart = 6;
-        this._settings = new Gio.Settings({ schema_id: 'org.gnome.desktop.calendar' });
+        this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.calendar'});
 
         this._settings.connect(`changed::${SHOW_WEEKDATE_KEY}`, this._onSettingsChange.bind(this));
         this._useWeekdate = this._settings.get_boolean(SHOW_WEEKDATE_KEY);
@@ -99,11 +101,11 @@ var Calendar = GObject.registerClass({
         this._buildHeader();
     }
 
-    setEventSource(eventSource) {
-        if (!(eventSource instanceof EventSource))
+    setEventSource(event_source) {
+        if (!(event_source instanceof EventSource))
             throw new Error('Event source is not valid type');
 
-        this._eventSource = eventSource;
+        this._eventSource = event_source;
         this._eventSource.connect('changed', () => {
             this._rebuildCalendar();
             this._update();
@@ -131,7 +133,7 @@ var Calendar = GObject.registerClass({
         this.destroy_all_children();
 
         // Top line of the calendar '<| September 2009 |>'
-        this._topBox = new St.BoxLayout({ style_class: 'calendar-month-header' });
+        this._topBox = new St.BoxLayout({style_class: 'calendar-month-header'});
         layout.attach(this._topBox, 0, 0, offsetCols + 7, 1);
 
         this._backButton = new St.Button({
@@ -179,7 +181,7 @@ var Calendar = GObject.registerClass({
             });
             label.accessible_name = iter.toLocaleFormat('%A');
             let col;
-            if (this.get_text_direction() == Clutter.TextDirection.RTL)
+            if (this.get_text_direction() === Clutter.TextDirection.RTL)
                 col = 6 - (7 + iter.getDay() - this._weekStart) % 7;
             else
                 col = offsetCols + (7 + iter.getDay() - this._weekStart) % 7;
@@ -208,16 +210,16 @@ var Calendar = GObject.registerClass({
     _onPrevMonthButtonClicked() {
         let newDate = new PersianDate(this._selectedDate);
         let oldMonth = newDate.getMonth();
-        if (oldMonth == 0) {
+        if (oldMonth === 0) {
             newDate.setMonth(11);
             newDate.setFullYear(newDate.getFullYear() - 1);
-            if (newDate.getMonth() != 11) {
+            if (newDate.getMonth() !== 11) {
                 let day = 32 - new PersianDate(newDate.getFullYear() - 1, 11, 32).getDate();
                 newDate = new PersianDate(newDate.getFullYear() - 1, 11, day);
             }
         } else {
             newDate.setMonth(oldMonth - 1);
-            if (newDate.getMonth() != oldMonth - 1) {
+            if (newDate.getMonth() !== oldMonth - 1) {
                 let day = 32 - new PersianDate(newDate.getFullYear(), oldMonth - 1, 32).getDate();
                 newDate = new PersianDate(newDate.getFullYear(), oldMonth - 1, day);
             }
@@ -231,16 +233,16 @@ var Calendar = GObject.registerClass({
     _onNextMonthButtonClicked() {
         let newDate = new PersianDate(this._selectedDate);
         let oldMonth = newDate.getMonth();
-        if (oldMonth == 11) {
+        if (oldMonth === 11) {
             newDate.setMonth(0);
             newDate.setFullYear(newDate.getFullYear() + 1);
-            if (newDate.getMonth() != 0) {
+            if (newDate.getMonth() !== 0) {
                 let day = 32 - new PersianDate(newDate.getFullYear() + 1, 0, 32).getDate();
                 newDate = new PersianDate(newDate.getFullYear() + 1, 0, day);
             }
         } else {
             newDate.setMonth(oldMonth + 1);
-            if (newDate.getMonth() != oldMonth + 1) {
+            if (newDate.getMonth() !== oldMonth + 1) {
                 let day = 32 - new PersianDate(newDate.getFullYear(), oldMonth + 1, 32).getDate();
                 newDate = new PersianDate(newDate.getFullYear(), oldMonth + 1, day);
             }
@@ -289,14 +291,14 @@ var Calendar = GObject.registerClass({
         beginDate.setPersianDate(
             this._selectedDate.getPersianYear(),
             this._selectedDate.getPersianMonth(),
-            1
+            1,
         );
 
         this._calendarBegin = new PersianDate(beginDate);
         this._markedAsToday = now;
 
         let daysToWeekStart = (7 + beginDate.getDay() - this._weekStart) % 7;
-        let startsOnWeekStart = daysToWeekStart == 0;
+        let startsOnWeekStart = daysToWeekStart === 0;
         let weekPadding = startsOnWeekStart ? 7 : 0;
 
         beginDate.setDate(beginDate.getDate() - (weekPadding + daysToWeekStart));
@@ -312,7 +314,7 @@ var Calendar = GObject.registerClass({
                 label: iter.getPersianDate().toString(),
                 can_focus: true,
             });
-            let rtl = button.get_text_direction() == Clutter.TextDirection.RTL;
+            let rtl = button.get_text_direction() === Clutter.TextDirection.RTL;
 
             button._date = new PersianDate(iter);
             button.connect('clicked', () => {
@@ -325,20 +327,20 @@ var Calendar = GObject.registerClass({
             let isHoliday = this._eventSource.isHoliday(iter);
             let styleClass = 'calendar-day-base calendar-day';
 
-            let isSameMonthWithSelected = iter.getPersianMonth() == this._selectedDate.getPersianMonth();
-            if (isSameMonthWithSelected) {
+            let isSameMonthWithSelected = iter.getPersianMonth() === this._selectedDate.getPersianMonth();
+            if (isSameMonthWithSelected)
                 if (_isWorkDay(iter))
                     styleClass += ' calendar-work-day';
                 else
                     styleClass += ' pcalendar-nonwork-day';
-            }
+
             // Hack used in lieu of border-collapse - see gnome-shell.css
-            if (row == 2)
+            if (row === 2)
                 styleClass = `calendar-day-top ${styleClass}`;
 
             let leftMost = rtl
-                ? iter.getDay() == (this._weekStart + 6) % 7
-                : iter.getDay() == this._weekStart;
+                ? iter.getDay() === (this._weekStart + 6) % 7
+                : iter.getDay() === this._weekStart;
             if (leftMost)
                 styleClass = `calendar-day-left ${styleClass}`;
 
@@ -349,7 +351,7 @@ var Calendar = GObject.registerClass({
 
             if (hasEvents)
                 styleClass += ' calendar-day-with-events';
-            
+
             if (isHoliday)
                 if (isSameMonthWithSelected)
                     styleClass += ' pcalendar-nonwork-day';
@@ -370,7 +372,7 @@ var Calendar = GObject.registerClass({
 
             iter.setDate(iter.getDate() + 1);
 
-            if (iter.getDay() == this._weekStart)
+            if (iter.getDay() === this._weekStart)
                 row++;
         }
     }
@@ -391,9 +393,8 @@ var Calendar = GObject.registerClass({
                 button.add_style_pseudo_class('selected');
                 if (this._shouldDateGrabFocus)
                     button.grab_key_focus();
-            } else {
+            } else
                 button.remove_style_pseudo_class('selected');
-            }
         });
     }
 });

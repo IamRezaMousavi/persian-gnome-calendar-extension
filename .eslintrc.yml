@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT OR LGPL-2.0-or-later
 env:
   es6: true
+  node: true
 extends: 'eslint:recommended'
 rules:
   array-bracket-newline:
@@ -142,7 +143,7 @@ rules:
   no-unneeded-ternary: error
   no-unused-expressions: error
   no-unused-vars:
-  - warn
+  - off
   # Vars use a suffix _ instead of a prefix because of file-scope private vars
   - varsIgnorePattern: ^_
     argsIgnorePattern: ^_
@@ -212,7 +213,9 @@ rules:
   yield-star-spacing: error
   yoda: error
   no-duplicate-imports: error
-  no-use-before-define: error
+  no-use-before-define:
+  - error
+  - functions: false
   no-unused-private-class-members: error
   no-unmodified-loop-condition: error
   no-promise-executor-return: error

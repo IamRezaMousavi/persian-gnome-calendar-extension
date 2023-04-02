@@ -16,11 +16,11 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('1-1', [new CalendarEvent('جشن آغاز سال نو میلادی', false)]);
         this._events.set('1-14', [
             new CalendarEvent('روز جهانی منطق', false),
-            new CalendarEvent('جشن ولنتاین', false)
+            new CalendarEvent('جشن ولنتاین', false),
         ]);
         this._events.set('1-24', [
             new CalendarEvent('روز جهانی آموزش', false),
-            new CalendarEvent('روز جهانی فرهنگ آفریقایی', false)
+            new CalendarEvent('روز جهانی فرهنگ آفریقایی', false),
         ]);
         this._events.set('1-26', [new CalendarEvent('روز جهانی گمرک', false)]);
         this._events.set('1-27', [new CalendarEvent('روز جهانی یادبود هولوکاست', false)]);
@@ -33,12 +33,12 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('3-14', [new CalendarEvent('روز جهانی ریاضیات', false)]);
         this._events.set('3-20', [
             new CalendarEvent('روز جهانی شادی', false),
-            new CalendarEvent('روز جهانی فرانکفونی', false)
+            new CalendarEvent('روز جهانی فرانکفونی', false),
         ]);
         this._events.set('3-21', [
             new CalendarEvent('روز جهانی نوروز', false),
             new CalendarEvent('روز جهانی شعر', false),
-            new CalendarEvent('روز جهانی رفع تبعیض نژادی', false)
+            new CalendarEvent('روز جهانی رفع تبعیض نژادی', false),
         ]);
         this._events.set('3-22', [new CalendarEvent('روز جهانی آب', false)]);
         this._events.set('3-23', [new CalendarEvent('روز جهانی هواشناسی', false)]);
@@ -57,13 +57,13 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('5-5', [
             new CalendarEvent('روز جهانی ماما', false),
             new CalendarEvent('روز میراث جهانی آفریقا', false),
-            new CalendarEvent('روز جهانی زبان پرتغالی', false)
+            new CalendarEvent('روز جهانی زبان پرتغالی', false),
         ]);
         this._events.set('5-8', [new CalendarEvent('روز جهانی صلیب سرخ و هلال احمر', false)]);
         this._events.set('5-15', [new CalendarEvent('روز جهانی خانواده', false)]);
         this._events.set('5-16', [
             new CalendarEvent('روز جهانی نور', false),
-            new CalendarEvent('روز جهانی زندگی با هم در صلح', false)
+            new CalendarEvent('روز جهانی زندگی با هم در صلح', false),
         ]);
         this._events.set('5-17', [new CalendarEvent('روز جهانی ارتباطات', false)]);
         this._events.set('5-18', [new CalendarEvent('روز جهانی موزه و میراث فرهنگی', false)]);
@@ -103,7 +103,7 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('9-30', [
             new CalendarEvent('روز جهانی دریانوردی', false),
             new CalendarEvent('روز جهانی ناشنوایان', false),
-            new CalendarEvent('روز جهانی ترجمه و مترجم', false)
+            new CalendarEvent('روز جهانی ترجمه و مترجم', false),
         ]);
         this._events.set('10-1', [new CalendarEvent('روز جهانی سالمندان', false)]);
         this._events.set('10-4', [new CalendarEvent('آغاز هفته جهانی فضا', false)]);
@@ -112,7 +112,7 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('10-9', [new CalendarEvent('روز جهانی پست', false)]);
         this._events.set('10-10', [
             new CalendarEvent('روز جهانی بهداشت روان', false),
-            new CalendarEvent('روز جهانی مبارزه با حکم اعدام', false)
+            new CalendarEvent('روز جهانی مبارزه با حکم اعدام', false),
         ]);
         this._events.set('10-11', [new CalendarEvent('روز جهانی دختر', false)]);
         this._events.set('10-13', [new CalendarEvent('روز جهانی کاهش بلایا', false)]);
@@ -122,23 +122,23 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('10-17', [new CalendarEvent('روز جهانی مبارزه با فقر', false)]);
         this._events.set('10-24', [
             new CalendarEvent('روز جهانی سارمان ملل', false),
-            new CalendarEvent('روز جهانی اخبار', false)
+            new CalendarEvent('روز جهانی اخبار', false),
         ]);
         this._events.set('10-27', [new CalendarEvent('روز جهانی میراث سمعی و بصری', false)]);
         this._events.set('11-2', [new CalendarEvent('روز جهانی پایان دادن به مصونیت از مجازات برای جنایات علیه خبرنگاران', false)]);
         this._events.set('11-5', [
             new CalendarEvent('روز جهانی زبان رومی', false),
-            new CalendarEvent('روز جهانی آگاهی از سونامی', false)
+            new CalendarEvent('روز جهانی آگاهی از سونامی', false),
         ]);
         this._events.set('11-10', [new CalendarEvent('روز جهانی علم در خدمت صلح و توسعه پایدار', false)]);
         this._events.set('11-14', [
             new CalendarEvent('روز جهانی دیابت', false),
-            new CalendarEvent('روز جهانی مبارزه با قاچاق غیرقانونی اموال فرهنگی', false)
+            new CalendarEvent('روز جهانی مبارزه با قاچاق غیرقانونی اموال فرهنگی', false),
         ]);
         this._events.set('11-16', [new CalendarEvent('روز جهانی مدارا', false)]);
         this._events.set('11-18', [
             new CalendarEvent('روز جهانی هنر اسلامی', false),
-            new CalendarEvent('روز جهانی فلسفه', false)
+            new CalendarEvent('روز جهانی فلسفه', false),
         ]);
         this._events.set('11-19', [new CalendarEvent('روز جهانی آقایان', false)]);
         this._events.set('11-21', [new CalendarEvent('روز جهانی تلویزیون', false)]);
@@ -153,9 +153,9 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('12-11', [new CalendarEvent('روز جهانی کوه‌نوردی', false)]);
         this._events.set('12-18', [
             new CalendarEvent('روز جهانی مهاجرین', false),
-            new CalendarEvent('روز جهانی زبان عربی', false)
+            new CalendarEvent('روز جهانی زبان عربی', false),
         ]);
         this._events.set('12-25', [new CalendarEvent('جشن کریسمس', false)]);
         this._events.set('12-30', [new CalendarEvent('روز جهانی همبستگی انسانی', false)]);
     }
-}
+};

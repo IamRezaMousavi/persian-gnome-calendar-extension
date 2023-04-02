@@ -9,22 +9,27 @@ var PersianDate = class PersianDate extends Date {
         super(...args);
         this._createPersianDate();
     }
+
     getPersianYear() {
         return this.pDate.year;
     }
+
     getPersianMonth() {
         return this.pDate.month;
     }
+
     getPersianDate() {
         return this.pDate.day;
     }
+
     _createPersianDate() {
         this.pDate = gregorianToPersian(
             this.getFullYear(),
             this.getMonth() + 1,
-            this.getDate()
+            this.getDate(),
         );
     }
+
     setPersianDate(year, month, day) {
         let gDate = persianToGregorian(year, month, day);
         gDate = new Date(gDate.year, gDate.month, gDate.day);
@@ -33,23 +38,27 @@ var PersianDate = class PersianDate extends Date {
         this.setDate(gDate.getDate());
         this._createPersianDate();
     }
+
     setDate(date) {
         super.setDate(date);
         this._createPersianDate();
     }
+
     setMonth(month) {
         super.setMonth(month);
         this._createPersianDate();
     }
+
     setFullYear(year) {
         super.setFullYear(year);
         this._createPersianDate();
     }
+
     toPersianString(option) {
         // or can use 'fa-ir-u-nu-latn' to replace latin number with persian
         return this.toLocaleDateString('fa-ir', option);
     }
-}
+};
 
 const g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const p_days_in_month = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
@@ -60,9 +69,9 @@ function persianToGregorian(py, pm, pd) {
     pd = parseInt(pd) - 1;
 
     let p_day_no = 365 * py + parseInt(py / 33) * 8 + parseInt((py % 33 + 3) / 4);
-    for (let i = 0; i < pm; i++) {
+    for (let i = 0; i < pm; i++)
         p_day_no += p_days_in_month[i];
-    }
+
 
     p_day_no += pd;
 
@@ -80,11 +89,10 @@ function persianToGregorian(py, pm, pd) {
         /* 36524 = 365*100 + 100/4 - 100/100 */
         g_day_no %= 36524;
 
-        if (g_day_no >= 365) {
+        if (g_day_no >= 365)
             g_day_no++;
-        } else {
+        else
             leap = false;
-        }
     }
 
     gy += 4 * parseInt(g_day_no / 1461);
@@ -100,9 +108,9 @@ function persianToGregorian(py, pm, pd) {
     }
 
     let i = 0;
-    for (; g_day_no >= g_days_in_month[i] + (i === 1 && leap); i++) {
+    for (; g_day_no >= g_days_in_month[i] + (i === 1 && leap); i++)
         g_day_no -= g_days_in_month[i] + (i === 1 && leap);
-    }
+
 
     return {year: gy, month: i + 1, day: g_day_no + 1};
 }
@@ -114,14 +122,14 @@ function gregorianToPersian(gy, gm, gd) {
 
     let g_day_no = 365 * gy + parseInt((gy + 3) / 4) - parseInt((gy + 99) / 100) + parseInt((gy + 399) / 400);
 
-    for (let i = 0; i < gm; ++i) {
+    for (let i = 0; i < gm; ++i)
         g_day_no += g_days_in_month[i];
-    }
+
 
     /* leap and after Feb */
-    if (gm > 1 && ((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0))) {
+    if (gm > 1 && ((gy % 4 === 0 && gy % 100 !== 0) || (gy % 400 === 0)))
         ++g_day_no;
-    }
+
 
     g_day_no += gd;
 
@@ -139,9 +147,9 @@ function gregorianToPersian(gy, gm, gd) {
 
     let day_in_year = p_day_no + 1;
     let i = 0;
-    for (; i < 11 && p_day_no >= p_days_in_month[i]; ++i) {
+    for (; i < 11 && p_day_no >= p_days_in_month[i]; ++i)
         p_day_no -= p_days_in_month[i];
-    }
+
 
     return {year: py, month: i + 1, day: p_day_no + 1, yearDays: day_in_year};
 }

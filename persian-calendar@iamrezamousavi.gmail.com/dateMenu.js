@@ -10,26 +10,25 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 
 const ExtensionUtils = imports.misc.extensionUtils;
+const _ = ExtensionUtils.gettext;
+
 const Me = ExtensionUtils.getCurrentExtension();
-const {calendar, persianDate, hijriDate, eventSource} = Me.imports;
-const Calendar = calendar.Calendar;
-const EventSource = eventSource.EventSource;
-const PersianDate = persianDate.PersianDate;
+const {calendar, persianDate, eventSource} = Me.imports;
 
 function _isToday(date) {
-    let now = new PersianDate();
-    return now.getYear() == date.getYear() &&
-           now.getMonth() == date.getMonth() &&
-           now.getDate() == date.getDate();
+    let now = new persianDate.PersianDate();
+    return now.getYear() === date.getYear() &&
+           now.getMonth() === date.getMonth() &&
+           now.getDate() === date.getDate();
 }
 
 function _gDateTimeToDate(datetime) {
-    return new PersianDate(datetime.to_unix() * 1000 + datetime.get_microsecond() / 1000);
+    return new persianDate.PersianDate(datetime.to_unix() * 1000 + datetime.get_microsecond() / 1000);
 }
 
 var TodayButton = GObject.registerClass(
 class TodayButton extends St.Button {
-    _init(calendar) {
+    _init(cal) {
         // Having the ability to go to the current date if the user is already
         // on the current date can be confusing. So don't make the button reactive
         // until the selected date changes.
@@ -40,18 +39,18 @@ class TodayButton extends St.Button {
             reactive: false,
         });
 
-        let hbox = new St.BoxLayout({ vertical: true });
+        let hbox = new St.BoxLayout({vertical: true});
         this.add_actor(hbox);
 
         this._dayLabel = new St.Label({
-            style_class: 'day-label pday-label'
+            style_class: 'day-label pday-label',
         });
         hbox.add_actor(this._dayLabel);
 
-        this._dateLabel = new St.Label({ style_class: 'date-label pdate-label' });
+        this._dateLabel = new St.Label({style_class: 'date-label pdate-label'});
         hbox.add_actor(this._dateLabel);
 
-        this._calendar = calendar;
+        this._calendar = cal;
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
             // Make the button reactive only if the selected date is not the
             // current date.
@@ -60,7 +59,7 @@ class TodayButton extends St.Button {
     }
 
     vfunc_clicked() {
-        this._calendar.setDate(new PersianDate(), false);
+        this._calendar.setDate(new persianDate.PersianDate(), false);
     }
 
     setDate(date) {
@@ -124,19 +123,19 @@ class EventsSection extends St.Button {
 
     setDate(date) {
         this._startDate =
-            new PersianDate(date.getFullYear(), date.getMonth(), date.getDate());
+            new persianDate.PersianDate(date.getFullYear(), date.getMonth(), date.getDate());
         this._endDate =
-            new PersianDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+            new persianDate.PersianDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
         this._updateTitle();
         this._reloadEvents();
     }
 
-    setEventSource(eventSource) {
-        if (!(eventSource instanceof EventSource))
+    setEventSource(_eventSource) {
+        if (!(_eventSource instanceof eventSource.EventSource))
             throw new Error('Event source is not valid type');
 
-        this._eventSource = eventSource;
+        this._eventSource = _eventSource;
     }
 
     _updateTitle() {
@@ -147,7 +146,7 @@ class EventsSection extends St.Button {
         const otherYearFormat = {month: 'long', day: 'numeric', year: 'numeric'};
 
         const timeSpanDay = GLib.TIME_SPAN_DAY / 1000;
-        const now = new PersianDate();
+        const now = new persianDate.PersianDate();
 
         if (this._startDate <= now && now < this._endDate)
             this._title.text = _('امروز');
@@ -180,10 +179,10 @@ class EventsSection extends St.Button {
                 text: event.summary,
                 style_class: pstyle,
             }));
-            
+
             this._eventsList.add_child(box);
         }
-        
+
         if (this._eventsList.get_n_children() === 0) {
             const placeholder = new St.Label({
                 text: _('بدون رویداد'),
@@ -211,16 +210,15 @@ class EventsSection extends St.Button {
             const app = Gio.AppInfo.get_default_for_type('text/calendar', false);
             const defaultInRecommended = apps.some(a => a.equal(app));
             this._calendarApp = defaultInRecommended ? app : apps[0];
-        } else {
+        } else
             this._calendarApp = null;
-        }
     }
 });
 
 var CalendarColumnLayout = GObject.registerClass(
 class CalendarColumnLayout extends Clutter.BoxLayout {
     _init(actors) {
-        super._init({ orientation: Clutter.Orientation.VERTICAL });
+        super._init({orientation: Clutter.Orientation.VERTICAL});
         this._colActors = actors;
     }
 
@@ -243,26 +241,26 @@ class DateMenuButton extends PanelMenu.Button {
 
         super._init(0.5);
 
-        this._calendarDisplay = new St.Label({ style_class: 'clock' });
+        this._calendarDisplay = new St.Label({style_class: 'clock'});
         this._calendarDisplay.clutter_text.y_align = Clutter.ActorAlign.CENTER;
         this._calendarDisplay.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
 
-        let box = new St.BoxLayout({ style_class: 'clock-display-box' });
+        let box = new St.BoxLayout({style_class: 'clock-display-box'});
         box.add_actor(this._calendarDisplay);
         this.label_actor = this._calendarDisplay;
         this.add_actor(box);
         this.add_style_class_name('clock-display');
 
         let layout = new Clutter.BinLayout();
-        let bin = new St.Widget({ layout_manager: layout });
+        let bin = new St.Widget({layout_manager: layout});
         // For some minimal compatibility with PopupMenuItem
         bin._delegate = this;
         this.menu.box.add_child(bin);
 
-        hbox = new St.BoxLayout({ name: 'calendarArea' });
+        hbox = new St.BoxLayout({name: 'calendarArea'});
         bin.add_actor(hbox);
 
-        this._calendar = new Calendar();
+        this._calendar = new calendar.Calendar();
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
             let date = _gDateTimeToDate(datetime);
             this._eventsItem.setDate(date);
@@ -272,7 +270,7 @@ class DateMenuButton extends PanelMenu.Button {
         this.menu.connect('open-state-changed', (menu, isOpen) => {
             // Whenever the menu is opened, select today
             if (isOpen) {
-                let now = new PersianDate();
+                let now = new persianDate.PersianDate();
                 this._calendar.setDate(now);
                 this._date.setDate(now);
                 this._eventsItem.setDate(now);
@@ -315,25 +313,26 @@ class DateMenuButton extends PanelMenu.Button {
         this._clock = new GnomeDesktop.WallClock();
         this._clock.connect('notify::clock', this._updateCalendarDisplay.bind(this));
 
-        this._setEventSource(new EventSource());
+        this._setEventSource(new eventSource.EventSource());
     }
 
     _getEventSource() {
-        return new EventSource();
+        return new eventSource.EventSource();
     }
 
-    _setEventSource(eventSource) {
+    _setEventSource(_eventSource) {
         if (this._eventSource)
             this._eventSource.destroy();
 
-        this._calendar.setEventSource(eventSource);
-        this._eventsItem.setEventSource(eventSource);
+        this._calendar.setEventSource(_eventSource);
+        this._eventsItem.setEventSource(_eventSource);
 
-        this._eventSource = eventSource;
+        this._eventSource = _eventSource;
     }
+
     _updateCalendarDisplay() {
         let Display_Format = {day: 'numeric', month: 'long', year: 'numeric'};
-        let date = new PersianDate().toPersianString(Display_Format);
+        let date = new persianDate.PersianDate().toPersianString(Display_Format);
         this._calendarDisplay.set_text(date);
     }
 });

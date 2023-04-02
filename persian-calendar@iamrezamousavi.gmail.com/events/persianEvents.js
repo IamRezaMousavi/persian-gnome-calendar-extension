@@ -25,10 +25,11 @@ var PersianEvents = class PersianEvents extends CalendarEvents {
         this._events.set('11-22', [new CalendarEvent('پیروزی انقلاب اسلامی', true)]);
         this._events.set('12-29', [new CalendarEvent('روز ملی شدن صنعت نفت', true)]);
     }
+
     getEvents(day) {
-        let events = this._events.get(day.getPersianMonth() + '-' + day.getPersianDate());
-        if (events instanceof Array)
+        let events = this._events.get(`${day.getPersianMonth()}-${day.getPersianDate()}`);
+        if (Array.isArray(events))
             return events;
         return [];
     }
-}
+};

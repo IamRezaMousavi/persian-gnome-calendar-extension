@@ -41,9 +41,8 @@ function _julianDayToGregorian(julianDay) {
     if (days > 36524) {
         gY += 100 * ~~(--days / 36524);
         days %= 36524;
-        if (days >= 365) {
+        if (days >= 365)
             days++;
-        }
     }
     gY += 4 * ~~(days / 1461);
     days %= 1461;
@@ -53,9 +52,9 @@ function _julianDayToGregorian(julianDay) {
     }
     gD = days + 1;
     gDoM = [0, 31, (gY % 4 === 0 && gY % 100 !== 0) || (gY % 400 === 0) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    for (gM = 0; gM < 13 && gD > gDoM[gM]; gM++) {
+    for (gM = 0; gM < 13 && gD > gDoM[gM]; gM++)
         gD -= gDoM[gM];
-    }
+
 
     return [gY, gM, gD];
 }
@@ -72,9 +71,9 @@ function _julianDayToHijriA(julianDay) {
     tmp = julianDay - (1948439.5 + ((iy - 1) * 354) + ~~((3 + (11 * iy)) / 30));
     iy -= 990;
     im = ~~(((tmp - 29) / 29.5) + 1.99);
-    if (im > 12) {
+    if (im > 12)
         im = 12;
-    }
+
 
     id = 1 + tmp - ~~((29.5 * (im - 1)) + 0.5);
     return [iy, im, id];
@@ -82,44 +81,44 @@ function _julianDayToHijriA(julianDay) {
 
 function _hijriToJulianDay(iY, iM, iD) {
     const HILAL = _hilalIM(COUNTRY);
-    if (iY < HILAL.startYear || iY > HILAL.endYear) {
+    if (iY < HILAL.startYear || iY > HILAL.endYear)
         return _hijriAToJulianDay(iY, iM, iD);
-    }
+
 
     let julianDay = HILAL.startJD - 1 + iD;
-    for (let y in HILAL.iDoM) {
-        if (y < iY) {
+    for (let y in HILAL.iDoM)
+        if (y < iY)
             julianDay += HILAL.iDoM[y][0];
-        } else {
-            for (let m = 1; m < iM; m++) {
+        else {
+            for (let m = 1; m < iM; m++)
                 julianDay += HILAL.iDoM[iY][m];
-            }
+
 
             break;
         }
-    }
+
     return julianDay;
 }
 
 function _julianDayToHijri(julianDay) {
     const HILAL = _hilalIM(COUNTRY);
-    if (julianDay < HILAL.startJD || julianDay > HILAL.endJD) {
+    if (julianDay < HILAL.startJD || julianDay > HILAL.endJD)
         return _julianDayToHijriA(julianDay);
-    }
+
 
     let iM, iY;
     let iD = julianDay - HILAL.startJD + 1;
-    for (iY in HILAL.iDoM) {
-        if (iD > HILAL.iDoM[iY][0]) {
+    for (iY in HILAL.iDoM)
+        if (iD > HILAL.iDoM[iY][0])
             iD -= HILAL.iDoM[iY][0];
-        } else {
-            for (iM = 1; iM < 13 && iD > HILAL.iDoM[iY][iM]; iM++) {
+        else {
+            for (iM = 1; iM < 13 && iD > HILAL.iDoM[iY][iM]; iM++)
                 iD -= HILAL.iDoM[iY][iM];
-            }
+
 
             break;
         }
-    }
+
     return [Number(iY), iM, ~~iD];
 }
 
