@@ -101,11 +101,11 @@ var Calendar = GObject.registerClass({
         this._buildHeader();
     }
 
-    setEventSource(event_source) {
-        if (!(event_source instanceof EventSource))
+    setEventSource(_eventSource) {
+        if (!(_eventSource instanceof EventSource))
             throw new Error('Event source is not valid type');
 
-        this._eventSource = event_source;
+        this._eventSource = _eventSource;
         this._eventSource.connect('changed', () => {
             this._rebuildCalendar();
             this._update();
