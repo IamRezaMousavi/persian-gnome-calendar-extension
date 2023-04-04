@@ -1,14 +1,18 @@
-name: check-lint
+name: Check Lint
 
 on: [push, pull_request]
 
 jobs:
-  lints:
+  checks:
     runs-on: ubuntu-latest
+    
     steps:
-    - uses: actions/checkout@v3
-    - name: Install modules
+    - name: Checkout Code
+      uses: actions/checkout@v3
+    
+    - name: Install Modules
       run: npm install eslint
+    
     - name: Run Lint
       run: |
         ./node_modules/.bin/eslint persian-calendar@iamrezamousavi.gmail.com
