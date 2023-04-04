@@ -21,7 +21,7 @@ jobs:
         with:
           type: 'zip'
           filename: 'release.zip'
-          exclusions: 'persian-calendar@iamrezamousavi.gmail.com/*'
+          path: './persian-calendar@iamrezamousavi.gmail.com/'
       
       - name: Create Release
         id: create_release
