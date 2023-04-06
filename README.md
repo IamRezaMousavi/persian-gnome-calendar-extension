@@ -16,7 +16,7 @@
   </p>
 </p>
 
-![Downloads](https://img.shields.io/github/downloads/IamRezaMousavi/persian-gnome-calendar-extension/total) ![Contributors](https://img.shields.io/github/contributors/IamRezaMousavi/persian-gnome-calendar-extension?color=dark-green) ![Issues](https://img.shields.io/github/issues/IamRezaMousavi/persian-gnome-calendar-extension) ![License](https://img.shields.io/github/license/IamRezaMousavi/persian-gnome-calendar-extension) 
+[![Check Lint](https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/actions/workflows/check-lint.yml/badge.svg)](https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/actions/workflows/check-lint.yml) ![Downloads](https://img.shields.io/github/downloads/IamRezaMousavi/persian-gnome-calendar-extension/total) ![Contributors](https://img.shields.io/github/contributors/IamRezaMousavi/persian-gnome-calendar-extension?color=dark-green) ![Issues](https://img.shields.io/github/issues/IamRezaMousavi/persian-gnome-calendar-extension) ![License](https://img.shields.io/github/license/IamRezaMousavi/persian-gnome-calendar-extension) 
 
 ## Table Of Contents
 
