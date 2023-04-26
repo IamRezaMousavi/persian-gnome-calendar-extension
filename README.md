@@ -24,7 +24,6 @@
 * [Getting Started](#getting-started)
   * [Installation](#installation)
 * [Roadmap](#roadmap)
-  * [ToDo](#todo)
 * [Contributing](#contributing)
 * [License](#license)
 * [Acknowledgements](#acknowledgements)
@@ -55,16 +54,6 @@ make install
 ## Roadmap
 
 See the [open issues](https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/issues) for a list of proposed features (and known issues).
-
-Or:
-
-### ToDo
-- [ ] change month with persian cal
-- [ ] send notif when today changed
-- [ ] add schema
-- [ ] add prefs
-- [ ] add some error handling
-- [ ] add custome persian fonts
 
 ## Contributing
 
