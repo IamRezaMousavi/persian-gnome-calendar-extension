@@ -20,7 +20,7 @@
 
 const GETTEXT_DOMAIN = 'my-indicator-extension';
 
-const {GObject, St} = imports.gi;
+const {GObject, Gio, St} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
@@ -46,16 +46,48 @@ class Extension {
 
     enable() {
         log(`enabling ${Me.metadata.name}`);
+
+        this.settings = ExtensionUtils.getSettings(
+            'org.gnome.shell.extensions.PersianCalendar');
+
         this._indicator = new Indicator();
-        Main.panel.addToStatusArea(this._uuid, this._indicator, 0, 'center');
+
+        this.settings.bind(
+            'show-indicator',
+            this._indicator,
+            'visible',
+            Gio.SettingsBindFlags.DEFAULT,
+        );
+
+        this.settings.connect('changed::position', () => {
+            this.disable();
+            this.enable();
+        });
+        this.settings.connect('changed::index', () => {
+            this.disable();
+            this.enable();
+        });
+
+        Main.panel.addToStatusArea(
+            this._uuid,
+            this._indicator,
+            this.settings.get_int('index'),
+            this.settings.get_string('position'),
+        );
     }
 
     disable() {
+        log(`disabling ${Me.metadata.name}`);
+
         this._indicator.destroy();
         this._indicator = null;
+
+        this.settings = null;
     }
 }
 
 function init(meta) {
+    log(`initializing ${Me.metadata.name}`);
+
     return new Extension(meta.uuid);
 }

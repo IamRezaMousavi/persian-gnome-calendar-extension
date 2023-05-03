@@ -1,8 +1,10 @@
 UUID := persian-calendar@iamrezamousavi.gmail.com
 EXTENSION_PATH := ~/.local/share/gnome-shell/extensions
 
+build:
+	glib-compile-schemas $(UUID)/schemas/
 
-install:
+install: build
 	mkdir -p $(EXTENSION_PATH)
 	cp -r $(UUID)/ $(EXTENSION_PATH)/
 

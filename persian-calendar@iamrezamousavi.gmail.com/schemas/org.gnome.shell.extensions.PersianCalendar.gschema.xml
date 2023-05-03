@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.PersianCalendar" path="/org/gnome/shell/extensions/PersianCalendar/">
+    <key name="show-indicator" type="b">
+      <default>true</default>
+    </key>
+    <key name="position" type="s">
+			<default>"center"</default>
+			<summary>Indicator position in top panel</summary>
+		</key>
+    <key name="index" type="i">
+      <default>0</default>
+      <summary>Indicator position in selected area</summary>
+    </key>
+  </schema>
+</schemalist>
