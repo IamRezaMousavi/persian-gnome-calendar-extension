@@ -7,7 +7,7 @@
   <h3 align="center">Persian Gnome Calendar Extension</h3>
 
   <p align="center">
-    Fork of Gnome Calendar with Persian taste!
+    Fork of Gnome Calendar extension with Persian taste!
     <br/>
     <br/>
     <a href="https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/issues">Report Bug</a>

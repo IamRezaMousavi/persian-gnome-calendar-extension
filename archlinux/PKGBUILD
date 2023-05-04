@@ -1,0 +1,32 @@
+# Maintainer: Reza Mousavi <iamrezamousavi@gmail.com>
+pkgname=gnome-shell-extension-persian-calendar
+pkgver=2
+pkgrel=1
+pkgdesc="Fork of Gnome Calendar extension with Persian taste"
+arch=('any')
+url="https://github.com/IamRezaMousavi/persian-gnome-calendar-extension"
+license=('GPL3')
+depends=('gnome-shell>=43')
+makedepends=('git')
+
+_gitroot="https://github.com/IamRezaMousavi/persian-gnome-calendar-extension.git"
+_gitname="persian-gnome-calendar-extension"
+
+build() {
+    cd ${srcdir}/
+    msg "Connecting to the GIT server..."
+    if [[ -d ${srcdir}/${_gitname} ]] ; then
+	    cd ${_gitname}
+        git pull origin
+        msg "The local files are updated..."
+    else
+        git clone ${_gitroot} ${_gitname}
+    fi
+    msg "GIT checkout done."
+}
+
+package() {
+    cd "$srcdir/$_gitname"
+    mkdir -p "$pkgdir/usr/share/gnome-shell/extensions/"
+    cp -R "persian-calendar@iamrezamousavi.gmail.com" "$pkgdir/usr/share/gnome-shell/extensions"
+}
