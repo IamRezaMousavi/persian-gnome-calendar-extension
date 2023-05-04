@@ -45,8 +45,6 @@ class Extension {
     }
 
     enable() {
-        log(`enabling ${Me.metadata.name}`);
-
         this.settings = ExtensionUtils.getSettings(
             'org.gnome.shell.extensions.PersianCalendar');
 
@@ -77,8 +75,6 @@ class Extension {
     }
 
     disable() {
-        log(`disabling ${Me.metadata.name}`);
-
         this._indicator.destroy();
         this._indicator = null;
 
@@ -87,7 +83,5 @@ class Extension {
 }
 
 function init(meta) {
-    log(`initializing ${Me.metadata.name}`);
-
     return new Extension(meta.uuid);
 }
