@@ -48,7 +48,7 @@ class Extension {
         this.settings = ExtensionUtils.getSettings(
             'org.gnome.shell.extensions.PersianCalendar');
 
-        this._indicator = new Indicator();
+        this._indicator = new Indicator(this.settings);
 
         this.settings.bind(
             'show-indicator',
@@ -62,6 +62,11 @@ class Extension {
             this.enable();
         });
         this.settings.connect('changed::index', () => {
+            this.disable();
+            this.enable();
+        });
+
+        this.settings.connect('changed::panel-format', () => {
             this.disable();
             this.enable();
         });

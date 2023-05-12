@@ -62,6 +62,17 @@ function fillPreferencesWindow(window) {
     pos_row.add_suffix(pos);
     pos_row.add_suffix(item);
 
+    const format_row = new Adw.ActionRow({title: 'Panel Date Format'});
+    group.add(format_row);
+
+    const format = new Gtk.Entry();
+    format.set_text(settings.get_string('panel-format'));
+    format.connect('changed', innerFormat => {
+        settings.set_string('panel-format', innerFormat.text);
+    });
+    format_row.add_suffix(format);
+
+
     // Add our page to the window
     window.add(page);
 }

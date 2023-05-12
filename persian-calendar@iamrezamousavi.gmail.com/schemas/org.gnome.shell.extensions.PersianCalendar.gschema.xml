@@ -12,5 +12,9 @@
       <default>0</default>
       <summary>Indicator position in selected area</summary>
     </key>
+    <key name="panel-format" type="s">
+      <default>"yyyy mmmm d"</default>
+      <summary>Panel date format</summary>
+    </key>
   </schema>
 </schemalist>

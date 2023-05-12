@@ -13,7 +13,8 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const _ = ExtensionUtils.gettext;
 
 const Me = ExtensionUtils.getCurrentExtension();
-const {calendar, persianDate, eventSource} = Me.imports;
+const {calendar, persianDate, utils, eventSource} = Me.imports;
+const {dateformat, numbers} = utils;
 
 function _isToday(date) {
     let now = new persianDate.PersianDate();
@@ -154,7 +155,7 @@ class EventsSection extends St.Button {
             this._title.text = _('دیروز');
         else if (this._startDate > now && this._startDate - now <= timeSpanDay)
             this._title.text = _('فردا');
-        else if (this._startDate.getPersianYear() === now.getPersianYear())
+        else if (this._startDate.getPersianFullYear() === now.getPersianFullYear())
             this._title.text = this._startDate.toPersianString(sameYearFormat);
         else
             this._title.text = this._startDate.toPersianString(otherYearFormat);
@@ -236,7 +237,8 @@ class CalendarColumnLayout extends Clutter.BoxLayout {
 
 var DateMenuButton = GObject.registerClass(
 class DateMenuButton extends PanelMenu.Button {
-    _init() {
+    _init(settings) {
+        this.settings = settings;
         let hbox;
 
         super._init(0.5);
@@ -331,8 +333,10 @@ class DateMenuButton extends PanelMenu.Button {
     }
 
     _updateCalendarDisplay() {
-        let Display_Format = {day: 'numeric', month: 'long', year: 'numeric'};
-        let date = new persianDate.PersianDate().toPersianString(Display_Format);
-        this._calendarDisplay.set_text(date);
+        let Display_Format = this.settings.get_string('panel-format');
+        let date = new persianDate.PersianDate();
+        this._calendarDisplay.set_text(
+            dateformat.dateFormat(date, Display_Format),
+        );
     }
 });

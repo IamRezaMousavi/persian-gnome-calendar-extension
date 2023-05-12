@@ -16,7 +16,7 @@ var SHOW_WEEKDATE_KEY = 'show-weekdate';
 var NC_ = (context, str) => `${context}\u0004${str}`;
 
 function sameYear(dateA, dateB) {
-    return dateA.getPersianYear() === dateB.getPersianYear();
+    return dateA.getPersianFullYear() === dateB.getPersianFullYear();
 }
 
 function sameMonth(dateA, dateB) {
@@ -289,7 +289,7 @@ var Calendar = GObject.registerClass({
         // all months at the end have 6 weeks.
         let beginDate = new PersianDate(this._selectedDate);
         beginDate.setPersianDate(
-            this._selectedDate.getPersianYear(),
+            this._selectedDate.getPersianFullYear(),
             this._selectedDate.getPersianMonth(),
             1,
         );

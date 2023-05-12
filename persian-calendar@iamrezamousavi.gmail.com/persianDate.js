@@ -10,16 +10,16 @@ var PersianDate = class PersianDate extends Date {
         this._createPersianDate();
     }
 
-    getPersianYear() {
-        return this.pDate.year;
+    getPersianDate() {
+        return this.pDate.day;
     }
 
     getPersianMonth() {
         return this.pDate.month;
     }
 
-    getPersianDate() {
-        return this.pDate.day;
+    getPersianFullYear() {
+        return this.pDate.year;
     }
 
     _createPersianDate() {
