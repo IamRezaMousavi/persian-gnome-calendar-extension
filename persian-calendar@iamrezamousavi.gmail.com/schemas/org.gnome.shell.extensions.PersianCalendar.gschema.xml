@@ -16,5 +16,9 @@
       <default>"yyyy mmmm d"</default>
       <summary>Panel date format</summary>
     </key>
+    <key name="number-to-persian" type="b">
+      <default>true</default>
+      <summary>Use persian digit in top panel</summary>
+    </key>
   </schema>
 </schemalist>

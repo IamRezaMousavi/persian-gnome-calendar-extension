@@ -71,6 +71,11 @@ class Extension {
             this.enable();
         });
 
+        this.settings.connect('changed::number-to-persian', () => {
+            this.disable();
+            this.enable();
+        });
+
         Main.panel.addToStatusArea(
             this._uuid,
             this._indicator,

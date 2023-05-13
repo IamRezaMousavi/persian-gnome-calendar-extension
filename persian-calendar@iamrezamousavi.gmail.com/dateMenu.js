@@ -334,9 +334,14 @@ class DateMenuButton extends PanelMenu.Button {
 
     _updateCalendarDisplay() {
         let Display_Format = this.settings.get_string('panel-format');
+        let usePersianDigit = this.settings.get_boolean('number-to-persian');
         let date = new persianDate.PersianDate();
         this._calendarDisplay.set_text(
-            dateformat.dateFormat(date, Display_Format),
+
+            usePersianDigit
+                ? numbers.toPersianDigit(dateformat.dateFormat(date, Display_Format))
+                : dateformat.dateFormat(date, Display_Format),
+
         );
     }
 });

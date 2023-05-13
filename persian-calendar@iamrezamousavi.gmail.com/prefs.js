@@ -72,6 +72,22 @@ function fillPreferencesWindow(window) {
     });
     format_row.add_suffix(format);
 
+    const toPersian_row = new Adw.ActionRow({title: 'Use Persian Digit'});
+    group.add(toPersian_row);
+
+    const toPersian = new Gtk.Switch({
+        active: settings.get_boolean('number-to-persian'),
+        valign: Gtk.Align.CENTER,
+    });
+    settings.bind(
+        'number-to-persian',
+        toPersian,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT,
+    );
+    toPersian_row.add_suffix(toPersian);
+    toPersian_row.activatable_widget = toPersian;
+
 
     // Add our page to the window
     window.add(page);
