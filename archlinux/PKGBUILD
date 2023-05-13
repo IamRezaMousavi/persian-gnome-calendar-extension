@@ -1,6 +1,6 @@
 # Maintainer: Reza Mousavi <iamrezamousavi@gmail.com>
 pkgname=gnome-shell-extension-persian-calendar
-pkgver=2
+pkgver=5
 pkgrel=1
 pkgdesc="Fork of Gnome Calendar extension with Persian taste"
 arch=('any')
