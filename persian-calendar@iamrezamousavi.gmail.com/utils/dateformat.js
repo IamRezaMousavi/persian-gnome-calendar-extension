@@ -286,8 +286,7 @@ function dateFormat(date, mask) {
         utc = true;
         if (maskSlice === 'GMT:')
             gmt = true;
-    }
-    else
+    } else
         isPersian = true;
 
     const _ = () => utc ? 'getUTC' : 'get';
