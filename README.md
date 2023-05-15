@@ -4,9 +4,9 @@
     <img src="https://raw.githubusercontent.com/andyholmes/gnome-shell-extensions-badge/master/get-it-on-ego.svg?sanitize=true" alt="Get it on GNOME Extensions" height="100">
   </a>
 
-  <h3 align="center">Persian Gnome Calendar Extension</h3>
+<h3 align="center">Persian Gnome Calendar Extension</h3>
 
-  <p align="center">
+<p align="center">
     Fork of Gnome Calendar extension with Persian taste!
     <br/>
     <br/>
@@ -53,6 +53,7 @@ make install
 ```
 
 ### More Settings
+
 #### Mask options
 
 | Mask             | Description                                                                                                                                                   |
@@ -92,6 +93,7 @@ make install
 | `Z`              | US timezone abbreviation, e.g. EST or MDT. For non-US timezones, the GMT/UTC offset is returned, e.g. GMT-0500                                                |
 | `'...'`, `"..."` | Literal character sequence. Surrounding quotes are removed.                                                                                                   |
 | `UTC:`           | Must be the first four characters of the mask. Converts the date from local time to UTC/GMT/Zulu time before applying the mask. The "UTC:" prefix is removed. |
+| `GMT:`           | Must be the first four characters of the mask. Converts the date from Persian date to GMT date before applying the mask. The "GMT:" prefix is removed.        |
 
 #### Named Formats
 
