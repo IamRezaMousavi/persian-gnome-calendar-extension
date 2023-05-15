@@ -280,11 +280,14 @@ function dateFormat(date, mask) {
     let utc = false, gmt = false;
     const maskSlice = mask.slice(0, 4);
     if (maskSlice === 'UTC:' || maskSlice === 'GMT:') {
+        isPersian = false;
         mask = mask.slice(4);
         utc = true;
         if (maskSlice === 'GMT:')
             gmt = true;
     }
+    else
+        isPersian = true;
 
     const _ = () => utc ? 'getUTC' : 'get';
     const D = () => date[`${_()}Day`]();
