@@ -8,3 +8,8 @@ tmp/
 node_modules/
 package*.json
 
+# Zip file
+*.zip
+
+# Compiled GSchemas
+gschemas.compiled
