@@ -6,4 +6,7 @@ node_modules/
 package*.json
 
 # Zip file
-gnome-shell-extension-persian-calendar-rezamousavi.zip
+*.zip
+
+# Compiled GSchemas
+gschemas.compiled

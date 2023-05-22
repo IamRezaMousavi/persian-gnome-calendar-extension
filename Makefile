@@ -1,5 +1,6 @@
 PKG_NAME = gnome-shell-extension-persian-calendar-rezamousavi
 UUID = persian-calendar@iamrezamousavi.gmail.com
+ZIPVER = $(shell cat $(UUID)/metadata.json | sed '/"version"/!d' | sed s/\"version\"://g | sed s/\ //g)
 
 # Packagers: Use DESTDIR for system wide installation
 ifeq ($(strip $(DESTDIR)),)
@@ -40,8 +41,8 @@ endif
 
 zip-file: _build
 	cd _build ; \
-	zip -qr "$(PKG_NAME).zip" .
-	mv _build/$(PKG_NAME).zip ./
+	zip -qr "$(PKG_NAME)-v$(ZIPVER).zip" .
+	mv _build/$(PKG_NAME)-v$(ZIPVER).zip ./
 	-rm -fR _build
 
 _build: all
