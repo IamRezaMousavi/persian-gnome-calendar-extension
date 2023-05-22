@@ -311,7 +311,7 @@ var Calendar = GObject.registerClass({
         while (row < nRows) {
             let button = new St.Button({
                 // xgettext:no-javascript-format
-                label: iter.getPersianDate().toString(),
+                label: iter.getPersianDate().toString().replace(/\d/g, x => _(x)),
                 can_focus: true,
             });
             let rtl = button.get_text_direction() === Clutter.TextDirection.RTL;

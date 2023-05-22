@@ -1,6 +1,10 @@
 # temp directory
 tmp/
 
+# Locale binary files
+*.mo
+
 # ESLint Dependency directories
 node_modules/
 package*.json
+

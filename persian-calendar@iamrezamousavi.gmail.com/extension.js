@@ -18,8 +18,6 @@
 
 /* exported init */
 
-const GETTEXT_DOMAIN = 'my-indicator-extension';
-
 const {GObject, Gio, St} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
@@ -41,7 +39,7 @@ class Extension {
     constructor(uuid) {
         this._uuid = uuid;
 
-        ExtensionUtils.initTranslations(GETTEXT_DOMAIN);
+        ExtensionUtils.initTranslations(Me.metadata.uuid);
     }
 
     enable() {
