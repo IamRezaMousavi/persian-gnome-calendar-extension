@@ -8,5 +8,5 @@
   "url": "https://github.com/IamRezaMousavi/persian-gnome-calendar-extension",
   "uuid": "persian-calendar@iamrezamousavi.gmail.com",
   "settings-schema": "org.gnome.shell.extensions.PersianCalendar",
-  "version": 8
+  "version": 9
 }
