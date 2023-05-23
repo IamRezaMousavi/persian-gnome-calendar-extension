@@ -1,5 +1,10 @@
+PKG_NAME = persiangnomecalendar
 UUID = persian-calendar@iamrezamousavi.gmail.com
 VERSION = $(shell git describe --tags)
+TOLOCALIZE = $(wildcard $(UUID)/*js) \
+             $(wildcard $(UUID)/utils/*.js) \
+             $(UUID)/schemas/org.gnome.shell.extensions.PersianCalendar.gschema.xml
+MSGSRC = $(wildcard $(UUID)/po/*.po)
 
 # Packagers: Use DESTDIR for system wide installation
 ifeq ($(strip $(DESTDIR)),)
@@ -11,21 +16,32 @@ else
 	INSTALLBASE = $(SHARE_PREFIX)/gnome-shell/extensions
 endif
 
-.PHONY: all clean extension install install-local zip-file
+.PHONY: all clean extension potfile mergepo install install-local zip-file
 
-all: extension locale
+all: extension
 
-extension: ./$(UUID)/schemas/gschemas.compiled
+clean:
+	rm -f ./$(UUID)/schemas/gschemas.compiled
+	rm -f ./$(UUID)/po/*.mo
+
+extension: ./$(UUID)/schemas/gschemas.compiled $(MSGSRC:.po=.mo)
 
 ./$(UUID)/schemas/gschemas.compiled: ./$(UUID)/schemas/org.gnome.shell.extensions.PersianCalendar.gschema.xml
 	glib-compile-schemas ./$(UUID)/schemas/
 
-locale: trans-fa-compile
+potfile: ./$(UUID)/po/persiangnomecalendar.pot
 
-trans-fa-compile: $(UUID)/locale/fa/LC_MESSAGES/persiangnomecalendar.po
-	cd $(UUID)/locale/fa/LC_MESSAGES ; \
-	msgfmt persiangnomecalendar.po --output=$(UUID).mo
+mergepo: potfile
+	for l in $(MSGSRC); do \
+		msgmerge -U $$l ./$(UUID)/po/persiangnomecalendar.pot; \
+	done;
 
+./$(UUID)/po/persiangnomecalendar.pot: $(TOLOCALIZE)
+	mkdir -p po
+	xgettext -k_ -kN_ --from-code utf-8 -o po/persiangnomecalendar.pot --package-name $(PKG_NAME) $(TOLOCALIZE)
+
+./$(UUID)/po/%.mo: ./$(UUID)/po/%.po
+	msgfmt -c $< -o $@
 
 install: install-local
 
@@ -35,18 +51,14 @@ install-local: _build
 	cp -r ./_build/* $(INSTALLBASE)/$(UUID)/
 ifeq ($(INSTALLTYPE),system)
 	# system-wide settings and locale files
-	rm -r  $(addprefix $(INSTALLBASE)/$(UUID)/, schemas)
+	rm -r  $(addprefix $(INSTALLBASE)/$(UUID)/, schemas locale)
 	mkdir -p $(SHARE_PREFIX)/glib-2.0/schemas \
+		$(SHARE_PREFIX)/locale
 	cp -r ./$(UUID)/schemas/*gschema.xml $(SHARE_PREFIX)/glib-2.0/schemas
+	cp -r ./_build/locale/* $(SHARE_PREFIX)/locale
 endif
 	-rm -fR _build
 	echo done
-
-_build: all
-	-rm -fR ./_build
-	mkdir -p _build
-	cp -r $(UUID)/* _build
-	rm -f _build/locale/fa/LC_MESSAGES/*.po _build/locale/*.pot
 
 zip-file: _build
 	cd _build ; \
@@ -54,9 +66,18 @@ zip-file: _build
 	mv _build/$(UUID)-v$(VERSION).zip ./
 	-rm -fR _build
 
-clean:
-	rm -f ./$(UUID)/schemas/gschemas.compiled
-	rm -f ./$(UUID)/locale/fa/LC_MESSAGES/$(UUID).mo
+_build: all
+	-rm -fR ./_build
+	mkdir -p _build
+	cp -r $(UUID)/* _build
+	mkdir -p _build/locale
+	for l in $(MSGSRC:.po=.mo) ; do \
+		lf=_build/locale/`basename $$l .mo`; \
+		mkdir -p $$lf; \
+		mkdir -p $$lf/LC_MESSAGES; \
+		cp $$l $$lf/LC_MESSAGES/$(PKG_NAME).mo; \
+	done;
+	-rm -fR _build/po
 
 remove:
 	rm -rf $(INSTALLBASE)/$(UUID)
@@ -68,11 +89,3 @@ taillog:
 
 eslint:
 	./node_modules/.bin/eslint persian-calendar@iamrezamousavi.gmail.com
-
-trans-scan:
-	mkdir -p $(UUID)/locale
-	xgettext --add-comments --from-code=UTF-8 --output=$(UUID)/locale/persiangnomecalendar.pot $(UUID)/*js $(UUID)/utils/*.js
-
-trans-fa: $(UUID)/locale/persiangnomecalendar.pot
-	mkdir -p $(UUID)/locale/fa/LC_MESSAGES
-	msginit --locale fa --input $(UUID)/locale/persiangnomecalendar.pot --output $(UUID)/locale/fa/LC_MESSAGES/persiangnomecalendar.po
