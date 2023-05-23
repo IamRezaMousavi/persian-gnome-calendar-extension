@@ -13,3 +13,6 @@ package*.json
 
 # Compiled GSchemas
 gschemas.compiled
+
+# Compiled l10n files
+*.mo
