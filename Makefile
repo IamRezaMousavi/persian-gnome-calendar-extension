@@ -75,7 +75,7 @@ _build: all
 		lf=_build/locale/`basename $$l .mo`; \
 		mkdir -p $$lf; \
 		mkdir -p $$lf/LC_MESSAGES; \
-		cp $$l $$lf/LC_MESSAGES/$(PKG_NAME).mo; \
+		cp $$l $$lf/LC_MESSAGES/$(UUID).mo; \
 	done;
 	-rm -fR _build/po
 
