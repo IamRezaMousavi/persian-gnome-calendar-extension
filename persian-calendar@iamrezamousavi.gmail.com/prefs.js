@@ -88,6 +88,71 @@ function fillPreferencesWindow(window) {
     toPersian_row.add_suffix(toPersian);
     toPersian_row.activatable_widget = toPersian;
 
+    // Event Switchs
+    const gevents_row = new Adw.ActionRow({title: 'Show Gregorian Events'});
+    group.add(gevents_row);
+
+    const gEvents = new Gtk.Switch({
+        active: settings.get_boolean('gevents-active'),
+        valign: Gtk.Align.CENTER,
+    });
+    settings.bind(
+        'gevents-active',
+        gEvents,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT,
+    );
+    gevents_row.add_suffix(gEvents);
+    gevents_row.activatable_widget = gEvents;
+
+    const pevent_row = new Adw.ActionRow({title: 'Show Persian Events'});
+    group.add(pevent_row);
+
+    const pEvents = new Gtk.Switch({
+        active: settings.get_boolean('pevents-active'),
+        valign: Gtk.Align.CENTER,
+    });
+    settings.bind(
+        'pevents-active',
+        pEvents,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT,
+    );
+    pevent_row.add_suffix(pEvents);
+    pevent_row.activatable_widget = pEvents;
+
+    const hevents_row = new Adw.ActionRow({title: 'Show Hijri Events'});
+    group.add(hevents_row);
+
+    const hEvents = new Gtk.Switch({
+        active: settings.get_boolean('hevents-active'),
+        valign: Gtk.Align.CENTER,
+    });
+    settings.bind(
+        'hevents-active',
+        hEvents,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT,
+    );
+    hevents_row.add_suffix(hEvents);
+    hevents_row.activatable_widget = hEvents;
+
+    const unoffevent_row = new Adw.ActionRow({title: 'Show Unofficial World Events'});
+    group.add(unoffevent_row);
+
+    const unoffiEvents = new Gtk.Switch({
+        active: settings.get_boolean('unoffevents-active'),
+        valign: Gtk.Align.CENTER,
+    });
+    settings.bind(
+        'unoffevents-active',
+        unoffiEvents,
+        'active',
+        Gio.SettingsBindFlags.DEFAULT,
+    );
+    unoffevent_row.add_suffix(unoffiEvents);
+    unoffevent_row.activatable_widget = unoffiEvents;
+
 
     // Add our page to the window
     window.add(page);

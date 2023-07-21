@@ -25,7 +25,7 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('8-20', [new CalendarEvent('روز جهانی پشه', false)]);
         this._events.set('9-2', [
             new CalendarEvent('روز جهانی ریش', false),
-            new CalendarEvent('روز جهانی نارگیل', false)
+            new CalendarEvent('روز جهانی نارگیل', false),
         ]);
         this._events.set('9-9', [new CalendarEvent('روز جهانی سودوکو', false)]);
         this._events.set('9-13', [new CalendarEvent('روز جهانی برنامه‌نویسان', false)]);
@@ -34,7 +34,7 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('9-23', [new CalendarEvent('روز جهانی زبان اشاره', false)]);
         this._events.set('9-24', [
             new CalendarEvent('روز جهانی بالیوود', false),
-            new CalendarEvent('روز جهانی رودخانه‌ها', false)
+            new CalendarEvent('روز جهانی رودخانه‌ها', false),
         ]);
         this._events.set('9-29', [new CalendarEvent('روز جهانی نجوم', false)]);
         this._events.set('9-30', [new CalendarEvent('روز جهانی لباس توری', false)]);

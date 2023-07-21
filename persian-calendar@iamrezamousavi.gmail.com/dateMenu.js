@@ -315,7 +315,7 @@ class DateMenuButton extends PanelMenu.Button {
         this._clock = new GnomeDesktop.WallClock();
         this._clock.connect('notify::clock', this._updateCalendarDisplay.bind(this));
 
-        this._setEventSource(new eventSource.EventSource());
+        this._setEventSource(new eventSource.EventSource(this.settings));
     }
 
     _getEventSource() {

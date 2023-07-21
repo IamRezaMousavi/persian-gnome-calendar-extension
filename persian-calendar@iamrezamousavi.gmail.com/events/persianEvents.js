@@ -25,7 +25,7 @@ var PersianEvents = class PersianEvents extends CalendarEvents {
         this._events.set('2-1', [new CalendarEvent('روز بزرگداشت سعدی', false)]);
         this._events.set('2-3', [
             new CalendarEvent('روز بزرگداشت شیخ بهایی', false),
-            new CalendarEvent('روز معماری', false)
+            new CalendarEvent('روز معماری', false),
         ]);
         this._events.set('2-7', [new CalendarEvent('روز ایمنی حمل و نقل', false)]);
         this._events.set('2-9', [new CalendarEvent('روز شوراها', false)]);
@@ -39,7 +39,7 @@ var PersianEvents = class PersianEvents extends CalendarEvents {
         this._events.set('2-31', [new CalendarEvent('روز اهدای عضو، اهدای زندگی', false)]);
         this._events.set('3-1', [
             new CalendarEvent('روز بهره‌وری و بهینه‌سازی مصرف', false),
-            new CalendarEvent('روز بزرگداشت ملاصدرا', false)
+            new CalendarEvent('روز بزرگداشت ملاصدرا', false),
         ]);
         this._events.set('3-8', [new CalendarEvent('روز فرهنگ پهلوانی و ورزش زورخانه‌ای', false)]);
         this._events.set('3-14', [new CalendarEvent('رحلت امام خمینی', true)]);
@@ -48,7 +48,7 @@ var PersianEvents = class PersianEvents extends CalendarEvents {
         this._events.set('3-29', [new CalendarEvent('درگذشت دکتر علی شریعتی', false)]);
         this._events.set('3-31', [
             new CalendarEvent('شهادت دکتر مصطفی چمران', false),
-            new CalendarEvent('روز بسیج استادان', false)
+            new CalendarEvent('روز بسیج استادان', false),
         ]);
         this._events.set('4-1', [new CalendarEvent('روز اصناف', false)]);
         this._events.set('4-7', [new CalendarEvent('روز قوه قضاییه', false)]);
@@ -67,28 +67,28 @@ var PersianEvents = class PersianEvents extends CalendarEvents {
         this._events.set('5-29', [new CalendarEvent('روز تجلیل از اسرا و مفقودان', false)]);
         this._events.set('5-30', [
             new CalendarEvent('روز بزرگداشت علامه مجلسی', false),
-            new CalendarEvent('روز جهانی مسجد', false)
+            new CalendarEvent('روز جهانی مسجد', false),
         ]);
         this._events.set('6-1', [
             new CalendarEvent('روز بزرگداشت ابوعلی سینا', false),
-            new CalendarEvent('روز پزشک', false)
+            new CalendarEvent('روز پزشک', false),
         ]);
         this._events.set('6-4', [new CalendarEvent('روز کارمند', false)]);
         this._events.set('6-5', [
             new CalendarEvent('روز بزرگداشت محمدبن‌زکریا رازی', false),
             new CalendarEvent('روز داروسازی', false),
-            new CalendarEvent('روز کشتی', false)
+            new CalendarEvent('روز کشتی', false),
         ]);
         this._events.set('6-8', [new CalendarEvent('روز مبارزه با تروریسم', false)]);
         this._events.set('6-13', [
             new CalendarEvent('روز بزرگداشت ابوریحان بیرونی', false),
-            new CalendarEvent('روز تعاون', false)
+            new CalendarEvent('روز تعاون', false),
         ]);
         this._events.set('6-21', [new CalendarEvent('روز سینما', false)]);
         this._events.set('6-23', [new CalendarEvent('روز بزرگداشت سلمان فارسی', false)]);
         this._events.set('6-27', [
             new CalendarEvent('روز بزرگداشت شهریار', false),
-            new CalendarEvent('روز شعر و ادب فارسی', false)
+            new CalendarEvent('روز شعر و ادب فارسی', false),
         ]);
         this._events.set('9-16', [new CalendarEvent('روز دانشجو', false)]);
         this._events.set('9-30', [new CalendarEvent('شب یلدا', false)]);
