@@ -7,6 +7,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const GregorianEvents = Me.imports.events.gregorianEvents.GregorianEvents;
 const PersianEvents = Me.imports.events.persianEvents.PersianEvents;
 const HijriEvents = Me.imports.events.hijriEvents.HijriEvents;
+const UnofficialWorldEvents = Me.imports.events.unofficialWorldEvents.GregorianEvents;
 
 
 // Interface for appointments/events - e.g. the contents of a calendar
@@ -19,6 +20,7 @@ var EventSource = GObject.registerClass({
         this._gregorianEvents = new GregorianEvents();
         this._persianEvents = new PersianEvents();
         this._hijriEvents = new HijriEvents();
+        this._unofficialWorldEvents = new UnofficialWorldEvents();
     }
 
     getEvents(_begin, _end) {
@@ -26,10 +28,12 @@ var EventSource = GObject.registerClass({
         let gEvents = this._gregorianEvents.getEvents(_begin);
         let pEvents = this._persianEvents.getEvents(_begin);
         let hEvents = this._hijriEvents.getEvents(_begin);
+        let unoffEvents = this._unofficialWorldEvents.getEvents(_begin);
 
         this._result = this._result.concat(hEvents);
         this._result = this._result.concat(pEvents);
         this._result = this._result.concat(gEvents);
+        this._result = this._result.concat(unoffEvents);
         return this._result;
     }
 

@@ -69,11 +69,11 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('5-18', [new CalendarEvent('روز جهانی موزه و میراث فرهنگی', false)]);
         this._events.set('5-21', [new CalendarEvent('روز جهانی تنوع فرهنگی برای گفتگو و توسعه', false)]);
         this._events.set('5-22', [new CalendarEvent('روز جهانی تنوع زیستی', false)]);
-        this._events.set('5-29', [new CalendarEvent('روز جهانی کلاه آبی‌های سازمان ملل', false)]);
+        this._events.set('5-29', [new CalendarEvent('روز جهانی کلاه‌آبی‌های سازمان ملل', false)]);
         this._events.set('5-31', [new CalendarEvent('روز جهانی بدون دخانیات', false)]);
         this._events.set('6-4', [new CalendarEvent('روز جهانی کودکان قربانی تجاوز', false)]);
         this._events.set('6-5', [new CalendarEvent('روز جهانی محیط زیست', false)]);
-        this._events.set('6-8', [new CalendarEvent('روز جهانی اقیانوس ها', false)]);
+        this._events.set('6-8', [new CalendarEvent('روز جهانی اقیانوس‌ها', false)]);
         this._events.set('6-10', [new CalendarEvent('روز جهانی صنایع دستی', false)]);
         this._events.set('6-12', [new CalendarEvent('روز جهانی مبارزه با کار کودکان', false)]);
         this._events.set('6-14', [new CalendarEvent('روز جهانی اهدای خون', false)]);
@@ -93,7 +93,6 @@ var GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('8-31', [new CalendarEvent('روز جهانی وبلاگ', false)]);
         this._events.set('9-8', [new CalendarEvent('روز جهانی سوادآموزی', false)]);
         this._events.set('9-10', [new CalendarEvent('روز جهانی پیشگیری از خودکشی', false)]);
-        this._events.set('9-13', [new CalendarEvent('روز جهانی برنامه‌نویسان', false)]);
         this._events.set('9-15', [new CalendarEvent('روز جهانی مردم سالاری', false)]);
         this._events.set('9-16', [new CalendarEvent('روز جهانی نگه‌داری از لایه ازن', false)]);
         this._events.set('9-20', [new CalendarEvent('روز جهانی ورزش دانشگاهی', false)]);
