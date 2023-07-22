@@ -20,19 +20,19 @@
       <default>true</default>
       <summary>Use persian digit in top panel</summary>
     </key>
-    <key name="gevents-active" type="b">
+    <key name="gregorian-events-active" type="b">
       <default>true</default>
       <summary>Show Gregorian Events</summary>
     </key>
-    <key name="pevents-active" type="b">
+    <key name="persian-events-active" type="b">
       <default>true</default>
       <summary>Show Persian Events</summary>
     </key>
-    <key name="hevents-active" type="b">
+    <key name="hijri-events-active" type="b">
       <default>true</default>
       <summary>Show Hijri Events</summary>
     </key>
-    <key name="unoffevents-active" type="b">
+    <key name="unofficial-events-active" type="b">
       <default>true</default>
       <summary>Show Unofficial World Events</summary>
     </key>

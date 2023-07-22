@@ -74,6 +74,26 @@ class Extension {
             this.enable();
         });
 
+        this.settings.connect('changed::gregorian-events-active', () => {
+            this.disable();
+            this.enable();
+        });
+
+        this.settings.connect('changed::persian-events-active', () => {
+            this.disable();
+            this.enable();
+        });
+
+        this.settings.connect('changed::hijri-events-active', () => {
+            this.disable();
+            this.enable();
+        });
+
+        this.settings.connect('changed::unofficial-events-active', () => {
+            this.disable();
+            this.enable();
+        });
+
         Main.panel.addToStatusArea(
             this._uuid,
             this._indicator,

@@ -27,60 +27,60 @@ var EventSource = GObject.registerClass({
     getEvents(_begin, _end) {
         this._result = [];
 
-        let geventsActive = this.settings.get_boolean('gevents-active');
-        if (geventsActive) {
-            let gEvents = this._gregorianEvents.getEvents(_begin);
-            this._result = this._result.concat(gEvents);
+        let gregorianEventsActive = this.settings.get_boolean('gregorian-events-active');
+        if (gregorianEventsActive) {
+            let gregorianEvents = this._gregorianEvents.getEvents(_begin);
+            this._result = this._result.concat(gregorianEvents);
         }
 
-        let peventsActive = this.settings.get_boolean('pevents-active');
-        if (peventsActive) {
-            let pEvents = this._persianEvents.getEvents(_begin);
-            this._result = this._result.concat(pEvents);
+        let persianEventsActive = this.settings.get_boolean('persian-events-active');
+        if (persianEventsActive) {
+            let persianEvents = this._persianEvents.getEvents(_begin);
+            this._result = this._result.concat(persianEvents);
         }
 
-        let heventsActive = this.settings.get_boolean('hevents-active');
-        if (heventsActive) {
-            let hEvents = this._hijriEvents.getEvents(_begin);
-            this._result = this._result.concat(hEvents);
+        let hijriEventsActive = this.settings.get_boolean('hijri-events-active');
+        if (hijriEventsActive) {
+            let hijriEvents = this._hijriEvents.getEvents(_begin);
+            this._result = this._result.concat(hijriEvents);
         }
 
-        let unoffeventsActive = this.settings.get_boolean('unoffevents-active');
-        if (unoffeventsActive) {
-            let unoffEvents = this._unofficialWorldEvents.getEvents(_begin);
-            this._result = this._result.concat(unoffEvents);
+        let unofficialEventsActive = this.settings.get_boolean('unofficial-events-active');
+        if (unofficialEventsActive) {
+            let unofficialEvents = this._unofficialWorldEvents.getEvents(_begin);
+            this._result = this._result.concat(unofficialEvents);
         }
 
         return this._result;
     }
 
     hasEvents(_day) {
-        let geventsActive = this.settings.get_boolean('gevents-active');
-        let peventsActive = this.settings.get_boolean('pevents-active');
-        let heventsActive = this.settings.get_boolean('hevents-active');
-        let unoffeventsActive = this.settings.get_boolean('unoffevents-active');
-        let n = 0;
-        if (geventsActive)
-            n += this._gregorianEvents.hasEvents(_day);
-        if (peventsActive)
-            n += this._persianEvents.hasEvents(_day);
-        if (heventsActive)
-            n += this._hijriEvents.hasEvents(_day);
-        if (unoffeventsActive)
-            n += this._unofficialWorldEvents.hasEvents(_day);
-        return n > 0;
+        let gregorianEventsActive = this.settings.get_boolean('gregorian-events-active');
+        let persianEventsActive = this.settings.get_boolean('persian-events-active');
+        let hijriEventsActive = this.settings.get_boolean('hijri-events-active');
+        let unofficialEventsActive = this.settings.get_boolean('unofficial-events-active');
+        let has = false;
+        if (gregorianEventsActive)
+            has = has || this._gregorianEvents.hasEvents(_day);
+        if (persianEventsActive)
+            has = has || this._persianEvents.hasEvents(_day);
+        if (hijriEventsActive)
+            has = has || this._hijriEvents.hasEvents(_day);
+        if (unofficialEventsActive)
+            has = has || this._unofficialWorldEvents.hasEvents(_day);
+        return has;
     }
 
     isHoliday(_day) {
         let answer = false;
-        let geventsActive = this.settings.get_boolean('gevents-active');
-        let peventsActive = this.settings.get_boolean('pevents-active');
-        let heventsActive = this.settings.get_boolean('hevents-active');
-        if (geventsActive)
+        let gregorianEventsActive = this.settings.get_boolean('gregorian-events-active');
+        let persianEventsActive = this.settings.get_boolean('persian-events-active');
+        let hijriEventsActive = this.settings.get_boolean('hijri-events-active');
+        if (gregorianEventsActive)
             answer = answer || this._gregorianEvents.isHoliday(_day);
-        if (peventsActive)
+        if (persianEventsActive)
             answer = answer || this._persianEvents.isHoliday(_day);
-        if (heventsActive)
+        if (hijriEventsActive)
             answer = answer || this._hijriEvents.isHoliday(_day);
         return answer;
     }

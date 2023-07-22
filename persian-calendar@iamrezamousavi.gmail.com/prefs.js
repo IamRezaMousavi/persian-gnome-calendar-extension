@@ -89,69 +89,69 @@ function fillPreferencesWindow(window) {
     toPersian_row.activatable_widget = toPersian;
 
     // Event Switchs
-    const gevents_row = new Adw.ActionRow({title: 'Show Gregorian Events'});
-    group.add(gevents_row);
+    const gregorian_events_row = new Adw.ActionRow({title: 'Show Gregorian Events'});
+    group.add(gregorian_events_row);
 
-    const gEvents = new Gtk.Switch({
-        active: settings.get_boolean('gevents-active'),
+    const gregorianEvents = new Gtk.Switch({
+        active: settings.get_boolean('gregorian-events-active'),
         valign: Gtk.Align.CENTER,
     });
     settings.bind(
-        'gevents-active',
-        gEvents,
+        'gregorian-events-active',
+        gregorianEvents,
         'active',
         Gio.SettingsBindFlags.DEFAULT,
     );
-    gevents_row.add_suffix(gEvents);
-    gevents_row.activatable_widget = gEvents;
+    gregorian_events_row.add_suffix(gregorianEvents);
+    gregorian_events_row.activatable_widget = gregorianEvents;
 
-    const pevent_row = new Adw.ActionRow({title: 'Show Persian Events'});
-    group.add(pevent_row);
+    const persian_event_row = new Adw.ActionRow({title: 'Show Persian Events'});
+    group.add(persian_event_row);
 
-    const pEvents = new Gtk.Switch({
-        active: settings.get_boolean('pevents-active'),
+    const persianEvents = new Gtk.Switch({
+        active: settings.get_boolean('persian-events-active'),
         valign: Gtk.Align.CENTER,
     });
     settings.bind(
-        'pevents-active',
-        pEvents,
+        'persian-events-active',
+        persianEvents,
         'active',
         Gio.SettingsBindFlags.DEFAULT,
     );
-    pevent_row.add_suffix(pEvents);
-    pevent_row.activatable_widget = pEvents;
+    persian_event_row.add_suffix(persianEvents);
+    persian_event_row.activatable_widget = persianEvents;
 
-    const hevents_row = new Adw.ActionRow({title: 'Show Hijri Events'});
-    group.add(hevents_row);
+    const hijri_events_row = new Adw.ActionRow({title: 'Show Hijri Events'});
+    group.add(hijri_events_row);
 
-    const hEvents = new Gtk.Switch({
-        active: settings.get_boolean('hevents-active'),
+    const hijriEvents = new Gtk.Switch({
+        active: settings.get_boolean('hijri-events-active'),
         valign: Gtk.Align.CENTER,
     });
     settings.bind(
-        'hevents-active',
-        hEvents,
+        'hijri-events-active',
+        hijriEvents,
         'active',
         Gio.SettingsBindFlags.DEFAULT,
     );
-    hevents_row.add_suffix(hEvents);
-    hevents_row.activatable_widget = hEvents;
+    hijri_events_row.add_suffix(hijriEvents);
+    hijri_events_row.activatable_widget = hijriEvents;
 
-    const unoffevent_row = new Adw.ActionRow({title: 'Show Unofficial World Events'});
-    group.add(unoffevent_row);
+    const unofficial_event_row = new Adw.ActionRow({title: 'Show Unofficial World Events'});
+    group.add(unofficial_event_row);
 
-    const unoffiEvents = new Gtk.Switch({
-        active: settings.get_boolean('unoffevents-active'),
+    const unofficialEvents = new Gtk.Switch({
+        active: settings.get_boolean('unofficial-events-active'),
         valign: Gtk.Align.CENTER,
     });
     settings.bind(
-        'unoffevents-active',
-        unoffiEvents,
+        'unofficial-events-active',
+        unofficialEvents,
         'active',
         Gio.SettingsBindFlags.DEFAULT,
     );
-    unoffevent_row.add_suffix(unoffiEvents);
-    unoffevent_row.activatable_widget = unoffiEvents;
+    unofficial_event_row.add_suffix(unofficialEvents);
+    unofficial_event_row.activatable_widget = unofficialEvents;
 
 
     // Add our page to the window
