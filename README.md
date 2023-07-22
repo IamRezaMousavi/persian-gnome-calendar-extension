@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD041 -->
 <br/>
 <p align="center">
   <a href="https://extensions.gnome.org/extension/5814/persian-calendar/">
@@ -16,7 +18,7 @@
   </p>
 </p>
 
-[![Check Lint](https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/actions/workflows/check-lint.yml/badge.svg)](https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/actions/workflows/check-lint.yml) ![Downloads](https://img.shields.io/github/downloads/IamRezaMousavi/persian-gnome-calendar-extension/total) ![Contributors](https://img.shields.io/github/contributors/IamRezaMousavi/persian-gnome-calendar-extension?color=dark-green) ![Issues](https://img.shields.io/github/issues/IamRezaMousavi/persian-gnome-calendar-extension) ![License](https://img.shields.io/github/license/IamRezaMousavi/persian-gnome-calendar-extension) 
+[![Check Lint](https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/actions/workflows/check-lint.yml/badge.svg)](https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/actions/workflows/check-lint.yml) ![Downloads](https://img.shields.io/github/downloads/IamRezaMousavi/persian-gnome-calendar-extension/total) ![Contributors](https://img.shields.io/github/contributors/IamRezaMousavi/persian-gnome-calendar-extension?color=dark-green) ![Issues](https://img.shields.io/github/issues/IamRezaMousavi/persian-gnome-calendar-extension) ![License](https://img.shields.io/github/license/IamRezaMousavi/persian-gnome-calendar-extension)
 
 ## Table Of Contents
 
@@ -42,15 +44,15 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo
 
-```bash
-git clone https://github.com/IamRezaMousavi/persian-gnome-calendar-extension.git
-```
+  ```bash
+  git clone https://github.com/IamRezaMousavi/persian-gnome-calendar-extension.git
+  ```
 
 2. Make install
 
-```bash
-make install
-```
+  ```bash
+  make install
+  ```
 
 ### More Settings
 
