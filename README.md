@@ -44,15 +44,15 @@ To get a local copy up and running follow these simple example steps.
 
 1. Clone the repo
 
-  ```bash
-  git clone https://github.com/IamRezaMousavi/persian-gnome-calendar-extension.git
-  ```
+   ```bash
+   git clone https://github.com/IamRezaMousavi/persian-gnome-calendar-extension.git
+   ```
 
 2. Make install
 
-  ```bash
-  make install
-  ```
+   ```bash
+   make install
+   ```
 
 ### More Settings
 
