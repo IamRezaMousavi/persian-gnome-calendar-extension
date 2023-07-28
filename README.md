@@ -42,6 +42,22 @@ To get a local copy up and running follow these simple example steps.
 
 ### Installation
 
+#### For Users
+
+* Install from [extensions.gnome.org](https://extensions.gnome.org/extension/5814/persian-calendar/) __(Recommended)__
+
+* Install Manualy
+
+    1. Download latest version from [release](https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/releases/latest)
+
+    2. Install zip file
+
+        ```bash
+        gnome-extensions install ./persian-calendar@iamrezamousavi.gmail.com-v<version-number>.zip
+        ```
+
+#### For Developers
+
 1. Clone the repo
 
    ```bash
