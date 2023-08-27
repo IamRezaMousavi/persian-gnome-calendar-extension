@@ -1,10 +1,11 @@
+/* eslint-disable */
 'use strict';
 
 /*
  * Based on a code from https://github.com/omid/Persian-Calendar-for-Gnome-Shell
  */
 
-var PersianDate = class PersianDate extends Date {
+export const PersianDate = class PersianDate extends Date {
     constructor(...args) {
         super(...args);
         this._createPersianDate();
@@ -26,7 +27,7 @@ var PersianDate = class PersianDate extends Date {
         this.pDate = gregorianToPersian(
             this.getFullYear(),
             this.getMonth() + 1,
-            this.getDate(),
+            this.getDate()
         );
     }
 
@@ -154,6 +155,6 @@ function gregorianToPersian(gy, gm, gd) {
     return {year: py, month: i + 1, day: p_day_no + 1, yearDays: day_in_year};
 }
 
-function isLeap(py) {
+function isLeap_(py) {
     return ((((((py - (py > 0 ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
 }

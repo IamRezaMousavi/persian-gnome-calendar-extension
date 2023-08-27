@@ -157,7 +157,7 @@ Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/IamRezaM
 
 ## Acknowledgements
 
-* [Gnome Calendar Extension](https://gitlab.gnome.org/GNOME/gnome-shell/-/blob/main/js/ui/)
+* [Gnome Calendar Extension](https://github.com/GNOME/gnome-shell/tree/main/js/ui)
 * [GNOME Shell Extension Reference](https://github.com/julio641742/gnome-shell-extension-reference)
 * [Omid Clalendar Extension](https://github.com/omid/Persian-Calendar-for-Gnome-Shell)
 * [Felix Date Format lib](https://github.com/felixge/node-dateformat)

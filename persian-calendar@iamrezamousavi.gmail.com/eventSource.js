@@ -1,18 +1,18 @@
 // Abstraction for an appointment/event in a calendar
 
-const {GObject} = imports.gi;
+import GObject from 'gi://GObject';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const GregorianEvents = Me.imports.events.gregorianEvents.GregorianEvents;
-const PersianEvents = Me.imports.events.persianEvents.PersianEvents;
-const HijriEvents = Me.imports.events.hijriEvents.HijriEvents;
-const UnofficialWorldEvents = Me.imports.events.unofficialWorldEvents.GregorianEvents;
+import {
+    GregorianEvents,
+    PersianEvents,
+    HijriEvents,
+    UnofficialWorldEvents
+} from './events.js';
 
 
 // Interface for appointments/events - e.g. the contents of a calendar
 
-var EventSource = GObject.registerClass({
+export const EventSource = GObject.registerClass({
     Signals: {'changed': {}},
 }, class EventSource extends GObject.Object {
     _init(settings) {
@@ -61,13 +61,13 @@ var EventSource = GObject.registerClass({
         let unofficialEventsActive = this.settings.get_boolean('unofficial-events-active');
         let has = false;
         if (gregorianEventsActive)
-            has = has || this._gregorianEvents.hasEvents(_day);
+            has ||= this._gregorianEvents.hasEvents(_day);
         if (persianEventsActive)
-            has = has || this._persianEvents.hasEvents(_day);
+            has ||= this._persianEvents.hasEvents(_day);
         if (hijriEventsActive)
-            has = has || this._hijriEvents.hasEvents(_day);
+            has ||= this._hijriEvents.hasEvents(_day);
         if (unofficialEventsActive)
-            has = has || this._unofficialWorldEvents.hasEvents(_day);
+            has ||= this._unofficialWorldEvents.hasEvents(_day);
         return has;
     }
 
@@ -77,11 +77,11 @@ var EventSource = GObject.registerClass({
         let persianEventsActive = this.settings.get_boolean('persian-events-active');
         let hijriEventsActive = this.settings.get_boolean('hijri-events-active');
         if (gregorianEventsActive)
-            answer = answer || this._gregorianEvents.isHoliday(_day);
+            answer ||= this._gregorianEvents.isHoliday(_day);
         if (persianEventsActive)
-            answer = answer || this._persianEvents.isHoliday(_day);
+            answer ||= this._persianEvents.isHoliday(_day);
         if (hijriEventsActive)
-            answer = answer || this._hijriEvents.isHoliday(_day);
+            answer ||= this._hijriEvents.isHoliday(_day);
         return answer;
     }
 });

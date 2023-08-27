@@ -2,12 +2,9 @@
  * see https://www.farhang.gov.ir/ershad_content/media/image/2020/09/1004261_orig.pdf
  */
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const CalendarEvent = Me.imports.events.calendarEvent.CalendarEvent;
-const CalendarEvents = Me.imports.events.calendarEvent.CalendarEvents;
+import {CalendarEvent, CalendarEvents} from './calendarEvent.js';
 
-var PersianEvents = class PersianEvents extends CalendarEvents {
+export const PersianEvents = class PersianEvents extends CalendarEvents {
     constructor() {
         super();
         this._events.set('1-1', [new CalendarEvent('عید نوروز', true)]);

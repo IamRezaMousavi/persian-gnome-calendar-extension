@@ -18,33 +18,21 @@
 
 /* exported init */
 
-const {GObject, Gio, St} = imports.gi;
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-const _ = ExtensionUtils.gettext;
-
-const Me = ExtensionUtils.getCurrentExtension();
-
-const DateMenu = Me.imports.dateMenu;
-const DateMenuButton = DateMenu.DateMenuButton;
+import {DateMenuButton} from './dateMenu.js';
 
 const Indicator = GObject.registerClass(
-class Indicator extends DateMenuButton {});
+    class Indicator extends DateMenuButton {}
+);
 
-class Extension {
-    constructor(uuid) {
-        this._uuid = uuid;
-
-        ExtensionUtils.initTranslations(Me.metadata.uuid);
-    }
-
+export default class PersianCalendar extends Extension {
     enable() {
-        this.settings = ExtensionUtils.getSettings(
-            'org.gnome.shell.extensions.PersianCalendar');
+        this.settings = this.getSettings();
 
         this._indicator = new Indicator(this.settings);
 
@@ -52,7 +40,7 @@ class Extension {
             'show-indicator',
             this._indicator,
             'visible',
-            Gio.SettingsBindFlags.DEFAULT,
+            Gio.SettingsBindFlags.DEFAULT
         );
 
         this.settings.connect('changed::position', () => {
@@ -95,10 +83,10 @@ class Extension {
         });
 
         Main.panel.addToStatusArea(
-            this._uuid,
+            this.uuid,
             this._indicator,
             this.settings.get_int('index'),
-            this.settings.get_string('position'),
+            this.settings.get_string('position')
         );
     }
 
@@ -108,8 +96,4 @@ class Extension {
 
         this.settings = null;
     }
-}
-
-function init(meta) {
-    return new Extension(meta.uuid);
 }

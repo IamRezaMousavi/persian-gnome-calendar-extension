@@ -2,12 +2,9 @@
  * See https://www.daysoftheyear.com/
 */
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const CalendarEvent = Me.imports.events.calendarEvent.CalendarEvent;
-const CalendarEvents = Me.imports.events.calendarEvent.CalendarEvents;
+import {CalendarEvent, CalendarEvents} from './calendarEvent.js';
 
-var GregorianEvents = class GregorianEvents extends CalendarEvents {
+export const UnofficialWorldEvents = class UnofficialWorldEvents extends CalendarEvents {
     constructor() {
         super();
         this._events.set('7-1', [new CalendarEvent('روز جهانی بال مرغ', false)]);

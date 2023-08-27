@@ -1,6 +1,4 @@
-/*
- * For OF
- */
+/* eslint-disable */
 
 /*
  * Date Format 1.2.3
@@ -16,9 +14,7 @@
  * The mask defaults to masks.default.
  */
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const {persianDate} = Me.imports;
+import {PersianDate} from '../persianDate.js';
 
 // Regexes and supporting functions are cached through closure
 const token = /d{1,4}|D{3,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|W{1,2}|[LlopSZN]|"[^"]*"|'[^']*'/g;
@@ -38,8 +34,8 @@ let masks = {
     longTime: 'h:MM:ss TT Z',
     isoDate: 'yyyy-mm-dd',
     isoTime: 'HH:MM:ss',
-    isoDateTime: "yyyy-mm-dd'T'HH:MM:sso",
-    isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'",
+    isoDateTime: 'yyyy-mm-dd\'T\'HH:MM:sso',
+    isoUtcDateTime: 'UTC:yyyy-mm-dd\'T\'HH:MM:ss\'Z\'',
     expiresHeaderFormat: 'ddd, dd mmm yyyy HH:MM:ss Z',
 };
 
@@ -144,16 +140,23 @@ const pad = (val, len = 2) => String(val).padStart(len, '0');
 /**
  * Get day name
  * Yesterday, Today, Tomorrow if the date lies within, else fallback to Monday - Sunday
- * @param  {Object}
- * @return {String}
+ *
+ * @param root0
+ * @param root0.y
+ * @param root0.m
+ * @param root0.d
+ * @param root0._
+ * @param root0.dayName
+ * @param root0.short
+ * @returns {string}
  */
 const getDayName = ({y, m, d, _, dayName, short = false}) => {
     let persianText = persian();
 
-    const today = new persianDate.PersianDate();
-    const yesterday = new persianDate.PersianDate();
+    const today = new PersianDate();
+    const yesterday = new PersianDate();
     yesterday.setDate(yesterday[`${_ + persianText}Date`]() - 1);
-    const tomorrow = new persianDate.PersianDate();
+    const tomorrow = new PersianDate();
     tomorrow.setDate(tomorrow[`${_ + persianText}Date`]() + 1);
     const today_d = () => today[`${_ + persianText}Date`]();
     const today_m = () => today[`${_ + persianText}Month`]();
@@ -183,27 +186,28 @@ const getDayName = ({y, m, d, _, dayName, short = false}) => {
  * http://techblog.procurios.nl/k/n618/news/view/33796/14863/Calculate-ISO-8601-week-and-year-in-javascript.html
  *
  * @param  {Date} `date`
- * @return {Number}
+ * @param date
+ * @returns {number}
  */
 const getWeek = date => {
     // Remove time components of date
-    const targetThursday = new persianDate.PersianDate(
+    const targetThursday = new PersianDate(
         date.getFullYear(),
         date.getMonth(),
-        date.getDate(),
+        date.getDate()
     );
 
     // Change date to Thursday same week
     targetThursday.setDate(
-        targetThursday.getDate() - ((targetThursday.getDay() + 6) % 7) + 3,
+        targetThursday.getDate() - ((targetThursday.getDay() + 6) % 7) + 3
     );
 
     // Take January 4th as it is always in week 1 (see ISO 8601)
-    const firstThursday = new persianDate.PersianDate(targetThursday.getFullYear(), 0, 4);
+    const firstThursday = new PersianDate(targetThursday.getFullYear(), 0, 4);
 
     // Change date to Thursday same week
     firstThursday.setDate(
-        firstThursday.getDate() - ((firstThursday.getDay() + 6) % 7) + 3,
+        firstThursday.getDate() - ((firstThursday.getDay() + 6) % 7) + 3
     );
 
     // Check if daylight-saving-time-switch occurred and correct for it
@@ -221,7 +225,8 @@ const getWeek = date => {
  * 1 (for Monday) through 7 (for Sunday)
  *
  * @param  {Date} `date`
- * @return {Number}
+ * @param date
+ * @returns {number}
  */
 const getDayOfWeek = date => {
     let dow = date.getDay();
@@ -238,8 +243,8 @@ const getDayOfWeek = date => {
  * timezone within the `timezone` RegEx above. Currently only common
  * American and Australian timezone abbreviations are supported.
  *
- * @param  {String | Date} date
- * @return {String}
+ * @param  {string | Date} date
+ * @returns {string}
  */
 const formatTimezone = date => (String(date).match(timezone) || [''])
     .pop()
@@ -252,7 +257,7 @@ const formatTimezone = date => (String(date).match(timezone) || [''])
  * @param {boolean} utc
  * @param {boolean} gmt
  */
-function dateFormat(date, mask) {
+export function dateFormat(date, mask) {
     // You can't provide utc if you skip other args (use the 'UTC:' mask prefix)
     if (
         arguments.length === 1 &&
@@ -263,10 +268,10 @@ function dateFormat(date, mask) {
         date = undefined;
     }
 
-    date = date || date === 0 ? date : new persianDate.PersianDate();
+    date = date || date === 0 ? date : new PersianDate();
 
     if (!(date instanceof Date))
-        date = new persianDate.PersianDate(date);
+        date = new PersianDate(date);
 
 
     if (isNaN(date))
@@ -274,7 +279,7 @@ function dateFormat(date, mask) {
 
 
     mask = String(
-        masks[mask] || mask || masks['default'],
+        masks[mask] || mask || masks['default']
     );
 
     // Allow setting the utc/gmt argument via the mask
@@ -286,8 +291,9 @@ function dateFormat(date, mask) {
         utc = true;
         if (maskSlice === 'GMT:')
             gmt = true;
-    } else
+    } else {
         isPersian = true;
+    }
 
     const _ = () => utc ? 'getUTC' : 'get';
     const D = () => date[`${_()}Day`]();
@@ -370,7 +376,7 @@ function dateFormat(date, mask) {
                 pad(Math.floor(Math.abs(o()) % 60), 2)}`,
         S: () =>
             ['th', 'st', 'nd', 'rd'][
-      d() % 10 > 3 ? 0 : (((d() % 100) - (d() % 10) !== 10) * d()) % 10
+                d() % 10 > 3 ? 0 : (((d() % 100) - (d() % 10) !== 10) * d()) % 10
             ],
         W: () => W(),
         WW: () => pad(W()),
@@ -383,4 +389,26 @@ function dateFormat(date, mask) {
 
         return match.slice(1, match.length - 1);
     });
+}
+
+export const getDayAccessibleName = (date) => {
+    switch (date.getDay()) {
+        case 0:
+            return 'Sun';
+        case 1:
+            return 'Mon';
+        case 2:
+            return 'Tue';
+        case 3:
+            return 'Wed';
+        case 4:
+            return 'Thu';
+        case 5:
+            return 'Fri';
+        case 6:
+            return 'Sat';
+
+        default:
+            return '';
+    }
 }

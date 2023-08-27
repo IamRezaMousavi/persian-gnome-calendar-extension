@@ -1,33 +1,38 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 /* exported DateMenuButton */
 
-const {
-    Clutter, Gio, GLib, GnomeDesktop,
-    GObject, Pango, Shell, St,
-} = imports.gi;
+import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import GnomeDesktop from 'gi://GnomeDesktop';
+import GObject from 'gi://GObject';
+import Pango from 'gi://Pango';
+import Shell from 'gi://Shell';
+import St from 'gi://St';
 
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const _ = ExtensionUtils.gettext;
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-const Me = ExtensionUtils.getCurrentExtension();
-const {calendar, persianDate, utils, eventSource} = Me.imports;
-const {dateformat, numbers} = utils;
+import {Calendar} from './calendar.js';
+import {PersianDate} from './persianDate.js';
+import {EventSource} from './eventSource.js';
+import {dateFormat, toPersianDigit} from './utils.js';
+
 
 function _isToday(date) {
-    let now = new persianDate.PersianDate();
+    let now = new PersianDate();
     return now.getYear() === date.getYear() &&
-           now.getMonth() === date.getMonth() &&
-           now.getDate() === date.getDate();
+        now.getMonth() === date.getMonth() &&
+        now.getDate() === date.getDate();
 }
 
 function _gDateTimeToDate(datetime) {
-    return new persianDate.PersianDate(datetime.to_unix() * 1000 + datetime.get_microsecond() / 1000);
+    return new PersianDate(datetime.to_unix() * 1000 + datetime.get_microsecond() / 1000);
 }
 
-var TodayButton = GObject.registerClass(
+const TodayButton = GObject.registerClass(
 class TodayButton extends St.Button {
     _init(cal) {
         // Having the ability to go to the current date if the user is already
@@ -60,7 +65,7 @@ class TodayButton extends St.Button {
     }
 
     vfunc_clicked() {
-        this._calendar.setDate(new persianDate.PersianDate(), false);
+        this._calendar.setDate(new PersianDate(), false);
     }
 
     setDate(date) {
@@ -72,19 +77,19 @@ class TodayButton extends St.Button {
          * "February 17 2015".
          */
         // let dateFormat = Shell.util_translate_time_string(N_("%B %-d %Y"));
-        let dateFormat = {month: 'long', day: 'numeric', year: 'numeric'};
-        this._dateLabel.set_text(date.toPersianString(dateFormat));
+        let _dateFormat = {month: 'long', day: 'numeric', year: 'numeric'};
+        this._dateLabel.set_text(date.toPersianString(_dateFormat));
 
         /* Translators: This is the accessible name of the date button shown
          * below the time in the shell; it should combine the weekday and the
          * date, e.g. "Tuesday February 17 2015".
          */
-        dateFormat = {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'};
-        this.accessible_name = date.toPersianString(dateFormat);
+        _dateFormat = {weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'};
+        this.accessible_name = date.toPersianString(_dateFormat);
     }
 });
 
-var EventsSection = GObject.registerClass(
+const EventsSection = GObject.registerClass(
 class EventsSection extends St.Button {
     _init() {
         super._init({
@@ -124,16 +129,16 @@ class EventsSection extends St.Button {
 
     setDate(date) {
         this._startDate =
-            new persianDate.PersianDate(date.getFullYear(), date.getMonth(), date.getDate());
+                new PersianDate(date.getFullYear(), date.getMonth(), date.getDate());
         this._endDate =
-            new persianDate.PersianDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+                new PersianDate(date.getFullYear(), date.getMonth(), date.getDate() + 1);
 
         this._updateTitle();
         this._reloadEvents();
     }
 
     setEventSource(_eventSource) {
-        if (!(_eventSource instanceof eventSource.EventSource))
+        if (!(_eventSource instanceof EventSource))
             throw new Error('Event source is not valid type');
 
         this._eventSource = _eventSource;
@@ -147,7 +152,7 @@ class EventsSection extends St.Button {
         const otherYearFormat = {month: 'long', day: 'numeric', year: 'numeric'};
 
         const timeSpanDay = GLib.TIME_SPAN_DAY / 1000;
-        const now = new persianDate.PersianDate();
+        const now = new PersianDate();
 
         if (this._startDate <= now && now < this._endDate)
             this._title.text = _('امروز');
@@ -164,7 +169,7 @@ class EventsSection extends St.Button {
     _reloadEvents() {
         [...this._eventsList].forEach(c => c.destroy());
         const events =
-            this._eventSource.getEvents(this._startDate, this._endDate);
+                this._eventSource.getEvents(this._startDate, this._endDate);
 
         for (let event of events) {
             const box = new St.BoxLayout({
@@ -198,6 +203,7 @@ class EventsSection extends St.Button {
         Main.panel.closeCalendar();
 
         const appInfo = this._calendarApp;
+        // eslint-disable-next-line no-undef
         const context = global.create_app_launch_context(0, -1);
         if (appInfo.get_id() === 'org.gnome.Evolution.desktop')
             appInfo.launch_action('calendar', context);
@@ -211,12 +217,13 @@ class EventsSection extends St.Button {
             const app = Gio.AppInfo.get_default_for_type('text/calendar', false);
             const defaultInRecommended = apps.some(a => a.equal(app));
             this._calendarApp = defaultInRecommended ? app : apps[0];
-        } else
+        } else {
             this._calendarApp = null;
+        }
     }
 });
 
-var CalendarColumnLayout = GObject.registerClass(
+const CalendarColumnLayout = GObject.registerClass(
 class CalendarColumnLayout extends Clutter.BoxLayout {
     _init(actors) {
         super._init({orientation: Clutter.Orientation.VERTICAL});
@@ -225,7 +232,7 @@ class CalendarColumnLayout extends Clutter.BoxLayout {
 
     vfunc_get_preferred_width(container, forHeight) {
         const actors =
-            this._colActors.filter(a => a.get_parent() === container);
+                this._colActors.filter(a => a.get_parent() === container);
         if (actors.length === 0)
             return super.vfunc_get_preferred_width(container, forHeight);
         return actors.reduce(([minAcc, natAcc], child) => {
@@ -235,7 +242,7 @@ class CalendarColumnLayout extends Clutter.BoxLayout {
     }
 });
 
-var DateMenuButton = GObject.registerClass(
+export const DateMenuButton = GObject.registerClass(
 class DateMenuButton extends PanelMenu.Button {
     _init(settings) {
         this.settings = settings;
@@ -262,7 +269,7 @@ class DateMenuButton extends PanelMenu.Button {
         hbox = new St.BoxLayout({name: 'calendarArea'});
         bin.add_actor(hbox);
 
-        this._calendar = new calendar.Calendar();
+        this._calendar = new Calendar();
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
             let date = _gDateTimeToDate(datetime);
             this._eventsItem.setDate(date);
@@ -272,7 +279,7 @@ class DateMenuButton extends PanelMenu.Button {
         this.menu.connect('open-state-changed', (menu, isOpen) => {
             // Whenever the menu is opened, select today
             if (isOpen) {
-                let now = new persianDate.PersianDate();
+                let now = new PersianDate();
                 this._calendar.setDate(now);
                 this._date.setDate(now);
                 this._eventsItem.setDate(now);
@@ -315,11 +322,11 @@ class DateMenuButton extends PanelMenu.Button {
         this._clock = new GnomeDesktop.WallClock();
         this._clock.connect('notify::clock', this._updateCalendarDisplay.bind(this));
 
-        this._setEventSource(new eventSource.EventSource(this.settings));
+        this._setEventSource(new EventSource(this.settings));
     }
 
     _getEventSource() {
-        return new eventSource.EventSource();
+        return new EventSource();
     }
 
     _setEventSource(_eventSource) {
@@ -333,14 +340,14 @@ class DateMenuButton extends PanelMenu.Button {
     }
 
     _updateCalendarDisplay() {
-        let Display_Format = this.settings.get_string('panel-format');
+        let displayFormat = this.settings.get_string('panel-format');
         let usePersianDigit = this.settings.get_boolean('number-to-persian');
-        let date = new persianDate.PersianDate();
+        let date = new PersianDate();
         this._calendarDisplay.set_text(
 
             usePersianDigit
-                ? numbers.toPersianDigit(dateformat.dateFormat(date, Display_Format))
-                : dateformat.dateFormat(date, Display_Format),
+                ? toPersianDigit(dateFormat(date, displayFormat))
+                : dateFormat(date, displayFormat)
 
         );
     }

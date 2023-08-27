@@ -1,13 +1,13 @@
 // Interface for Calendar Events
 
-var CalendarEvent = class CalendarEvent {
+export const CalendarEvent = class CalendarEvent {
     constructor(summary, isHoliday) {
         this.isHoliday = isHoliday;
         this.summary = summary;
     }
 };
 
-var CalendarEvents = class CalendarEvents {
+export const CalendarEvents = class CalendarEvents {
     constructor() {
         this._events = new Map();
     }
@@ -26,9 +26,10 @@ var CalendarEvents = class CalendarEvents {
 
     isHoliday(day) {
         let events = this.getEvents(day);
-        for (let i = 0; i < events.length; i++)
+        for (let i = 0; i < events.length; i++) {
             if (events[i].isHoliday)
                 return true;
+        }
         return false;
     }
 };
