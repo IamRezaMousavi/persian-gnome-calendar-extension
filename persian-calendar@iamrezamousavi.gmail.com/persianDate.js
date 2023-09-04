@@ -25,7 +25,7 @@ var PersianDate = class PersianDate extends Date {
     _createPersianDate() {
         this.pDate = gregorianToPersian(
             this.getFullYear(),
-            this.getMonth() + 1,
+            this.getMonth(),
             this.getDate(),
         );
     }
@@ -34,7 +34,7 @@ var PersianDate = class PersianDate extends Date {
         let gDate = persianToGregorian(year, month, day);
         gDate = new Date(gDate.year, gDate.month, gDate.day);
         this.setFullYear(gDate.getFullYear());
-        this.setMonth(gDate.getMonth() - 1);
+        this.setMonth(gDate.getMonth());
         this.setDate(gDate.getDate());
         this._createPersianDate();
     }
@@ -117,7 +117,7 @@ function persianToGregorian(py, pm, pd) {
 
 function gregorianToPersian(gy, gm, gd) {
     gy = parseInt(gy) - 1600;
-    gm = parseInt(gm) - 1;
+    gm = parseInt(gm);
     gd = parseInt(gd) - 1;
 
     let g_day_no = 365 * gy + parseInt((gy + 3) / 4) - parseInt((gy + 99) / 100) + parseInt((gy + 399) / 400);
@@ -151,7 +151,7 @@ function gregorianToPersian(gy, gm, gd) {
         p_day_no -= p_days_in_month[i];
 
 
-    return {year: py, month: i + 1, day: p_day_no + 1, yearDays: day_in_year};
+    return {year: py, month: i, day: p_day_no + 1, yearDays: day_in_year};
 }
 
 function isLeap(py) {

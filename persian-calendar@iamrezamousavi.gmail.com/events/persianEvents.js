@@ -97,7 +97,7 @@ var PersianEvents = class PersianEvents extends CalendarEvents {
     }
 
     getEvents(day) {
-        let events = this._events.get(`${day.getPersianMonth()}-${day.getPersianDate()}`);
+        let events = this._events.get(`${day.getPersianMonth() + 1}-${day.getPersianDate()}`);
         if (Array.isArray(events))
             return events;
         return [];
