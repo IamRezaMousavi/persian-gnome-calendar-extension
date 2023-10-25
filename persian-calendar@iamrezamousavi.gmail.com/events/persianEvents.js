@@ -90,9 +90,47 @@ var PersianEvents = class PersianEvents extends CalendarEvents {
             new CalendarEvent('روز بزرگداشت شهریار', false),
             new CalendarEvent('روز شعر و ادب فارسی', false),
         ]);
+        this._events.set('7-5', [new CalendarEvent('روز گردشگری', false)]);
+        this._events.set('7-7', [
+            new CalendarEvent('روز آتش‌نشانی و امنیت', false),
+            new CalendarEvent('روز بزرگداشت شمس', false),
+        ]);
+        this._events.set('7-8', [new CalendarEvent('روز بزرگداشت مولوی', false)]);
+        this._events.set('7-12', [new CalendarEvent('روز وقف', false)]);
+        this._events.set('7-13', [new CalendarEvent('روز نیروی انتظامی', false)]);
+        this._events.set('7-14', [new CalendarEvent('روز دامپزشکی', false)]);
+        this._events.set('7-15', [new CalendarEvent('روز روستا و عشایر', false)]);
+        this._events.set('7-20', [new CalendarEvent('روز بزرگداشت حافظ', false)]);
+        this._events.set('7-24', [new CalendarEvent('روز ملی پارالمپیک', false)]);
+        this._events.set('7-26', [new CalendarEvent('روز تربیت بدنی و ورزش', false)]);
+        this._events.set('7-29', [new CalendarEvent('روز صادرات', false)]);
+        this._events.set('8-8', [new CalendarEvent('روز نوجوان و بسیج دانشجویی', false)]);
+        this._events.set('8-13', [new CalendarEvent('روز دانش‌آموز', false)]);
+        this._events.set('8-14', [new CalendarEvent('روز فرهنگ عمومی', false)]);
+        this._events.set('8-24', [new CalendarEvent('روز کتاب، کتاب‌خوانی و کتابدار', false)]);
+        this._events.set('9-7', [new CalendarEvent('روز نیروی دریایی', false)]);
+        this._events.set('9-9', [new CalendarEvent('روز بزرگداشت شیخ مفید', false)]);
         this._events.set('9-16', [new CalendarEvent('روز دانشجو', false)]);
+        this._events.set('9-25', [new CalendarEvent('روز پژوهش', false)]);
+        this._events.set('9-27', [new CalendarEvent('روز وحدت حوزه و دانشگاه', false)]);
         this._events.set('9-30', [new CalendarEvent('شب یلدا', false)]);
+        this._events.set('10-5', [new CalendarEvent('روز ایمنی در برابر زلزله و کاهش اثرات بلایای طبیعی', false)]);
+        this._events.set('11-14', [new CalendarEvent('روز فناوری فضایی', false)]);
+        this._events.set('11-19', [new CalendarEvent('روز نیروی هوایی', false)]);
         this._events.set('11-22', [new CalendarEvent('پیروزی انقلاب اسلامی', true)]);
+        this._events.set('11-19', [new CalendarEvent('روز اقتصاد مقاومتی و کارآفرینی', false)]);
+        this._events.set('12-5', [
+            new CalendarEvent('روز بزرگداشت خواجه نصیرالدین طوسی', false),
+            new CalendarEvent('روز مهندسی', false),
+        ]);
+        this._events.set('12-14', [
+            new CalendarEvent('روز احسان و نیکوکاری', false),
+            new CalendarEvent('روز ترویج فرهنگ قرض‌الحسنه', false),
+        ]);
+        this._events.set('12-15', [new CalendarEvent('روز درختکاری', false)]);
+        this._events.set('12-20', [new CalendarEvent('روز راهیان نور', false)]);
+        this._events.set('12-21', [new CalendarEvent('روز بزرگداشت نظامی گنجوی', false)]);
+        this._events.set('12-25', [new CalendarEvent('روز بزرگداشت پروین اعتصامی', false)]);
         this._events.set('12-29', [new CalendarEvent('روز ملی شدن صنعت نفت', true)]);
     }
 
