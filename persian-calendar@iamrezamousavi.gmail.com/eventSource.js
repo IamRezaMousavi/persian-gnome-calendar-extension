@@ -1,4 +1,5 @@
 // Abstraction for an appointment/event in a calendar
+/* exported EventSource */
 
 const {GObject} = imports.gi;
 

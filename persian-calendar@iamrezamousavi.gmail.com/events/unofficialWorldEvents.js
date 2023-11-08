@@ -2,6 +2,8 @@
  * See https://www.daysoftheyear.com/
 */
 
+/* exported GregorianEvents */
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const CalendarEvent = Me.imports.events.calendarEvent.CalendarEvent;

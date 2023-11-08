@@ -1,4 +1,5 @@
 // Interface for Calendar Events
+/* exported CalendarEvent, CalendarEvents */
 
 var CalendarEvent = class CalendarEvent {
     constructor(summary, isHoliday) {
@@ -26,9 +27,10 @@ var CalendarEvents = class CalendarEvents {
 
     isHoliday(day) {
         let events = this.getEvents(day);
-        for (let i = 0; i < events.length; i++)
+        for (let i = 0; i < events.length; i++) {
             if (events[i].isHoliday)
                 return true;
+        }
         return false;
     }
 };

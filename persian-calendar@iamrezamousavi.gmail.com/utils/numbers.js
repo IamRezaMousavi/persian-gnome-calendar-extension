@@ -1,3 +1,5 @@
+/* exported transDigit, toPersianDigit */
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const _ = ExtensionUtils.gettext;
 

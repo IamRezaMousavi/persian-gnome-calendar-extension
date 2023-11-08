@@ -4,9 +4,8 @@ tmp/
 # Locale binary files
 *.mo
 
-# ESLint Dependency directories
+# Npm Dependency directories
 node_modules/
-package*.json
 
 # Zip file
 *.zip

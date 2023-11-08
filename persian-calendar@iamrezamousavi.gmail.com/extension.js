@@ -18,12 +18,10 @@
 
 /* exported init */
 
-const {GObject, Gio, St} = imports.gi;
+const {GObject, Gio} = imports.gi;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
 
 const _ = ExtensionUtils.gettext;
 
@@ -52,7 +50,7 @@ class Extension {
             'show-indicator',
             this._indicator,
             'visible',
-            Gio.SettingsBindFlags.DEFAULT,
+            Gio.SettingsBindFlags.DEFAULT
         );
 
         this.settings.connect('changed::position', () => {
@@ -98,7 +96,7 @@ class Extension {
             this._uuid,
             this._indicator,
             this.settings.get_int('index'),
-            this.settings.get_string('position'),
+            this.settings.get_string('position')
         );
     }
 
