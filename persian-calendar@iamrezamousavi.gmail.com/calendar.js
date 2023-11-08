@@ -1,19 +1,22 @@
 // -*- mode: js; js-indent-level: 4; indent-tabs-mode: nil -*-
 /* exported Calendar*/
 
-const {Clutter, Gio, GLib, GObject, Shell, St} = imports.gi;
+import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import GObject from 'gi://GObject';
+import Shell from 'gi://Shell';
+import St from 'gi://St';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const _ = ExtensionUtils.gettext;
-const Me = ExtensionUtils.getCurrentExtension();
+import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
-const {persianDate, eventSource} = Me.imports;
-const EventSource = eventSource.EventSource;
-const PersianDate = persianDate.PersianDate;
+import {PersianDate} from './persianDate.js';
+import {EventSource} from './eventSource.js';
+import {getDayAccessibleName} from './utils/dateformat.js';
 
-var SHOW_WEEKDATE_KEY = 'show-weekdate';
+const SHOW_WEEKDATE_KEY = 'show-weekdate';
 
-var NC_ = (context, str) => `${context}\u0004${str}`;
+const NC_ = (context, str) => `${context}\u0004${str}`;
 
 function sameYear(dateA, dateB) {
     return dateA.getPersianFullYear() === dateB.getPersianFullYear();
@@ -30,12 +33,12 @@ function sameDay(dateA, dateB) {
 function _isWorkDay(date) {
     /* Translators: Enter 0-6 (Sunday-Saturday) for non-work days. Examples: "0" (Sunday) "6" (Saturday) "06" (Sunday and Saturday). */
     /* calendar-no-work */
-    let days = '5';
+    const days = '5';
     return !days.includes(date.getDay().toString());
 }
 
 function _getCalendarDayAbbreviation(dayNumber) {
-    let abbreviations = [
+    const abbreviations = [
         /* Translators: Calendar grid abbreviation for Sunday.
          *
          * NOTE: These grid abbreviations are always shown together
@@ -58,7 +61,7 @@ function _getCalendarDayAbbreviation(dayNumber) {
     return Shell.util_translate_time_string(abbreviations[dayNumber]);
 }
 
-var Calendar = GObject.registerClass({
+export const Calendar = GObject.registerClass({
     Signals: {'selected-date-changed': {param_types: [GLib.DateTime.$gtype]}},
 }, class Calendar extends St.Widget {
     _init() {
@@ -179,7 +182,7 @@ var Calendar = GObject.registerClass({
                 text: customDayAbbrev,
                 can_focus: true,
             });
-            label.accessible_name = iter.toLocaleFormat('%A');
+            label.accessible_name = getDayAccessibleName(iter);
             let col;
             if (this.get_text_direction() === Clutter.TextDirection.RTL)
                 col = 6 - (7 + iter.getDay() - this._weekStart) % 7;

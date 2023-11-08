@@ -1,10 +1,9 @@
+/* eslint-disable */
 /*
  * Based on a code from https://github.com/omid/Persian-Calendar-for-Gnome-Shell
  */
 
-/* exported PersianDate */
-
-var PersianDate = class PersianDate extends Date {
+export const PersianDate = class PersianDate extends Date {
     constructor(...args) {
         super(...args);
         this._createPersianDate();
