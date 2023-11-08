@@ -161,3 +161,4 @@ Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/IamRezaM
 * [GNOME Shell Extension Reference](https://github.com/julio641742/gnome-shell-extension-reference)
 * [Omid Clalendar Extension](https://github.com/omid/Persian-Calendar-for-Gnome-Shell)
 * [Felix Date Format lib](https://github.com/felixge/node-dateformat)
+* [Jalaali-js lib](https://github.com/jalaali/jalaali-js)

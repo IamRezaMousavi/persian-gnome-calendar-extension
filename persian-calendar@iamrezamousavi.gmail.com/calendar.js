@@ -290,7 +290,7 @@ var Calendar = GObject.registerClass({
         let beginDate = new PersianDate(this._selectedDate);
         beginDate.setPersianDate(
             this._selectedDate.getPersianFullYear(),
-            this._selectedDate.getPersianMonth(),
+            this._selectedDate.getPersianMonth() + 1,
             1
         );
 
