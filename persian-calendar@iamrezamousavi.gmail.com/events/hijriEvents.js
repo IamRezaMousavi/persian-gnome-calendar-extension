@@ -2,6 +2,8 @@
  * see https://www.farhang.gov.ir/ershad_content/media/image/2020/09/1004261_orig.pdf
  */
 
+/* exported HijriEvents */
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const CalendarEvent = Me.imports.events.calendarEvent.CalendarEvent;
@@ -105,7 +107,7 @@ var HijriEvents = class HijriEvents extends CalendarEvents {
         let hDate = HijriDate.fromGregorian(
             day.getFullYear(),
             day.getMonth() + 1,
-            day.getDate(),
+            day.getDate()
         );
         let events = this._events.get(`${hDate.month}-${hDate.day}`);
         if (Array.isArray(events))

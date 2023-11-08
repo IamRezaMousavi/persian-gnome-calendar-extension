@@ -1,7 +1,4 @@
-/*
- * For OF
- */
-
+/* eslint-disable */
 /*
  * Date Format 1.2.3
  * (c) 2007-2009 Steven Levithan <stevenlevithan.com>
@@ -143,8 +140,15 @@ const pad = (val, len = 2) => String(val).padStart(len, '0');
 /**
  * Get day name
  * Yesterday, Today, Tomorrow if the date lies within, else fallback to Monday - Sunday
- * @param  {Object}
- * @return {String}
+ *
+ * @param root0
+ * @param root0.y
+ * @param root0.m
+ * @param root0.d
+ * @param root0._
+ * @param root0.dayName
+ * @param root0.short
+ * @returns {string}
  */
 const getDayName = ({y, m, d, _, dayName, short = false}) => {
     let persianText = persian();
@@ -182,19 +186,20 @@ const getDayName = ({y, m, d, _, dayName, short = false}) => {
  * http://techblog.procurios.nl/k/n618/news/view/33796/14863/Calculate-ISO-8601-week-and-year-in-javascript.html
  *
  * @param  {Date} `date`
- * @return {Number}
+ * @param date
+ * @returns {number}
  */
 const getWeek = date => {
     // Remove time components of date
     const targetThursday = new persianDate.PersianDate(
         date.getFullYear(),
         date.getMonth(),
-        date.getDate(),
+        date.getDate()
     );
 
     // Change date to Thursday same week
     targetThursday.setDate(
-        targetThursday.getDate() - ((targetThursday.getDay() + 6) % 7) + 3,
+        targetThursday.getDate() - ((targetThursday.getDay() + 6) % 7) + 3
     );
 
     // Take January 4th as it is always in week 1 (see ISO 8601)
@@ -202,7 +207,7 @@ const getWeek = date => {
 
     // Change date to Thursday same week
     firstThursday.setDate(
-        firstThursday.getDate() - ((firstThursday.getDay() + 6) % 7) + 3,
+        firstThursday.getDate() - ((firstThursday.getDay() + 6) % 7) + 3
     );
 
     // Check if daylight-saving-time-switch occurred and correct for it
@@ -220,7 +225,8 @@ const getWeek = date => {
  * 1 (for Monday) through 7 (for Sunday)
  *
  * @param  {Date} `date`
- * @return {Number}
+ * @param date
+ * @returns {number}
  */
 const getDayOfWeek = date => {
     let dow = date.getDay();
@@ -237,8 +243,8 @@ const getDayOfWeek = date => {
  * timezone within the `timezone` RegEx above. Currently only common
  * American and Australian timezone abbreviations are supported.
  *
- * @param  {String | Date} date
- * @return {String}
+ * @param  {string | Date} date
+ * @returns {string}
  */
 const formatTimezone = date => (String(date).match(timezone) || [''])
     .pop()
@@ -273,7 +279,7 @@ function dateFormat(date, mask) {
 
 
     mask = String(
-        masks[mask] || mask || masks['default'],
+        masks[mask] || mask || masks['default']
     );
 
     // Allow setting the utc/gmt argument via the mask
@@ -285,8 +291,9 @@ function dateFormat(date, mask) {
         utc = true;
         if (maskSlice === 'GMT:')
             gmt = true;
-    } else
+    } else {
         isPersian = true;
+    }
 
     const _ = () => utc ? 'getUTC' : 'get';
     const D = () => date[`${_()}Day`]();

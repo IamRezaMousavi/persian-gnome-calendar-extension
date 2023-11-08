@@ -1,8 +1,8 @@
-'use strict';
-
 /*
  * https://github.com/SCR-IR/tarikh-npm
  */
+
+/* exported fromGregorian, toGregorian */
 
 const COUNTRY = 'IR';
 
@@ -86,16 +86,17 @@ function _hijriToJulianDay(iY, iM, iD) {
 
 
     let julianDay = HILAL.startJD - 1 + iD;
-    for (let y in HILAL.iDoM)
-        if (y < iY)
+    for (let y in HILAL.iDoM) {
+        if (y < iY) {
             julianDay += HILAL.iDoM[y][0];
-        else {
+        } else {
             for (let m = 1; m < iM; m++)
                 julianDay += HILAL.iDoM[iY][m];
 
 
             break;
         }
+    }
 
     return julianDay;
 }
@@ -108,16 +109,17 @@ function _julianDayToHijri(julianDay) {
 
     let iM, iY;
     let iD = julianDay - HILAL.startJD + 1;
-    for (iY in HILAL.iDoM)
-        if (iD > HILAL.iDoM[iY][0])
+    for (iY in HILAL.iDoM) {
+        if (iD > HILAL.iDoM[iY][0]) {
             iD -= HILAL.iDoM[iY][0];
-        else {
+        } else {
             for (iM = 1; iM < 13 && iD > HILAL.iDoM[iY][iM]; iM++)
                 iD -= HILAL.iDoM[iY][iM];
 
 
             break;
         }
+    }
 
     return [Number(iY), iM, ~~iD];
 }

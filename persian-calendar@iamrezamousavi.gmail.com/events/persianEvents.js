@@ -2,6 +2,8 @@
  * see https://www.farhang.gov.ir/ershad_content/media/image/2020/09/1004261_orig.pdf
  */
 
+/* exported PersianEvents */
+
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const CalendarEvent = Me.imports.events.calendarEvent.CalendarEvent;

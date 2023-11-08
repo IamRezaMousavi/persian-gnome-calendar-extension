@@ -291,7 +291,7 @@ var Calendar = GObject.registerClass({
         beginDate.setPersianDate(
             this._selectedDate.getPersianFullYear(),
             this._selectedDate.getPersianMonth(),
-            1,
+            1
         );
 
         this._calendarBegin = new PersianDate(beginDate);
@@ -328,11 +328,12 @@ var Calendar = GObject.registerClass({
             let styleClass = 'calendar-day-base calendar-day';
 
             let isSameMonthWithSelected = iter.getPersianMonth() === this._selectedDate.getPersianMonth();
-            if (isSameMonthWithSelected)
+            if (isSameMonthWithSelected) {
                 if (_isWorkDay(iter))
                     styleClass += ' calendar-work-day';
                 else
                     styleClass += ' pcalendar-nonwork-day';
+            }
 
             // Hack used in lieu of border-collapse - see gnome-shell.css
             if (row === 2)
@@ -352,11 +353,12 @@ var Calendar = GObject.registerClass({
             if (hasEvents)
                 styleClass += ' calendar-day-with-events';
 
-            if (isHoliday)
+            if (isHoliday) {
                 if (isSameMonthWithSelected)
                     styleClass += ' pcalendar-nonwork-day';
                 else
                     styleClass += ' pcalendar-other-month-nonwork-day';
+            }
 
             button.style_class = styleClass;
 
@@ -393,8 +395,9 @@ var Calendar = GObject.registerClass({
                 button.add_style_pseudo_class('selected');
                 if (this._shouldDateGrabFocus)
                     button.grab_key_focus();
-            } else
+            } else {
                 button.remove_style_pseudo_class('selected');
+            }
         });
     }
 });

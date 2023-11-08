@@ -1,0 +1,31 @@
+rules:
+  camelcase:
+    - error
+    - properties: never
+      allow: [^vfunc_, ^on_]
+  consistent-return: error
+  eqeqeq:
+    - error
+    - smart
+  key-spacing:
+    - error
+    - mode: minimum
+      beforeColon: false
+      afterColon: true
+  prefer-arrow-callback: error
+  jsdoc/require-param-description: off
+  jsdoc/require-jsdoc:
+    - error
+    - exemptEmptyFunctions: true
+      publicOnly:
+        esm: true
+
+overrides:
+  - files:
+      - persian-calendar@iamrezamousavi.gmail.com/**
+    globals:
+      global: readonly
+      # _: readonly
+      C_: readonly
+      N_: readonly
+      ngettext: readonly

@@ -211,8 +211,9 @@ class EventsSection extends St.Button {
             const app = Gio.AppInfo.get_default_for_type('text/calendar', false);
             const defaultInRecommended = apps.some(a => a.equal(app));
             this._calendarApp = defaultInRecommended ? app : apps[0];
-        } else
+        } else {
             this._calendarApp = null;
+        }
     }
 });
 
@@ -333,14 +334,14 @@ class DateMenuButton extends PanelMenu.Button {
     }
 
     _updateCalendarDisplay() {
-        let Display_Format = this.settings.get_string('panel-format');
+        let displayFormat = this.settings.get_string('panel-format');
         let usePersianDigit = this.settings.get_boolean('number-to-persian');
         let date = new persianDate.PersianDate();
         this._calendarDisplay.set_text(
 
             usePersianDigit
-                ? numbers.toPersianDigit(dateformat.dateFormat(date, Display_Format))
-                : dateformat.dateFormat(date, Display_Format),
+                ? numbers.toPersianDigit(dateformat.dateFormat(date, displayFormat))
+                : dateformat.dateFormat(date, displayFormat)
 
         );
     }
