@@ -1,8 +1,41 @@
 extends:
- - ./lint/eslintrc-gjs.yml
- - ./lint/eslintrc-shell.yml
-overrides:
-  - files:
-      - js/ui/init.js
-    parserOptions:
-      sourceType: module
+  - ./lint/eslintrc-gjs.yml
+  - ./lint/eslintrc-shell.yml
+
+parserOptions:
+  sourceType: module
+
+rules:
+  no-constant-binary-expression: error
+  no-constructor-return: error
+  no-duplicate-imports: error
+  no-new-native-nonconstructor: error
+  no-promise-executor-return: error
+  no-unmodified-loop-condition: error
+  no-unreachable-loop: error
+  no-unused-private-class-members: error
+  no-use-before-define: error
+  require-atomic-updates: error
+  default-case-last: error
+  default-param-last: error
+  dot-notation: error
+  func-names:
+    - error
+    - as-needed
+  logical-assignment-operators: error
+  no-confusing-arrow: error
+  no-else-return: error
+  no-eq-null: error
+  no-eval: error
+  no-extend-native: error
+  no-floating-decimal: error
+  no-implied-eval: error
+  no-labels: error
+  no-lone-blocks: error
+  no-new: error
+  no-new-func: error
+  no-param-reassign: error
+  no-script-url: error
+  no-var: error
+  no-multi-spaces: error
+  no-multiple-empty-lines: error

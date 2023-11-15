@@ -5,14 +5,9 @@
  * see https://www.farhang.gov.ir/ershad_content/media/image/2020/09/1004261_orig.pdf
 */
 
-/* exported GregorianEvents */
+import {CalendarEvent, CalendarEvents} from './calendarEvent.js';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const CalendarEvent = Me.imports.events.calendarEvent.CalendarEvent;
-const CalendarEvents = Me.imports.events.calendarEvent.CalendarEvents;
-
-var GregorianEvents = class GregorianEvents extends CalendarEvents {
+export const GregorianEvents = class GregorianEvents extends CalendarEvents {
     constructor() {
         super();
         this._events.set('1-1', [new CalendarEvent('جشن آغاز سال نو میلادی', false)]);

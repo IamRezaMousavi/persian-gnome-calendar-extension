@@ -1,17 +1,28 @@
+/* eslint-disable */
 /*
  * https://github.com/SCR-IR/tarikh-npm
  */
 
-/* exported fromGregorian, toGregorian */
-
 const COUNTRY = 'IR';
 
-function fromGregorian(year, month, day) {
+/**
+ *
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ */
+export function fromGregorian(year, month, day) {
     [year, month, day] = _gregorianToHijri(parseInt(year), parseInt(month), parseInt(day));
     return {year, month, day};
 }
 
-function toGregorian(year, month, day) {
+/**
+ *
+ * @param {number} year
+ * @param {number} month
+ * @param {number} day
+ */
+export function toGregorian(year, month, day) {
     [year, month, day] = _hijriToGregorian(parseInt(year), parseInt(month), parseInt(day));
     return {year, month, day};
 }

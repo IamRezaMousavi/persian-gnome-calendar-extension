@@ -1,14 +1,14 @@
 // Interface for Calendar Events
 /* exported CalendarEvent, CalendarEvents */
 
-var CalendarEvent = class CalendarEvent {
+export const CalendarEvent = class CalendarEvent {
     constructor(summary, isHoliday) {
         this.isHoliday = isHoliday;
         this.summary = summary;
     }
 };
 
-var CalendarEvents = class CalendarEvents {
+export const CalendarEvents = class CalendarEvents {
     constructor() {
         this._events = new Map();
     }

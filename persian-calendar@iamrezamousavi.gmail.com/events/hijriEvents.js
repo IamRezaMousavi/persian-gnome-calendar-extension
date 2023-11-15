@@ -2,15 +2,10 @@
  * see https://www.farhang.gov.ir/ershad_content/media/image/2020/09/1004261_orig.pdf
  */
 
-/* exported HijriEvents */
+import {CalendarEvent, CalendarEvents} from './calendarEvent.js';
+import * as HijriDate from '../hijriDate.js';
 
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const CalendarEvent = Me.imports.events.calendarEvent.CalendarEvent;
-const CalendarEvents = Me.imports.events.calendarEvent.CalendarEvents;
-const HijriDate = Me.imports.hijriDate;
-
-var HijriEvents = class HijriEvents extends CalendarEvents {
+export const HijriEvents = class HijriEvents extends CalendarEvents {
     constructor() {
         super();
         this._events.set('1-1', [new CalendarEvent('آغاز سال جدید هجری قمری', false)]);
