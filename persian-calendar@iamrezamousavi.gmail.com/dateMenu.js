@@ -45,16 +45,19 @@ class TodayButton extends St.Button {
             reactive: false,
         });
 
-        let hbox = new St.BoxLayout({vertical: true});
-        this.add_actor(hbox);
+        const hbox = new St.BoxLayout({
+            vertical: true,
+            x_expand: true,
+        });
+        this.child = hbox;
 
         this._dayLabel = new St.Label({
             style_class: 'day-label pday-label',
         });
-        hbox.add_actor(this._dayLabel);
+        hbox.add_child(this._dayLabel);
 
         this._dateLabel = new St.Label({style_class: 'date-label pdate-label'});
-        hbox.add_actor(this._dateLabel);
+        hbox.add_child(this._dateLabel);
 
         this._calendar = cal;
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
@@ -110,7 +113,7 @@ class EventsSection extends St.Button {
         this._calendarApp = null;
 
         this._title = new St.Label({
-            style_class: 'pevents-title',
+            style_class: 'events-title pevents-title',
         });
         this.child.add_child(this._title);
 
@@ -177,13 +180,13 @@ class EventsSection extends St.Button {
                 vertical: true,
             });
 
-            let pstyle = 'pevent-summary';
+            let eventStyle = 'event-summary pevent-summary';
             if (event.isHoliday)
-                pstyle += ' pevent-summary-holyday';
+                eventStyle += ' pevent-summary-holyday';
 
-            box.add(new St.Label({
+            box.add_child(new St.Label({
                 text: event.summary,
-                style_class: pstyle,
+                style_class: eventStyle,
             }));
 
             this._eventsList.add_child(box);
@@ -255,9 +258,10 @@ class DateMenuButton extends PanelMenu.Button {
         this._calendarDisplay.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
 
         let box = new St.BoxLayout({style_class: 'clock-display-box'});
-        box.add_actor(this._calendarDisplay);
+        box.add_child(this._calendarDisplay);
+
         this.label_actor = this._calendarDisplay;
-        this.add_actor(box);
+        this.add_child(box);
         this.add_style_class_name('clock-display');
 
         let layout = new Clutter.BinLayout();
@@ -267,7 +271,7 @@ class DateMenuButton extends PanelMenu.Button {
         this.menu.box.add_child(bin);
 
         hbox = new St.BoxLayout({name: 'calendarArea'});
-        bin.add_actor(hbox);
+        bin.add_child(hbox);
 
         this._calendar = new Calendar();
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
@@ -293,10 +297,10 @@ class DateMenuButton extends PanelMenu.Button {
             layout_manager: boxLayout,
         });
         boxLayout.hookup_style(vbox);
-        hbox.add(vbox);
+        hbox.add_child(vbox);
 
-        vbox.add_actor(this._date);
-        vbox.add_actor(this._calendar);
+        vbox.add_child(this._date);
+        vbox.add_child(this._calendar);
 
         this._displaysSection = new St.ScrollView({
             style_class: 'datemenu-displays-section vfade',
@@ -304,7 +308,7 @@ class DateMenuButton extends PanelMenu.Button {
             overlay_scrollbars: true,
         });
         this._displaysSection.set_policy(St.PolicyType.NEVER, St.PolicyType.EXTERNAL);
-        vbox.add_actor(this._displaysSection);
+        vbox.add_child(this._displaysSection);
 
         const displaysBox = new St.BoxLayout({
             vertical: true,

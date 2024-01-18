@@ -38,7 +38,7 @@ function _isWorkDay(date) {
 }
 
 function _getCalendarDayAbbreviation(dayNumber) {
-    const abbreviations = [
+    let abbreviations = [
         /* Translators: Calendar grid abbreviation for Sunday.
          *
          * NOTE: These grid abbreviations are always shown together
@@ -123,11 +123,12 @@ export const Calendar = GObject.registerClass({
             return;
 
         this._selectedDate = date;
-        this._update();
 
         let datetime = GLib.DateTime.new_from_unix_local(
             this._selectedDate.getTime() / 1000);
         this.emit('selected-date-changed', datetime);
+
+        this._update();
     }
 
     _buildHeader() {
@@ -141,11 +142,11 @@ export const Calendar = GObject.registerClass({
 
         this._backButton = new St.Button({
             style_class: 'calendar-change-month-back pager-button',
+            icon_name: 'pan-start-symbolic',
             accessible_name: _('Previous month'),
             can_focus: true,
         });
-        this._backButton.add_actor(new St.Icon({icon_name: 'pan-start-symbolic'}));
-        this._topBox.add(this._backButton);
+        this._topBox.add_child(this._backButton);
         this._backButton.connect('clicked', this._onPrevMonthButtonClicked.bind(this));
 
         this._monthLabel = new St.Label({
@@ -159,11 +160,11 @@ export const Calendar = GObject.registerClass({
 
         this._forwardButton = new St.Button({
             style_class: 'calendar-change-month-forward pager-button',
+            icon_name: 'pan-end-symbolic',
             accessible_name: _('Next month'),
             can_focus: true,
         });
-        this._forwardButton.add_actor(new St.Icon({icon_name: 'pan-end-symbolic'}));
-        this._topBox.add(this._forwardButton);
+        this._topBox.add_child(this._forwardButton);
         this._forwardButton.connect('clicked', this._onNextMonthButtonClicked.bind(this));
 
         // Add weekday labels...
@@ -172,13 +173,14 @@ export const Calendar = GObject.registerClass({
         // we do this by just getting the next 7 days starting from right now and then putting
         // them in the right cell in the table. It doesn't matter if we add them in order
         let iter = new PersianDate(this._selectedDate);
-
+        iter.setSeconds(0);
+        iter.setHours(12);
         for (let i = 0; i < 7; i++) {
             // Could use iter.toLocaleFormat('%a') but that normally gives three characters
             // and we want, ideally, a single character for e.g. S M T W T F S
             let customDayAbbrev = _getCalendarDayAbbreviation(iter.getDay());
             let label = new St.Label({
-                style_class: 'calendar-day-base calendar-day-heading',
+                style_class: 'calendar-day-heading',
                 text: customDayAbbrev,
                 can_focus: true,
             });
@@ -328,12 +330,12 @@ export const Calendar = GObject.registerClass({
 
             let hasEvents = this._eventSource.hasEvents(iter);
             let isHoliday = this._eventSource.isHoliday(iter);
-            let styleClass = 'calendar-day-base calendar-day';
+            let styleClass = 'calendar-day';
 
             let isSameMonthWithSelected = iter.getPersianMonth() === this._selectedDate.getPersianMonth();
             if (isSameMonthWithSelected) {
                 if (_isWorkDay(iter))
-                    styleClass += ' calendar-work-day';
+                    styleClass += ' calendar-weekday';
                 else
                     styleClass += ' pcalendar-nonwork-day';
             }
@@ -351,7 +353,7 @@ export const Calendar = GObject.registerClass({
             if (sameDay(now, iter))
                 styleClass += ' calendar-today';
             else if (!isSameMonthWithSelected)
-                styleClass += ' calendar-other-month-day';
+                styleClass += ' calendar-other-month';
 
             if (hasEvents)
                 styleClass += ' calendar-day-with-events';
