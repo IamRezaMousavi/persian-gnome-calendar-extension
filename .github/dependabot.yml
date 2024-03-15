@@ -9,6 +9,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
     open-pull-requests-limit: 5
 
   - package-ecosystem: "github-actions"
@@ -18,4 +22,8 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
+    groups:
+      action-dependencies:
+        patterns:
+          - "*"
     open-pull-requests-limit: 5
