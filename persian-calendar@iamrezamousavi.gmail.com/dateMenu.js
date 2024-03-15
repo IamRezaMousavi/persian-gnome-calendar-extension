@@ -269,6 +269,7 @@ class DateMenuButton extends PanelMenu.Button {
         // For some minimal compatibility with PopupMenuItem
         bin._delegate = this;
         this.menu.box.add_child(bin);
+        this.menu.box.add_style_class_name('datemenu-popover');
 
         hbox = new St.BoxLayout({name: 'calendarArea'});
         bin.add_child(hbox);
@@ -302,20 +303,20 @@ class DateMenuButton extends PanelMenu.Button {
         vbox.add_child(this._date);
         vbox.add_child(this._calendar);
 
-        this._displaysSection = new St.ScrollView({
-            style_class: 'datemenu-displays-section vfade',
-            x_expand: true,
-            overlay_scrollbars: true,
-        });
-        this._displaysSection.set_policy(St.PolicyType.NEVER, St.PolicyType.EXTERNAL);
-        vbox.add_child(this._displaysSection);
-
         const displaysBox = new St.BoxLayout({
             vertical: true,
             x_expand: true,
             style_class: 'datemenu-displays-box',
         });
-        this._displaysSection.add_actor(displaysBox);
+
+        this._displaysSection = new St.ScrollView({
+            style_class: 'datemenu-displays-section vfade',
+            x_expand: true,
+            overlay_scrollbars: true,
+            vscrollbar_policy: St.PolicyType.EXTERNAL,
+            child: displaysBox,
+        });
+        vbox.add_child(this._displaysSection);
 
         this._eventsItem = new EventsSection();
         displaysBox.add_child(this._eventsItem);
