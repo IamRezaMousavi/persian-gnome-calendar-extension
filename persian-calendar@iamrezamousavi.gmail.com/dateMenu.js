@@ -314,8 +314,9 @@ class DateMenuButton extends PanelMenu.Button {
             x_expand: true,
             overlay_scrollbars: true,
             vscrollbar_policy: St.PolicyType.EXTERNAL,
-            child: displaysBox,
+            // child: displaysBox,
         });
+        this._displaysSection.add_actor(displaysBox);
         vbox.add_child(this._displaysSection);
 
         this._eventsItem = new EventsSection();
