@@ -1,9 +1,9 @@
-name: Check Lint
+name: CI
 
 on: [push, pull_request]
 
 jobs:
-  checks:
+  ci:
     runs-on: ubuntu-latest
     
     steps:

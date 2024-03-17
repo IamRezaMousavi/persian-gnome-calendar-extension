@@ -1,9 +1,6 @@
 # temp directory
 tmp/
 
-# Locale binary files
-*.mo
-
 # Npm Dependency directories
 node_modules/
 
