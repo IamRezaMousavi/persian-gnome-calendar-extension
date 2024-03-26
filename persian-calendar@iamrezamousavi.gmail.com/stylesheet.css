@@ -6,12 +6,17 @@
     color: rgba(245, 127, 145, 0.50);
     opacity: 0.5;
 }
+
+.pcalendar-month-label {
+    text-align: center;
+    direction: rtl;
+}
+
 .pday-label,
 .pdate-label,
 .pevents-title,
 .pevent-placeholder,
-.pevent-summary,
-.pcalendar-month-label {
+.pevent-summary {
     text-align: right;
     direction: rtl;
 }
