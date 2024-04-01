@@ -11,7 +11,12 @@ import {
 } from './events.js';
 
 
-// Interface for appointments/events - e.g. the contents of a calendar
+const GREGORIAN_EVENT_ACTIVE_KEY = 'gregorian-events-active';
+const PERSIAN_EVENT_ACTIVE_KEY = 'persian-events-active';
+const HIJRI_EVENT_ACTIVE_KEY = 'hijri-events-active';
+const INTERNATIONAL_EVENT_ACTIVE_KEY = 'international-events-active';
+
+// Repository for appointments/events - e.g. the contents of a calendar
 
 export const EventSource = GObject.registerClass({
     Signals: {'changed': {}},
@@ -19,35 +24,44 @@ export const EventSource = GObject.registerClass({
     _init(settings) {
         super._init();
         this.settings = settings;
+
+        this.gregorianEventsActive = this.settings.get_boolean(GREGORIAN_EVENT_ACTIVE_KEY);
+        this.persianEventsActive = this.settings.get_boolean(PERSIAN_EVENT_ACTIVE_KEY);
+        this.hijriEventsActive = this.settings.get_boolean(HIJRI_EVENT_ACTIVE_KEY);
+        this.internationalEventsActive = this.settings.get_boolean(INTERNATIONAL_EVENT_ACTIVE_KEY);
+
         this._gregorianEvents = new GregorianEvents();
         this._persianEvents = new PersianEvents();
         this._hijriEvents = new HijriEvents();
         this._InternationalEvents = new InternationalEvents();
     }
 
+    _onSettingsChange() {
+        this.gregorianEventsActive = this.settings.get_boolean(GREGORIAN_EVENT_ACTIVE_KEY);
+        this.persianEventsActive = this.settings.get_boolean(PERSIAN_EVENT_ACTIVE_KEY);
+        this.hijriEventsActive = this.settings.get_boolean(HIJRI_EVENT_ACTIVE_KEY);
+        this.internationalEventsActive = this.settings.get_boolean(INTERNATIONAL_EVENT_ACTIVE_KEY);
+    }
+
     getEvents(_begin, _end) {
         this._result = [];
 
-        let gregorianEventsActive = this.settings.get_boolean('gregorian-events-active');
-        if (gregorianEventsActive) {
+        if (this.gregorianEventsActive) {
             let gregorianEvents = this._gregorianEvents.getEvents(_begin);
             this._result = this._result.concat(gregorianEvents);
         }
 
-        let persianEventsActive = this.settings.get_boolean('persian-events-active');
-        if (persianEventsActive) {
+        if (this.persianEventsActive) {
             let persianEvents = this._persianEvents.getEvents(_begin);
             this._result = this._result.concat(persianEvents);
         }
 
-        let hijriEventsActive = this.settings.get_boolean('hijri-events-active');
-        if (hijriEventsActive) {
+        if (this.hijriEventsActive) {
             let hijriEvents = this._hijriEvents.getEvents(_begin);
             this._result = this._result.concat(hijriEvents);
         }
 
-        let internationalEventsActive = this.settings.get_boolean('international-events-active');
-        if (internationalEventsActive) {
+        if (this.internationalEventsActive) {
             let internationalEvents = this._InternationalEvents.getEvents(_begin);
             this._result = this._result.concat(internationalEvents);
         }
@@ -56,32 +70,25 @@ export const EventSource = GObject.registerClass({
     }
 
     hasEvents(_day) {
-        let gregorianEventsActive = this.settings.get_boolean('gregorian-events-active');
-        let persianEventsActive = this.settings.get_boolean('persian-events-active');
-        let hijriEventsActive = this.settings.get_boolean('hijri-events-active');
-        let internationalEventsActive = this.settings.get_boolean('international-events-active');
         let has = false;
-        if (gregorianEventsActive)
+        if (this.gregorianEventsActive)
             has ||= this._gregorianEvents.hasEvents(_day);
-        if (persianEventsActive)
+        if (this.persianEventsActive)
             has ||= this._persianEvents.hasEvents(_day);
-        if (hijriEventsActive)
+        if (this.hijriEventsActive)
             has ||= this._hijriEvents.hasEvents(_day);
-        if (internationalEventsActive)
+        if (this.internationalEventsActive)
             has ||= this._InternationalEvents.hasEvents(_day);
         return has;
     }
 
     isHoliday(_day) {
         let answer = false;
-        let gregorianEventsActive = this.settings.get_boolean('gregorian-events-active');
-        let persianEventsActive = this.settings.get_boolean('persian-events-active');
-        let hijriEventsActive = this.settings.get_boolean('hijri-events-active');
-        if (gregorianEventsActive)
+        if (this.gregorianEventsActive)
             answer ||= this._gregorianEvents.isHoliday(_day);
-        if (persianEventsActive)
+        if (this.persianEventsActive)
             answer ||= this._persianEvents.isHoliday(_day);
-        if (hijriEventsActive)
+        if (this.hijriEventsActive)
             answer ||= this._hijriEvents.isHoliday(_day);
         return answer;
     }

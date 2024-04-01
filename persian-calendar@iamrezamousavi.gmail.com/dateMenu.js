@@ -21,6 +21,9 @@ import {EventSource} from './eventSource.js';
 import {dateFormat, toPersianDigit} from './utils.js';
 
 
+const PANEL_FORMAT_KEY = 'panel-format';
+const USE_PERSIAN_DIGIT = 'panel-persian-number';
+
 function _isToday(date) {
     let now = new PersianDate();
     return now.getYear() === date.getYear() &&
@@ -249,6 +252,12 @@ export const DateMenuButton = GObject.registerClass(
 class DateMenuButton extends PanelMenu.Button {
     _init(settings) {
         this.settings = settings;
+
+        this.settings.connect(`changed::${PANEL_FORMAT_KEY}`, this._onSettingsChange.bind(this));
+        this.settings.connect(`changed::${USE_PERSIAN_DIGIT}`, this._onSettingsChange.bind(this));
+        this.displayFormat = this.settings.get_string(PANEL_FORMAT_KEY);
+        this.usePersianDigit = this.settings.get_boolean(USE_PERSIAN_DIGIT);
+
         let hbox;
 
         super._init(0.5);
@@ -344,14 +353,18 @@ class DateMenuButton extends PanelMenu.Button {
         this._eventSource = _eventSource;
     }
 
+    _onSettingsChange() {
+        this.displayFormat = this.settings.get_string(PANEL_FORMAT_KEY);
+        this.usePersianDigit = this.settings.get_boolean(USE_PERSIAN_DIGIT);
+        this._updateCalendarDisplay();
+    }
+
     _updateCalendarDisplay() {
-        let displayFormat = this.settings.get_string('panel-format');
-        let usePersianDigit = this.settings.get_boolean('panel-persian-number');
         let date = new PersianDate();
         this._calendarDisplay.set_text(
-            usePersianDigit
-                ? toPersianDigit(dateFormat(date, displayFormat))
-                : dateFormat(date, displayFormat)
+            this.usePersianDigit
+                ? toPersianDigit(dateFormat(date, this.displayFormat))
+                : dateFormat(date, this.displayFormat)
         );
     }
 });

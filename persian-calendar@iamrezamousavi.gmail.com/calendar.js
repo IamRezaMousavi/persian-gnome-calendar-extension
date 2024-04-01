@@ -16,6 +16,8 @@ import {getDayAccessibleName} from './utils/dateformat.js';
 import {toPersianDigit} from './utils/numbers.js';
 
 const SHOW_WEEKDATE_KEY = 'show-weekdate';
+const USE_PERSIAN_WEEKDAY = 'calendar-persian-weekday';
+const USE_PERSIAN_NUMBER = 'calendar-persian-number';
 
 const NC_ = (context, str) => `${context}\u0004${str}`;
 
@@ -78,8 +80,10 @@ export const Calendar = GObject.registerClass({
         this._weekStart = 6;
 
         this.settings = settings;
-        this.usePersianWeekday = this.settings.get_boolean('calendar-persian-weekday');
-        this.usePersianDay = this.settings.get_boolean('calendar-persian-number');
+        this.settings.connect(`changed::${USE_PERSIAN_WEEKDAY}`, this._onSettingsChange.bind(this));
+        this.settings.connect(`changed::${USE_PERSIAN_NUMBER}`, this._onSettingsChange.bind(this));
+        this.usePersianWeekday = this.settings.get_boolean(USE_PERSIAN_WEEKDAY);
+        this.usePersianDay = this.settings.get_boolean(USE_PERSIAN_NUMBER);
 
         this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.calendar'});
         this._settings.connect(`changed::${SHOW_WEEKDATE_KEY}`, this._onSettingsChange.bind(this));
@@ -272,6 +276,8 @@ export const Calendar = GObject.registerClass({
     }
 
     _onSettingsChange() {
+        this.usePersianWeekday = this.settings.get_boolean(USE_PERSIAN_WEEKDAY);
+        this.usePersianDay = this.settings.get_boolean(USE_PERSIAN_NUMBER);
         this._useWeekdate = this._settings.get_boolean(SHOW_WEEKDATE_KEY);
         this._buildHeader();
         this._rebuildCalendar();

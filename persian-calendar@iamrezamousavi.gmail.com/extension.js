@@ -52,41 +52,19 @@ export default class PersianCalendar extends Extension {
             this.enable();
         });
 
-        this.settings.connect('changed::panel-format', () => {
-            this.disable();
-            this.enable();
-        });
-
-        this.settings.connect('changed::panel-persian-number', () => {
-            this.disable();
-            this.enable();
-        });
-
-        this.settings.connect('changed::calendar-persian-weekday', () => {
-            this.disable();
-            this.enable();
-        });
-
-        this.settings.connect('changed::calendar-persian-number', () => {
-            this.disable();
-            this.enable();
-        });
-
+        // TODO: clean binds
         this.settings.connect('changed::gregorian-events-active', () => {
             this.disable();
             this.enable();
         });
-
         this.settings.connect('changed::persian-events-active', () => {
             this.disable();
             this.enable();
         });
-
         this.settings.connect('changed::hijri-events-active', () => {
             this.disable();
             this.enable();
         });
-
         this.settings.connect('changed::international-events-active', () => {
             this.disable();
             this.enable();
