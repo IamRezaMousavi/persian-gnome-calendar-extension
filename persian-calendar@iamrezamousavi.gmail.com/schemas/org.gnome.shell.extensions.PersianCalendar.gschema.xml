@@ -16,9 +16,13 @@
       <default>"d mmmm yyyy"</default>
       <summary>Panel date format</summary>
     </key>
-    <key name="number-to-persian" type="b">
+    <key name="top-panel-persian-number" type="b">
       <default>true</default>
       <summary>Use persian digit in top panel</summary>
+    </key>
+    <key name="calendar-weekday-persian-number" type="b">
+      <default>true</default>
+      <summary>Use persian digit in calendar weekday</summary>
     </key>
     <key name="gregorian-events-active" type="b">
       <default>true</default>
