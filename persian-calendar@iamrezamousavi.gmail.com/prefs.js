@@ -102,6 +102,22 @@ export default class PersianCalendarPreferences extends ExtensionPreferences {
         persianWeekdayRow.add_suffix(persianWeekday);
         persianWeekdayRow.activatable_widget = persianWeekday;
 
+        const persianCalDayRow = new Adw.ActionRow({title: 'Use Persian Number in Calendar'});
+        group.add(persianCalDayRow);
+
+        const persianCalDay = new Gtk.Switch({
+            active: settings.get_boolean('calendar-day-persian-number'),
+            valign: Gtk.Align.CENTER,
+        });
+        settings.bind(
+            'calendar-day-persian-number',
+            persianCalDay,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        );
+        persianCalDayRow.add_suffix(persianCalDay);
+        persianCalDayRow.activatable_widget = persianCalDay;
+
         // Event Switchs
         const gregorianEventsRow = new Adw.ActionRow({title: 'Show Gregorian Events'});
         group.add(gregorianEventsRow);

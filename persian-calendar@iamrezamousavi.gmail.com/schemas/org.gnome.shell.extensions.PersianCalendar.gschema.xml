@@ -24,6 +24,10 @@
       <default>true</default>
       <summary>Use persian digit in calendar weekday</summary>
     </key>
+    <key name="calendar-day-persian-number" type="b">
+      <default>true</default>
+      <summary>Use persian digit in calendar day</summary>
+    </key>
     <key name="gregorian-events-active" type="b">
       <default>true</default>
       <summary>Show Gregorian Events</summary>

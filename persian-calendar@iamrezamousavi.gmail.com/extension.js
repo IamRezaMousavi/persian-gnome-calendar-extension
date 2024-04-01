@@ -67,6 +67,11 @@ export default class PersianCalendar extends Extension {
             this.enable();
         });
 
+        this.settings.connect('changed::calendar-day-persian-number', () => {
+            this.disable();
+            this.enable();
+        });
+
         this.settings.connect('changed::gregorian-events-active', () => {
             this.disable();
             this.enable();

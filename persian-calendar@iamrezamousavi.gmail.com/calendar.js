@@ -13,6 +13,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {PersianDate} from './persianDate.js';
 import {EventSource} from './eventSource.js';
 import {getDayAccessibleName} from './utils/dateformat.js';
+import {toPersianDigit} from './utils/numbers.js';
 
 const SHOW_WEEKDATE_KEY = 'show-weekdate';
 
@@ -78,6 +79,7 @@ export const Calendar = GObject.registerClass({
 
         this.settings = settings;
         this.usePersianWeekday = this.settings.get_boolean('calendar-weekday-persian-number');
+        this.usePersianDay = this.settings.get_boolean('calendar-day-persian-number');
 
         this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.calendar'});
         this._settings.connect(`changed::${SHOW_WEEKDATE_KEY}`, this._onSettingsChange.bind(this));
@@ -327,7 +329,9 @@ export const Calendar = GObject.registerClass({
         while (row < nRows) {
             let button = new St.Button({
                 // xgettext:no-javascript-format
-                label: iter.getPersianDate().toString().replace(/\d/g, x => _(x)),
+                label: this.usePersianDay
+                    ? toPersianDigit(iter.getPersianDate())
+                    : iter.getPersianDate().toString().replace(/\d/g, x => _(x)),
                 can_focus: true,
             });
             let rtl = button.get_text_direction() === Clutter.TextDirection.RTL;
