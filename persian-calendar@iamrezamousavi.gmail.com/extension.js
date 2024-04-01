@@ -57,7 +57,17 @@ export default class PersianCalendar extends Extension {
             this.enable();
         });
 
-        this.settings.connect('changed::number-to-persian', () => {
+        this.settings.connect('changed::top-panel-persian-number', () => {
+            this.disable();
+            this.enable();
+        });
+
+        this.settings.connect('changed::calendar-weekday-persian-number', () => {
+            this.disable();
+            this.enable();
+        });
+
+        this.settings.connect('changed::calendar-day-persian-number', () => {
             this.disable();
             this.enable();
         });

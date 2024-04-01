@@ -274,7 +274,7 @@ class DateMenuButton extends PanelMenu.Button {
         hbox = new St.BoxLayout({name: 'calendarArea'});
         bin.add_child(hbox);
 
-        this._calendar = new Calendar();
+        this._calendar = new Calendar(settings);
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
             let date = _gDateTimeToDate(datetime);
             this._eventsItem.setDate(date);
@@ -346,7 +346,7 @@ class DateMenuButton extends PanelMenu.Button {
 
     _updateCalendarDisplay() {
         let displayFormat = this.settings.get_string('panel-format');
-        let usePersianDigit = this.settings.get_boolean('number-to-persian');
+        let usePersianDigit = this.settings.get_boolean('top-panel-persian-number');
         let date = new PersianDate();
         this._calendarDisplay.set_text(
             usePersianDigit

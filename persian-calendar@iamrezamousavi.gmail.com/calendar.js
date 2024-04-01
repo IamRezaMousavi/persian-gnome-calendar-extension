@@ -13,6 +13,7 @@ import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
 import {PersianDate} from './persianDate.js';
 import {EventSource} from './eventSource.js';
 import {getDayAccessibleName} from './utils/dateformat.js';
+import {toPersianDigit} from './utils/numbers.js';
 
 const SHOW_WEEKDATE_KEY = 'show-weekdate';
 
@@ -37,7 +38,7 @@ function _isWorkDay(date) {
     return !days.includes(date.getDay().toString());
 }
 
-function _getCalendarDayAbbreviation(dayNumber) {
+function _getCalendarDayAbbreviation(dayNumber, isPersian) {
     let abbreviations = [
         /* Translators: Calendar grid abbreviation for Sunday.
          *
@@ -57,18 +58,30 @@ function _getCalendarDayAbbreviation(dayNumber) {
         NC_('grid friday', 'F'),
         /* Translators: Calendar grid abbreviation for Saturday */
         NC_('grid saturday', 'S'),
+
+        'ی',
+        'د',
+        'س',
+        'چ',
+        'پ',
+        'ج',
+        'ش',
     ];
-    return Shell.util_translate_time_string(abbreviations[dayNumber]);
+    return isPersian ? abbreviations[dayNumber + 7] : Shell.util_translate_time_string(abbreviations[dayNumber]);
 }
 
 export const Calendar = GObject.registerClass({
     Signals: {'selected-date-changed': {param_types: [GLib.DateTime.$gtype]}},
 }, class Calendar extends St.Widget {
-    _init() {
+    _init(settings) {
         // this._weekStart = Shell.util_get_week_start();
         this._weekStart = 6;
-        this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.calendar'});
 
+        this.settings = settings;
+        this.usePersianWeekday = this.settings.get_boolean('calendar-weekday-persian-number');
+        this.usePersianDay = this.settings.get_boolean('calendar-day-persian-number');
+
+        this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.calendar'});
         this._settings.connect(`changed::${SHOW_WEEKDATE_KEY}`, this._onSettingsChange.bind(this));
         this._useWeekdate = this._settings.get_boolean(SHOW_WEEKDATE_KEY);
 
@@ -178,7 +191,7 @@ export const Calendar = GObject.registerClass({
         for (let i = 0; i < 7; i++) {
             // Could use iter.toLocaleFormat('%a') but that normally gives three characters
             // and we want, ideally, a single character for e.g. S M T W T F S
-            let customDayAbbrev = _getCalendarDayAbbreviation(iter.getDay());
+            let customDayAbbrev = _getCalendarDayAbbreviation(iter.getDay(), this.usePersianWeekday);
             let label = new St.Label({
                 style_class: 'calendar-day-heading',
                 text: customDayAbbrev,
@@ -316,7 +329,9 @@ export const Calendar = GObject.registerClass({
         while (row < nRows) {
             let button = new St.Button({
                 // xgettext:no-javascript-format
-                label: iter.getPersianDate().toString().replace(/\d/g, x => _(x)),
+                label: this.usePersianDay
+                    ? toPersianDigit(iter.getPersianDate())
+                    : iter.getPersianDate().toString().replace(/\d/g, x => _(x)),
                 can_focus: true,
             });
             let rtl = button.get_text_direction() === Clutter.TextDirection.RTL;
