@@ -43,11 +43,11 @@ export default class PersianCalendar extends Extension {
             Gio.SettingsBindFlags.DEFAULT
         );
 
-        this.settings.connect('changed::position', () => {
+        this.settings.connect('changed::indicator-position', () => {
             this.disable();
             this.enable();
         });
-        this.settings.connect('changed::index', () => {
+        this.settings.connect('changed::indicator-index', () => {
             this.disable();
             this.enable();
         });
@@ -57,17 +57,17 @@ export default class PersianCalendar extends Extension {
             this.enable();
         });
 
-        this.settings.connect('changed::top-panel-persian-number', () => {
+        this.settings.connect('changed::panel-persian-number', () => {
             this.disable();
             this.enable();
         });
 
-        this.settings.connect('changed::calendar-weekday-persian-number', () => {
+        this.settings.connect('changed::calendar-persian-weekday', () => {
             this.disable();
             this.enable();
         });
 
-        this.settings.connect('changed::calendar-day-persian-number', () => {
+        this.settings.connect('changed::calendar-persian-number', () => {
             this.disable();
             this.enable();
         });
@@ -87,7 +87,7 @@ export default class PersianCalendar extends Extension {
             this.enable();
         });
 
-        this.settings.connect('changed::unofficial-events-active', () => {
+        this.settings.connect('changed::international-events-active', () => {
             this.disable();
             this.enable();
         });
@@ -95,8 +95,8 @@ export default class PersianCalendar extends Extension {
         Main.panel.addToStatusArea(
             this.uuid,
             this._indicator,
-            this.settings.get_int('index'),
-            this.settings.get_string('position')
+            this.settings.get_int('indicator-index'),
+            this.settings.get_string('indicator-position')
         );
     }
 

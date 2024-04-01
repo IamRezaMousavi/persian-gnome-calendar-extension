@@ -7,7 +7,7 @@ import {
     GregorianEvents,
     PersianEvents,
     HijriEvents,
-    UnofficialWorldEvents
+    InternationalEvents
 } from './events.js';
 
 
@@ -22,7 +22,7 @@ export const EventSource = GObject.registerClass({
         this._gregorianEvents = new GregorianEvents();
         this._persianEvents = new PersianEvents();
         this._hijriEvents = new HijriEvents();
-        this._unofficialWorldEvents = new UnofficialWorldEvents();
+        this._InternationalEvents = new InternationalEvents();
     }
 
     getEvents(_begin, _end) {
@@ -46,10 +46,10 @@ export const EventSource = GObject.registerClass({
             this._result = this._result.concat(hijriEvents);
         }
 
-        let unofficialEventsActive = this.settings.get_boolean('unofficial-events-active');
-        if (unofficialEventsActive) {
-            let unofficialEvents = this._unofficialWorldEvents.getEvents(_begin);
-            this._result = this._result.concat(unofficialEvents);
+        let internationalEventsActive = this.settings.get_boolean('international-events-active');
+        if (internationalEventsActive) {
+            let internationalEvents = this._InternationalEvents.getEvents(_begin);
+            this._result = this._result.concat(internationalEvents);
         }
 
         return this._result;
@@ -59,7 +59,7 @@ export const EventSource = GObject.registerClass({
         let gregorianEventsActive = this.settings.get_boolean('gregorian-events-active');
         let persianEventsActive = this.settings.get_boolean('persian-events-active');
         let hijriEventsActive = this.settings.get_boolean('hijri-events-active');
-        let unofficialEventsActive = this.settings.get_boolean('unofficial-events-active');
+        let internationalEventsActive = this.settings.get_boolean('international-events-active');
         let has = false;
         if (gregorianEventsActive)
             has ||= this._gregorianEvents.hasEvents(_day);
@@ -67,8 +67,8 @@ export const EventSource = GObject.registerClass({
             has ||= this._persianEvents.hasEvents(_day);
         if (hijriEventsActive)
             has ||= this._hijriEvents.hasEvents(_day);
-        if (unofficialEventsActive)
-            has ||= this._unofficialWorldEvents.hasEvents(_day);
+        if (internationalEventsActive)
+            has ||= this._InternationalEvents.hasEvents(_day);
         return has;
     }
 

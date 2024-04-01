@@ -4,7 +4,7 @@
 
 import {CalendarEvent, CalendarEvents} from './calendarEvent.js';
 
-export const UnofficialWorldEvents = class UnofficialWorldEvents extends CalendarEvents {
+export const InternationalEvents = class InternationalEvents extends CalendarEvents {
     constructor() {
         super();
         this._events.set('7-1', [new CalendarEvent('روز جهانی بال مرغ', false)]);

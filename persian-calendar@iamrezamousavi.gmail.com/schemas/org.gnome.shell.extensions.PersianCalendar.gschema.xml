@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
   <schema id="org.gnome.shell.extensions.PersianCalendar" path="/org/gnome/shell/extensions/PersianCalendar/">
+
     <key name="show-indicator" type="b">
       <default>true</default>
     </key>
-    <key name="position" type="s">
+    <key name="indicator-position" type="s">
       <default>"center"</default>
       <summary>Indicator position in top panel</summary>
     </key>
-    <key name="index" type="i">
+    <key name="indicator-index" type="i">
       <default>0</default>
       <summary>Indicator position in selected area</summary>
     </key>
+
     <key name="panel-format" type="s">
       <default>"d mmmm yyyy"</default>
       <summary>Panel date format</summary>
     </key>
-    <key name="top-panel-persian-number" type="b">
+    <key name="panel-persian-number" type="b">
       <default>true</default>
       <summary>Use persian digit in top panel</summary>
     </key>
-    <key name="calendar-weekday-persian-number" type="b">
+    <key name="calendar-persian-weekday" type="b">
       <default>true</default>
       <summary>Use persian digit in calendar weekday</summary>
     </key>
-    <key name="calendar-day-persian-number" type="b">
+    <key name="calendar-persian-number" type="b">
       <default>true</default>
       <summary>Use persian digit in calendar day</summary>
     </key>
+
     <key name="gregorian-events-active" type="b">
       <default>true</default>
       <summary>Show Gregorian Events</summary>
@@ -40,9 +43,10 @@
       <default>true</default>
       <summary>Show Hijri Events</summary>
     </key>
-    <key name="unofficial-events-active" type="b">
+    <key name="international-events-active" type="b">
       <default>true</default>
-      <summary>Show Unofficial World Events</summary>
+      <summary>Show International World Events</summary>
     </key>
+
   </schema>
 </schemalist>

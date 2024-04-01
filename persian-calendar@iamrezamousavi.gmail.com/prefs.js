@@ -13,175 +13,203 @@ export default class PersianCalendarPreferences extends ExtensionPreferences {
 
         // Create a preferences page and group
         const page = new Adw.PreferencesPage();
-        const group = new Adw.PreferencesGroup();
-        page.add(group);
+
+
+        /** ********* Indicator Settings **************/
+
+        const indicatorGroup = new Adw.PreferencesGroup();
+        page.add(indicatorGroup);
 
         // Create a new preferences row
-        const row = new Adw.ActionRow({title: 'Show Extension Indicator'});
-        group.add(row);
+        const showIndicatorRow = new Adw.ActionRow({title: 'Show Extension Indicator'});
+        indicatorGroup.add(showIndicatorRow);
 
 
         // Create the switch and bind its value to the `show-indicator` key
-        const toggle = new Gtk.Switch({
+        const showIndicatorSwitch = new Gtk.Switch({
             active: settings.get_boolean('show-indicator'),
             valign: Gtk.Align.CENTER,
         });
         settings.bind(
             'show-indicator',
-            toggle,
+            showIndicatorSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
 
         // Add the switch to the row
-        row.add_suffix(toggle);
-        row.activatable_widget = toggle;
+        showIndicatorRow.add_suffix(showIndicatorSwitch);
+        showIndicatorRow.activatable_widget = showIndicatorSwitch;
 
-        const posRow = new Adw.ActionRow({title: 'Position'});
-        group.add(posRow);
+        const indicatorPosRow = new Adw.ActionRow({title: 'Position'});
+        indicatorGroup.add(indicatorPosRow);
 
-        const pos = new Gtk.ComboBoxText({
-            active: settings.get_string('position'),
+        const indicatorPos = new Gtk.ComboBoxText({
+            active: settings.get_string('indicator-position'),
         });
-        pos.append('left', 'left');
-        pos.append('center', 'center');
-        pos.append('right', 'right');
-        settings.bind('position', pos, 'active-id', Gio.SettingsBindFlags.DEFAULT);
+        indicatorPos.append('left', 'left');
+        indicatorPos.append('center', 'center');
+        indicatorPos.append('right', 'right');
+        settings.bind(
+            'indicator-position',
+            indicatorPos,
+            'active-id',
+            Gio.SettingsBindFlags.DEFAULT
+        );
 
-        const item = new Gtk.SpinButton();
-        let adjustment = new Gtk.Adjustment();
-        adjustment.set_lower(-99);
-        adjustment.set_upper(99);
-        adjustment.set_step_increment(1);
-        item.set_adjustment(adjustment);
-        item.set_value(settings.get_int('index'));
-        settings.bind('index', item, 'value', Gio.SettingsBindFlags.DEFAULT);
+        indicatorPosRow.add_suffix(indicatorPos);
 
-        posRow.add_suffix(pos);
-        posRow.add_suffix(item);
+        const indicatorIndex = new Gtk.SpinButton();
+        let indicatorIndexAdjustment = new Gtk.Adjustment();
+        indicatorIndexAdjustment.set_lower(-99);
+        indicatorIndexAdjustment.set_upper(99);
+        indicatorIndexAdjustment.set_step_increment(1);
+        indicatorIndex.set_adjustment(indicatorIndexAdjustment);
+        indicatorIndex.set_value(settings.get_int('indicator-index'));
+        settings.bind('indicator-index', indicatorIndex, 'value', Gio.SettingsBindFlags.DEFAULT);
 
-        const formatRow = new Adw.ActionRow({title: 'Panel Date Format'});
-        group.add(formatRow);
+        indicatorPosRow.add_suffix(indicatorIndex);
 
-        const format = new Gtk.Entry();
-        format.set_text(settings.get_string('panel-format'));
-        format.connect('changed', innerFormat => {
+        /** ************ End Indicator Settings ***************/
+
+
+        /** ************ Locale Settings ***************/
+
+        const localeGroup = new Adw.PreferencesGroup();
+        page.add(localeGroup);
+
+        const panelFormatRow = new Adw.ActionRow({title: 'Panel Date Format'});
+        localeGroup.add(panelFormatRow);
+
+        const panelFormat = new Gtk.Entry();
+        panelFormat.set_text(settings.get_string('panel-format'));
+        panelFormat.connect('changed', innerFormat => {
             settings.set_string('panel-format', innerFormat.text);
         });
-        formatRow.add_suffix(format);
+        panelFormatRow.add_suffix(panelFormat);
 
-        const toPersianRow = new Adw.ActionRow({title: 'Use Persian Digit'});
-        group.add(toPersianRow);
+        const panelPersianDigitRow = new Adw.ActionRow({title: 'Use Persian Digit on panel'});
+        localeGroup.add(panelPersianDigitRow);
 
-        const toPersian = new Gtk.Switch({
-            active: settings.get_boolean('top-panel-persian-number'),
+        const panelPersianDigitSwitch = new Gtk.Switch({
+            active: settings.get_boolean('panel-persian-number'),
             valign: Gtk.Align.CENTER,
         });
         settings.bind(
-            'top-panel-persian-number',
-            toPersian,
+            'panel-persian-number',
+            panelPersianDigitSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-        toPersianRow.add_suffix(toPersian);
-        toPersianRow.activatable_widget = toPersian;
+        panelPersianDigitRow.add_suffix(panelPersianDigitSwitch);
+        panelPersianDigitRow.activatable_widget = panelPersianDigitSwitch;
 
-        const persianWeekdayRow = new Adw.ActionRow({title: 'Use Persian Weekday'});
-        group.add(persianWeekdayRow);
+        const calPersianWeekdayRow = new Adw.ActionRow({title: 'Use Persian Weekday in calendar'});
+        localeGroup.add(calPersianWeekdayRow);
 
-        const persianWeekday = new Gtk.Switch({
-            active: settings.get_boolean('calendar-weekday-persian-number'),
+        const calPersianWeekdaySwitch = new Gtk.Switch({
+            active: settings.get_boolean('calendar-persian-weekday'),
             valign: Gtk.Align.CENTER,
         });
         settings.bind(
-            'calendar-weekday-persian-number',
-            persianWeekday,
+            'calendar-persian-weekday',
+            calPersianWeekdaySwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-        persianWeekdayRow.add_suffix(persianWeekday);
-        persianWeekdayRow.activatable_widget = persianWeekday;
+        calPersianWeekdayRow.add_suffix(calPersianWeekdaySwitch);
+        calPersianWeekdayRow.activatable_widget = calPersianWeekdaySwitch;
 
-        const persianCalDayRow = new Adw.ActionRow({title: 'Use Persian Number in Calendar'});
-        group.add(persianCalDayRow);
+        const persianCalNumRow = new Adw.ActionRow({title: 'Use Persian Number in Calendar'});
+        localeGroup.add(persianCalNumRow);
 
-        const persianCalDay = new Gtk.Switch({
-            active: settings.get_boolean('calendar-day-persian-number'),
+        const persianCalNum = new Gtk.Switch({
+            active: settings.get_boolean('calendar-persian-number'),
             valign: Gtk.Align.CENTER,
         });
         settings.bind(
-            'calendar-day-persian-number',
-            persianCalDay,
+            'calendar-persian-number',
+            persianCalNum,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-        persianCalDayRow.add_suffix(persianCalDay);
-        persianCalDayRow.activatable_widget = persianCalDay;
+        persianCalNumRow.add_suffix(persianCalNum);
+        persianCalNumRow.activatable_widget = persianCalNum;
+
+        /** ************ End Locale Settings ***************/
+
+
+        /** ************ Event Settings ***************/
+
+        const eventsGroup = new Adw.PreferencesGroup();
+        page.add(eventsGroup);
 
         // Event Switchs
         const gregorianEventsRow = new Adw.ActionRow({title: 'Show Gregorian Events'});
-        group.add(gregorianEventsRow);
+        eventsGroup.add(gregorianEventsRow);
 
-        const gregorianEvents = new Gtk.Switch({
+        const gregorianEventsSwitch = new Gtk.Switch({
             active: settings.get_boolean('gregorian-events-active'),
             valign: Gtk.Align.CENTER,
         });
         settings.bind(
             'gregorian-events-active',
-            gregorianEvents,
+            gregorianEventsSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-        gregorianEventsRow.add_suffix(gregorianEvents);
-        gregorianEventsRow.activatable_widget = gregorianEvents;
+        gregorianEventsRow.add_suffix(gregorianEventsSwitch);
+        gregorianEventsRow.activatable_widget = gregorianEventsSwitch;
 
         const persianEventRow = new Adw.ActionRow({title: 'Show Persian Events'});
-        group.add(persianEventRow);
+        eventsGroup.add(persianEventRow);
 
-        const persianEvents = new Gtk.Switch({
+        const persianEventsSwitch = new Gtk.Switch({
             active: settings.get_boolean('persian-events-active'),
             valign: Gtk.Align.CENTER,
         });
         settings.bind(
             'persian-events-active',
-            persianEvents,
+            persianEventsSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-        persianEventRow.add_suffix(persianEvents);
-        persianEventRow.activatable_widget = persianEvents;
+        persianEventRow.add_suffix(persianEventsSwitch);
+        persianEventRow.activatable_widget = persianEventsSwitch;
 
         const hijriEventsRow = new Adw.ActionRow({title: 'Show Hijri Events'});
-        group.add(hijriEventsRow);
+        eventsGroup.add(hijriEventsRow);
 
-        const hijriEvents = new Gtk.Switch({
+        const hijriEventsSwitch = new Gtk.Switch({
             active: settings.get_boolean('hijri-events-active'),
             valign: Gtk.Align.CENTER,
         });
         settings.bind(
             'hijri-events-active',
-            hijriEvents,
+            hijriEventsSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-        hijriEventsRow.add_suffix(hijriEvents);
-        hijriEventsRow.activatable_widget = hijriEvents;
+        hijriEventsRow.add_suffix(hijriEventsSwitch);
+        hijriEventsRow.activatable_widget = hijriEventsSwitch;
 
-        const unofficialEventRow = new Adw.ActionRow({title: 'Show Unofficial World Events'});
-        group.add(unofficialEventRow);
+        const internationalEventRow = new Adw.ActionRow({title: 'Show International World Events'});
+        eventsGroup.add(internationalEventRow);
 
-        const unofficialEvents = new Gtk.Switch({
-            active: settings.get_boolean('unofficial-events-active'),
+        const internationalEventsSwitch = new Gtk.Switch({
+            active: settings.get_boolean('international-events-active'),
             valign: Gtk.Align.CENTER,
         });
         settings.bind(
-            'unofficial-events-active',
-            unofficialEvents,
+            'international-events-active',
+            internationalEventsSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         );
-        unofficialEventRow.add_suffix(unofficialEvents);
-        unofficialEventRow.activatable_widget = unofficialEvents;
+        internationalEventRow.add_suffix(internationalEventsSwitch);
+        internationalEventRow.activatable_widget = internationalEventsSwitch;
+
+        /** ************ End Event Settings ***************/
 
         // Add our page to the window
         window.add(page);
