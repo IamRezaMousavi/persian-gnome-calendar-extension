@@ -78,8 +78,8 @@ export const Calendar = GObject.registerClass({
         this._weekStart = 6;
 
         this.settings = settings;
-        this.usePersianWeekday = this.settings.get_boolean('calendar-weekday-persian-number');
-        this.usePersianDay = this.settings.get_boolean('calendar-day-persian-number');
+        this.usePersianWeekday = this.settings.get_boolean('calendar-persian-weekday');
+        this.usePersianDay = this.settings.get_boolean('calendar-persian-number');
 
         this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.calendar'});
         this._settings.connect(`changed::${SHOW_WEEKDATE_KEY}`, this._onSettingsChange.bind(this));
