@@ -21,4 +21,5 @@ jobs:
     
     - name: Run Lint
       run: |
-        npx eslint persian-calendar@iamrezamousavi.gmail.com
+        ESLINT_USE_FLAT_CONFIG=false npx eslint persian-calendar@iamrezamousavi.gmail.com
+
