@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint camelcase: "off", no-nested-ternary: "off", no-param-reassign: "off", no-confusing-arrow: "off" */
 /*
  * Date Format 1.2.3
  * (c) 2007-2009 Steven Levithan <stevenlevithan.com>
@@ -139,13 +139,13 @@ const pad = (val, len = 2) => String(val).padStart(len, '0');
  * Get day name
  * Yesterday, Today, Tomorrow if the date lies within, else fallback to Monday - Sunday
  *
- * @param root0
- * @param root0.y
- * @param root0.m
- * @param root0.d
- * @param root0._
- * @param root0.dayName
- * @param root0.short
+ * @param {object} root0
+ * @param {number} root0.y
+ * @param {number} root0.m
+ * @param {number} root0.d
+ * @param {string} root0._
+ * @param {string} root0.dayName
+ * @param {boolean} root0.short
  * @returns {string}
  */
 const getDayName = ({y, m, d, _, dayName, short = false}) => {
@@ -183,8 +183,7 @@ const getDayName = ({y, m, d, _, dayName, short = false}) => {
  * Based on comments from
  * http://techblog.procurios.nl/k/n618/news/view/33796/14863/Calculate-ISO-8601-week-and-year-in-javascript.html
  *
- * @param  {Date} `date`
- * @param date
+ * @param {Date} date
  * @returns {number}
  */
 const getWeek = date => {
@@ -222,8 +221,7 @@ const getWeek = date => {
  * Get ISO-8601 numeric representation of the day of the week
  * 1 (for Monday) through 7 (for Sunday)
  *
- * @param  {Date} `date`
- * @param date
+ * @param {Date} date
  * @returns {number}
  */
 const getDayOfWeek = date => {
@@ -252,8 +250,7 @@ const formatTimezone = date => (String(date).match(timezone) || [''])
 /**
  * @param {string | number | Date} date
  * @param {string} mask
- * @param {boolean} utc
- * @param {boolean} gmt
+ * @returns {string}
  */
 export function dateFormat(date, mask) {
     // You can't provide utc if you skip other args (use the 'UTC:' mask prefix)
@@ -277,7 +274,7 @@ export function dateFormat(date, mask) {
 
 
     mask = String(
-        masks[mask] || mask || masks['default']
+        masks[mask] || mask || masks.default
     );
 
     // Allow setting the utc/gmt argument via the mask
@@ -389,24 +386,24 @@ export function dateFormat(date, mask) {
     });
 }
 
-export const getDayAccessibleName = (date) => {
+export const getDayAccessibleName = date => {
     switch (date.getDay()) {
-        case 0:
-            return 'Sun';
-        case 1:
-            return 'Mon';
-        case 2:
-            return 'Tue';
-        case 3:
-            return 'Wed';
-        case 4:
-            return 'Thu';
-        case 5:
-            return 'Fri';
-        case 6:
-            return 'Sat';
+    case 0:
+        return 'Sun';
+    case 1:
+        return 'Mon';
+    case 2:
+        return 'Tue';
+    case 3:
+        return 'Wed';
+    case 4:
+        return 'Thu';
+    case 5:
+        return 'Fri';
+    case 6:
+        return 'Sat';
 
-        default:
-            return '';
+    default:
+        return '';
     }
-}
+};

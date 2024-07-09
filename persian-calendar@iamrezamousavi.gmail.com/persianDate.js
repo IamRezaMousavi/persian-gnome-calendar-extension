@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint no-use-before-define: "off", no-param-reassign: "off" */
+
 /*
  * Based on a code from https://github.com/omid/Persian-Calendar-for-Gnome-Shell
  */
@@ -64,7 +65,7 @@ export const PersianDate = class PersianDate extends Date {
 /*
   Jalaali years starting the 33-year rule.
 */
-var breaks =  [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210,
+const breaks = [-61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210,
     1635, 2060, 2097, 2192, 2262, 2324, 2394, 2456, 3178];
 
 /*
@@ -91,7 +92,7 @@ function toGregorian(jy, jm, jd) {
   */
 // eslint-disable-next-line no-unused-vars
 function isValidJalaaliDate(jy, jm, jd) {
-    return  jy >= -61 && jy <= 3177 &&
+    return jy >= -61 && jy <= 3177 &&
             jm >= 1 && jm <= 12 &&
             jd >= 1 && jd <= jalaaliMonthLength(jy, jm);
 }
@@ -124,7 +125,7 @@ function jalaaliMonthLength(jy, jm) {
       @returns number of years since the last leap year (0 to 4)
    */
 function jalCalLeap(jy) {
-    var bl = breaks.length,
+    let bl = breaks.length,
         jp = breaks[0],
         jm,
         jump,
@@ -170,7 +171,7 @@ function jalCalLeap(jy) {
     @see: http://www.fourmilab.ch/documents/calendar/
   */
 function jalCal(jy, withoutLeap) {
-    var bl = breaks.length,
+    let bl = breaks.length,
         gy = jy + 621,
         leapJ = -14,
         jp = breaks[0],
@@ -220,8 +221,7 @@ function jalCal(jy, withoutLeap) {
     if (leap === -1)
         leap = 4;
 
-
-    return  {
+    return {
         leap,
         gy,
         march,
@@ -237,7 +237,7 @@ function jalCal(jy, withoutLeap) {
     @return Julian Day number
   */
 function j2d(jy, jm, jd) {
-    var r = jalCal(jy, true);
+    let r = jalCal(jy, true);
     return g2d(r.gy, 3, r.march) + (jm - 1) * 31 - div(jm, 7) * (jm - 7) + jd - 1;
 }
 
@@ -251,7 +251,7 @@ function j2d(jy, jm, jd) {
       jd: Jalaali day (1 to 29/31)
   */
 function d2j(jdn) {
-    var gy = d2g(jdn).gy, // Calculate Gregorian year (gy).
+    let gy = d2g(jdn).gy, // Calculate Gregorian year (gy).
         jy = gy - 621,
         r = jalCal(jy, false),
         jdn1f = g2d(gy, 3, r.march),
@@ -266,15 +266,14 @@ function d2j(jdn) {
         // The first 6 months.
             jm = 1 + div(k, 31);
             jd = mod(k, 31) + 1;
-            return  {
+            return {
                 jy,
                 jm,
                 jd,
             };
-        } else {
-        // The remaining months.
-            k -= 186;
         }
+        // The remaining months.
+        k -= 186;
     } else {
         // Previous Jalaali year.
         jy -= 1;
@@ -284,7 +283,7 @@ function d2j(jdn) {
     }
     jm = 7 + div(k, 30);
     jd = mod(k, 30) + 1;
-    return  {
+    return {
         jy,
         jm,
         jd,
@@ -304,7 +303,7 @@ function d2j(jdn) {
     @return Julian Day number
   */
 function g2d(gy, gm, gd) {
-    var d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4) +
+    let d = div((gy + div(gm - 8, 6) + 100100) * 1461, 4) +
         div(153 * mod(gm + 9, 12) + 2, 5) +
         gd - 34840408;
     d = d - div(div(gy + 100100 + div(gm - 8, 6), 100) * 3, 4) + 752;
@@ -323,7 +322,7 @@ function g2d(gy, gm, gd) {
       gd: Calendar day of the month M (1 to 28/29/30/31)
   */
 function d2g(jdn) {
-    var j,
+    let j,
         i,
         gd,
         gm,
@@ -334,7 +333,7 @@ function d2g(jdn) {
     gd = div(mod(i, 153), 5) + 1;
     gm = mod(div(i, 153), 12) + 1;
     gy = div(j, 1461) - 100100 + div(8 - gm, 6);
-    return  {
+    return {
         gy,
         gm,
         gd,
@@ -351,10 +350,10 @@ function d2g(jdn) {
  */
 // eslint-disable-next-line no-unused-vars
 function jalaaliWeek(jy, jm, jd) {
-    var dayOfWeek = jalaaliToDateObject(jy, jm, jd).getDay();
+    let dayOfWeek = jalaaliToDateObject(jy, jm, jd).getDay();
 
-    var startDayDifference = dayOfWeek === 6 ? 0 : -(dayOfWeek + 1);
-    var endDayDifference = 6 + startDayDifference;
+    let startDayDifference = dayOfWeek === 6 ? 0 : -(dayOfWeek + 1);
+    let endDayDifference = 6 + startDayDifference;
 
     return {
         saturday: d2j(j2d(jy, jm, jd + startDayDifference)),
@@ -383,7 +382,7 @@ function jalaaliToDateObject(
     s,
     ms
 ) {
-    var gregorianCalenderDate = toGregorian(jy, jm, jd);
+    let gregorianCalenderDate = toGregorian(jy, jm, jd);
 
     return new Date(
         gregorianCalenderDate.gy,
