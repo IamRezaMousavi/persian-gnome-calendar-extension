@@ -86,7 +86,7 @@ export const GregorianEvents = class GregorianEvents extends CalendarEvents {
         this._events.set('8-12', [new CalendarEvent('روز جهانی جوانان', false)]);
         this._events.set('8-13', [new CalendarEvent('روز جهانی چپ‌دست‌ها', false)]);
         this._events.set('8-19', [new CalendarEvent('روز جهانی عکاسی', false)]);
-        this._events.set('8-23', [new CalendarEvent('روز جهانی یادآوری تجارت برده و لفو آن', false)]);
+        this._events.set('8-23', [new CalendarEvent('روز جهانی یادآوری تجارت برده و لغو آن', false)]);
         this._events.set('8-31', [new CalendarEvent('روز جهانی وبلاگ', false)]);
         this._events.set('9-8', [new CalendarEvent('روز جهانی سوادآموزی', false)]);
         this._events.set('9-10', [new CalendarEvent('روز جهانی پیشگیری از خودکشی', false)]);
