@@ -29,4 +29,5 @@ package() {
     cd "$srcdir/$_gitname"
     mkdir -p "$pkgdir/usr/share/gnome-shell/extensions/"
     cp -R "persian-calendar@iamrezamousavi.gmail.com" "$pkgdir/usr/share/gnome-shell/extensions"
+    glib-compile-schemas "$pkgdir/usr/share/gnome-shell/extensions/persian-calendar@iamrezamousavi.gmail.com/schemas/"
 }
