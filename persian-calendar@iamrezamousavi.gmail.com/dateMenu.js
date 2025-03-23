@@ -209,7 +209,7 @@ class EventsSection extends St.Button {
         Main.panel.closeCalendar();
 
         const appInfo = this._calendarApp;
-        // eslint-disable-next-line no-undef
+
         const context = global.create_app_launch_context(0, -1);
         if (appInfo.get_id() === 'org.gnome.Evolution.desktop')
             appInfo.launch_action('calendar', context);
