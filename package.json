@@ -1,8 +1,8 @@
 {
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.24.0",
-    "eslint": "^9.24.0",
-    "eslint-plugin-jsdoc": "^50.6.9"
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
+    "eslint-plugin-jsdoc": "^50.7.1"
   }
 }
