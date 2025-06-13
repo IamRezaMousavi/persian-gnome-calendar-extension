@@ -139,8 +139,8 @@ function _hilalIM(country = 'IR') {
             startYear: 1427, /* =iDoM:firstYear */
             startJD: 2453767, /* =_hijriAToJulianDay(startYear,1,1) */
 
-            endYear: 1446, /* =iDoM:lastYear */
-            endJD: 2460735, /* =_hijriAToJulianDay(endYear,endMonth+1,1)-1 */
+            endYear: 1447, /* =iDoM:lastYear */
+            endJD: 2461207, /* =_hijriAToJulianDay(endYear,endMonth+1,1)-1 */
 
             iDoM: {
                 1427: [355, 30, 29, 29, 30, 29, 30, 30, 30, 30, 29, 29, 30],
