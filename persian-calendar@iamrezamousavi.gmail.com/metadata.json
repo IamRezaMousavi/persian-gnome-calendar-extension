@@ -9,5 +9,5 @@
   "uuid": "persian-calendar@iamrezamousavi.gmail.com",
   "settings-schema": "org.gnome.shell.extensions.PersianCalendar",
   "gettext-domain": "persian-calendar@iamrezamousavi.gmail.com",
-  "version": 30
+  "version": 31
 }
