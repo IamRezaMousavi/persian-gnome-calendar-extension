@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <schemalist>
-  <schema id="org.gnome.shell.extensions.PersianCalendar" path="/org/gnome/shell/extensions/PersianCalendar/">
+  <schema id="org.gnome.shell.extensions.persian-calendar" path="/org/gnome/shell/extensions/persian-calendar/">
 
     <key name="show-indicator" type="b">
       <default>true</default>
