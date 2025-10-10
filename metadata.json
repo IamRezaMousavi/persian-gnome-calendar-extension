@@ -1,0 +1,12 @@
+{
+    "name": "Persian Calendar",
+    "original-authors": "Reza Mousavi",
+    "description": "Fork of Gnome Calendar extension with Persian taste",
+    "uuid": "persian-calendar@iamrezamousavi.gmail.com",
+    "url": "https://github.com/IamRezaMousavi/persian-gnome-calendar-extension",
+    "settings-schema": "org.gnome.shell.extensions.persian-calendar",
+    "shell-version": [
+        "45", "46", "47", "48", "49"
+    ],
+    "version": 31
+}
