@@ -139,8 +139,8 @@ function _hilalIM(country = 'IR') {
             startYear: 1427, /* =iDoM:firstYear */
             startJD: 2453767, /* =_hijriAToJulianDay(startYear,1,1) */
 
-            endYear: 1447, /* =iDoM:lastYear */
-            endJD: 2461207, /* =_hijriAToJulianDay(endYear,endMonth+1,1)-1 */
+            endYear: 1448, /* =iDoM:lastYear */
+            endJD: 2461474, /* =_hijriAToJulianDay(endYear,endMonth+1,1)-1 */
 
             iDoM: {
                 1427: [355, 30, 29, 29, 30, 29, 30, 30, 30, 30, 29, 29, 30],
@@ -163,7 +163,8 @@ function _hilalIM(country = 'IR') {
                 1444: [354, 30, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30, 29],
                 1445: [354, 30, 30, 30, 29, 30, 29, 29, 30, 29, 30, 29, 29],
                 1446: [355, 30, 30, 30, 29, 30, 30, 29, 30, 29, 29, 29, 30],
-                1447: [355, 29, 30, 30, 29, 30, 30, 30, 29, 30, 30, 29, 29],
+                1447: [354, 29, 30, 30, 29, 30, 30, 30, 29, 30, 29, 29, 29],
+                1448: [267, 30, 29, 30, 29, 30, 30, 30, 29, 30],
                 /*
                   Delta = endJD - _hijriAToJulianDay(endYear,12,29)
                 */
