@@ -53,5 +53,6 @@ export default defineConfig([{
         "no-var": "error",
         "no-multi-spaces": "error",
         "no-multiple-empty-lines": "error",
+        "no-shadow": "off",
     },
 }]);
