@@ -2,6 +2,7 @@
 /* exported Calendar*/
 
 import Clutter from 'gi://Clutter';
+import GDesktopEnums from 'gi://GDesktopEnums';
 import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
@@ -16,6 +17,7 @@ import {getDayAccessibleName} from './utils/dateformat.js';
 import {toPersianDigit} from './utils/numbers.js';
 
 const SHOW_WEEKDATE_KEY = 'show-weekdate';
+const WEEK_START_DAY_KEY = 'week-start-day';
 const USE_PERSIAN_WEEKDAY = 'calendar-persian-weekday';
 const USE_PERSIAN_NUMBER = 'calendar-persian-number';
 
@@ -76,9 +78,6 @@ export const Calendar = GObject.registerClass({
     Signals: {'selected-date-changed': {param_types: [GLib.DateTime.$gtype]}},
 }, class Calendar extends St.Widget {
     _init(settings) {
-        // this._weekStart = Shell.util_get_week_start();
-        this._weekStart = 6;
-
         this.settings = settings;
         this.settings.connect(`changed::${USE_PERSIAN_WEEKDAY}`, this._onSettingsChange.bind(this));
         this.settings.connect(`changed::${USE_PERSIAN_NUMBER}`, this._onSettingsChange.bind(this));
@@ -86,7 +85,14 @@ export const Calendar = GObject.registerClass({
         this.usePersianDay = this.settings.get_boolean(USE_PERSIAN_NUMBER);
 
         this._settings = new Gio.Settings({schema_id: 'org.gnome.desktop.calendar'});
+        try {
+            this._settings.get_enum(WEEK_START_DAY_KEY);
+            this._settings.connect(`changed::${WEEK_START_DAY_KEY}`, this._onSettingsChange.bind(this));
+        } catch {
+            // week-start-day added in GNOME 50
+        }
         this._settings.connect(`changed::${SHOW_WEEKDATE_KEY}`, this._onSettingsChange.bind(this));
+        this._weekStart = this._getWeekStartDay();
         this._useWeekdate = this._settings.get_boolean(SHOW_WEEKDATE_KEY);
 
         /**
@@ -119,6 +125,18 @@ export const Calendar = GObject.registerClass({
         });
 
         this._buildHeader();
+    }
+
+    _getWeekStartDay() {
+        try {
+            const weekStartDay = this._settings.get_enum(WEEK_START_DAY_KEY);
+            if (weekStartDay === GDesktopEnums.Weekday.DEFAULT)
+                return 6;
+
+            return weekStartDay % 7;
+        } catch {
+            return 6;
+        }
     }
 
     setEventSource(_eventSource) {
@@ -278,6 +296,7 @@ export const Calendar = GObject.registerClass({
     _onSettingsChange() {
         this.usePersianWeekday = this.settings.get_boolean(USE_PERSIAN_WEEKDAY);
         this.usePersianDay = this.settings.get_boolean(USE_PERSIAN_NUMBER);
+        this._weekStart = this._getWeekStartDay();
         this._useWeekdate = this._settings.get_boolean(SHOW_WEEKDATE_KEY);
         this._buildHeader();
         this._rebuildCalendar();
