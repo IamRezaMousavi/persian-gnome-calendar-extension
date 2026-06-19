@@ -63,6 +63,7 @@ class TodayButton extends St.Button {
         hbox.add_child(this._dateLabel);
 
         this._calendar = cal;
+        // TODO: how disconnect this signal?
         this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
             // Make the button reactive only if the selected date is not the
             // current date.
@@ -128,6 +129,7 @@ class EventsSection extends St.Button {
         this.child.add_child(this._eventsList);
 
         this._appSys = Shell.AppSystem.get_default();
+        // TODO: how disconnect this signal?
         this._appSys.connect('installed-changed',
             this._appInstalledChanged.bind(this));
         this._appInstalledChanged();

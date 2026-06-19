@@ -43,29 +43,29 @@ export default class PersianCalendar extends Extension {
             Gio.SettingsBindFlags.DEFAULT
         );
 
-        this.settings.connect('changed::indicator-position', () => {
+        this.indicator_position_sig = this.settings.connect('changed::indicator-position', () => {
             this.disable();
             this.enable();
         });
-        this.settings.connect('changed::indicator-index', () => {
+        this.indicator_index_sig = this.settings.connect('changed::indicator-index', () => {
             this.disable();
             this.enable();
         });
 
         // TODO: clean binds
-        this.settings.connect('changed::gregorian-events-active', () => {
+        this.g_events_sig = this.settings.connect('changed::gregorian-events-active', () => {
             this.disable();
             this.enable();
         });
-        this.settings.connect('changed::persian-events-active', () => {
+        this.p_events_sig = this.settings.connect('changed::persian-events-active', () => {
             this.disable();
             this.enable();
         });
-        this.settings.connect('changed::hijri-events-active', () => {
+        this.h_events_sig = this.settings.connect('changed::hijri-events-active', () => {
             this.disable();
             this.enable();
         });
-        this.settings.connect('changed::international-events-active', () => {
+        this.int_events_sig = this.settings.connect('changed::international-events-active', () => {
             this.disable();
             this.enable();
         });
@@ -79,6 +79,32 @@ export default class PersianCalendar extends Extension {
     }
 
     disable() {
+        if (this.indicator_position_sig) {
+            this.settings.disconnect(this.indicator_position_sig);
+            this.indicator_position_sig = null;
+        }
+        if (this.indicator_index_sig) {
+            this.settings.disconnect(this.indicator_index_sig);
+            this.indicator_index_sig = null;
+        }
+
+        if (this.g_events_sig) {
+            this.settings.disconnect(this.g_events_sig);
+            this.g_events_sig = null;
+        }
+        if (this.p_events_sig) {
+            this.settings.disconnect(this.p_events_sig);
+            this.p_events_sig = null;
+        }
+        if (this.h_events_sig) {
+            this.settings.disconnect(this.h_events_sig);
+            this.h_events_sig = null;
+        }
+        if (this.int_events_sig) {
+            this.settings.disconnect(this.int_events_sig);
+            this.int_events_sig = null;
+        }
+
         this._indicator.destroy();
         this._indicator = null;
 

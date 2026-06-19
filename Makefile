@@ -24,7 +24,7 @@ clean:
 	rm -f ./$(UUID)/schemas/gschemas.compiled
 	rm -f ./$(UUID)/po/*.mo
 
-extension: ./$(UUID)/schemas/gschemas.compiled $(MSGSRC:.po=.mo)
+extension: $(MSGSRC:.po=.mo)
 
 ./$(UUID)/schemas/gschemas.compiled: ./$(UUID)/schemas/org.gnome.shell.extensions.PersianCalendar.gschema.xml
 	glib-compile-schemas ./$(UUID)/schemas/
@@ -87,5 +87,5 @@ remove:
 taillog:
 	journalctl -f -o cat GNOME_SHELL_EXTENSION_UUID=$(UUID)
 
-eslint:
-	./node_modules/.bin/eslint persian-calendar@iamrezamousavi.gmail.com
+lint:
+	npx eslint persian-calendar@iamrezamousavi.gmail.com
