@@ -26,15 +26,11 @@ import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/ex
 
 import {DateMenuButton} from './dateMenu.js';
 
-const Indicator = GObject.registerClass(
-    class Indicator extends DateMenuButton {}
-);
-
 export default class PersianCalendar extends Extension {
     enable() {
         this.settings = this.getSettings();
 
-        this._indicator = new Indicator(this.settings);
+        this._indicator = new DateMenuButton(this.settings);
 
         this.settings.bind(
             'show-indicator',
