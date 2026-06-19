@@ -1,91 +1,43 @@
-PKG_NAME = persiangnomecalendar
-UUID = persian-calendar@iamrezamousavi.gmail.com
-VERSION = $(shell git describe --tags)
-TOLOCALIZE = $(wildcard $(UUID)/*js) \
-             $(wildcard $(UUID)/utils/*.js) \
-             $(UUID)/schemas/org.gnome.shell.extensions.PersianCalendar.gschema.xml
-MSGSRC = $(wildcard $(UUID)/po/*.po)
+NAME=persian-gnome-calendar
+DOMAIN=iamrezamousavi.gmail.com
+TOLOCALIZE = $(wildcard src/*js) \
+             $(wildcard src/utils/*.js) \
+             schemas/org.gnome.shell.extensions.PersianCalendar.gschema.xml
 
-# Packagers: Use DESTDIR for system wide installation
-ifeq ($(strip $(DESTDIR)),)
-	INSTALLTYPE = local
-	INSTALLBASE = $(HOME)/.local/share/gnome-shell/extensions
-else
-	INSTALLTYPE = system
-	SHARE_PREFIX = $(DESTDIR)/usr/share
-	INSTALLBASE = $(SHARE_PREFIX)/gnome-shell/extensions
-endif
+MSGSRC = $(wildcard ./po/*.po)
 
-.PHONY: all clean extension potfile mergepo install install-local zip-file
+.PHONY: all pack install clean
 
-all: extension
+all: dist/extension.js locale
 
-clean:
-	rm -f ./$(UUID)/schemas/gschemas.compiled
-	rm -f ./$(UUID)/po/*.mo
+node_modules/.package-lock.json: package.json
+	npm install
 
-extension: $(MSGSRC:.po=.mo)
+dist/extension.js dist/prefs.js: node_modules/.package-lock.json src/*.ts
+	npm run build
 
-./$(UUID)/schemas/gschemas.compiled: ./$(UUID)/schemas/org.gnome.shell.extensions.PersianCalendar.gschema.xml
-	glib-compile-schemas ./$(UUID)/schemas/
+schemas/gschemas.compiled: schemas/org.gnome.shell.extensions.$(NAME).gschema.xml
+	glib-compile-schemas schemas
 
-potfile: ./$(UUID)/po/persiangnomecalendar.pot
+locale: $(MSGSRC:.po=.mo)
 
-mergepo: potfile
-	for l in $(MSGSRC); do \
-		msgmerge -U $$l ./$(UUID)/po/persiangnomecalendar.pot; \
-	done;
-
-./$(UUID)/po/persiangnomecalendar.pot: $(TOLOCALIZE)
+./po/persiangnomecalendar.pot: $(TOLOCALIZE)
 	mkdir -p po
 	xgettext -k_ -kN_ --from-code utf-8 -o po/persiangnomecalendar.pot --package-name $(PKG_NAME) $(TOLOCALIZE)
 
-./$(UUID)/po/%.mo: ./$(UUID)/po/%.po
+./po/%.mo: ./po/%.po
 	msgfmt -c $< -o $@
 
-install: install-local
+$(NAME).zip: dist/extension.js dist/prefs.js locale
+	@cp -r schemas dist/
+	@cp -r locale dist/po
+	@cp metadata.json dist/
+	@(cd dist && zip ../$(NAME).zip -9r .)
 
-install-local: _build
-	rm -rf $(INSTALLBASE)/$(UUID)
-	mkdir -p $(INSTALLBASE)/$(UUID)
-	cp -r ./_build/* $(INSTALLBASE)/$(UUID)/
-ifeq ($(INSTALLTYPE),system)
-	# system-wide settings and locale files
-	rm -r  $(addprefix $(INSTALLBASE)/$(UUID)/, schemas locale)
-	mkdir -p $(SHARE_PREFIX)/glib-2.0/schemas \
-		$(SHARE_PREFIX)/locale
-	cp -r ./$(UUID)/schemas/*gschema.xml $(SHARE_PREFIX)/glib-2.0/schemas
-	cp -r ./_build/locale/* $(SHARE_PREFIX)/locale
-endif
-	-rm -fR _build
-	echo done
+pack: $(NAME).zip
 
-zip-file: _build
-	cd _build ; \
-	zip -qr "$(UUID)-v$(VERSION).zip" .
-	mv _build/$(UUID)-v$(VERSION).zip ./
-	-rm -fR _build
+install: $(NAME).zip
+	gnome-extensions install --force $(NAME).zip
 
-_build: all
-	-rm -fR ./_build
-	mkdir -p _build
-	cp -r $(UUID)/* _build
-	mkdir -p _build/locale
-	for l in $(MSGSRC:.po=.mo) ; do \
-		lf=_build/locale/`basename $$l .mo`; \
-		mkdir -p $$lf; \
-		mkdir -p $$lf/LC_MESSAGES; \
-		cp $$l $$lf/LC_MESSAGES/$(UUID).mo; \
-	done;
-	-rm -fR _build/po
-
-remove:
-	rm -rf $(INSTALLBASE)/$(UUID)
-
-# help commands
-
-taillog:
-	journalctl -f -o cat GNOME_SHELL_EXTENSION_UUID=$(UUID)
-
-lint:
-	npx eslint persian-calendar@iamrezamousavi.gmail.com
+clean:
+	@rm -rf dist node_modules $(NAME).zip

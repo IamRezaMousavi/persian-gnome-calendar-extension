@@ -1,36 +1,29 @@
-/* extension.js
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * SPDX-License-Identifier: GPL-2.0-or-later
- */
-
-/* exported init */
-
-import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
-
+import GObject from 'gi://GObject';
+import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 
-import {DateMenuButton} from './dateMenu.js';
+import { DateMenuButton } from './dateMenu.js';
 
 const Indicator = GObject.registerClass(
-    class Indicator extends DateMenuButton {}
+    class Indicator extends DateMenuButton { }
 );
 
 export default class PersianCalendar extends Extension {
+    settings?: Gio.Settings
+    animationsEnabled: boolean = true
+    _indicator?: PanelMenu.Button
+    indicator_position_sig?: number
+    indicator_index_sig?: number
+    g_events_sig?: number
+    p_events_sig?: number
+    h_events_sig?: number
+    int_events_sig?: number
+
     enable() {
         this.settings = this.getSettings();
 
@@ -80,34 +73,34 @@ export default class PersianCalendar extends Extension {
 
     disable() {
         if (this.indicator_position_sig) {
-            this.settings.disconnect(this.indicator_position_sig);
-            this.indicator_position_sig = null;
+            this.settings?.disconnect(this.indicator_position_sig);
+            this.indicator_position_sig = undefined;
         }
         if (this.indicator_index_sig) {
-            this.settings.disconnect(this.indicator_index_sig);
-            this.indicator_index_sig = null;
+            this.settings?.disconnect(this.indicator_index_sig);
+            this.indicator_index_sig = undefined;
         }
 
         if (this.g_events_sig) {
-            this.settings.disconnect(this.g_events_sig);
-            this.g_events_sig = null;
+            this.settings?.disconnect(this.g_events_sig);
+            this.g_events_sig = undefined;
         }
         if (this.p_events_sig) {
-            this.settings.disconnect(this.p_events_sig);
-            this.p_events_sig = null;
+            this.settings?.disconnect(this.p_events_sig);
+            this.p_events_sig = undefined;
         }
         if (this.h_events_sig) {
-            this.settings.disconnect(this.h_events_sig);
-            this.h_events_sig = null;
+            this.settings?.disconnect(this.h_events_sig);
+            this.h_events_sig = undefined;
         }
         if (this.int_events_sig) {
-            this.settings.disconnect(this.int_events_sig);
-            this.int_events_sig = null;
+            this.settings?.disconnect(this.int_events_sig);
+            this.int_events_sig = undefined;
         }
 
-        this._indicator.destroy();
-        this._indicator = null;
+        this._indicator?.destroy();
+        this._indicator = undefined;
 
-        this.settings = null;
+        this.settings = undefined;
     }
 }

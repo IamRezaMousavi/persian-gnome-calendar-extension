@@ -1,8 +1,28 @@
 {
+  "name": "persian-gnome-calendar-extension",
+  "version": "0.0.0",
+  "description": "A Gnome Calendar extension with Persian taste",
+  "type": "module",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IamRezaMousavi/persian-gnome-calendar-extension.git"
+  },
+  "author": "Reza Mousavi <iamrezamousavi@gmail.com>",
+  "license": "LGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/IamRezaMousavi/persian-gnome-calendar-extension/issues"
+  },
+  "homepage": "https://github.com/IamRezaMousavi/persian-gnome-calendar-extension",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc"
+  },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.5",
-    "@eslint/js": "^10.0.1",
-    "eslint": "^10.2.1",
-    "eslint-plugin-jsdoc": "^62.9.0"
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@girs/gjs": "^4.0.4",
+    "@girs/gnome-shell": "^50.0.2"
   }
 }
