@@ -63,12 +63,16 @@ class TodayButton extends St.Button {
         hbox.add_child(this._dateLabel);
 
         this._calendar = cal;
-        // TODO: how disconnect this signal?
-        this._calendar.connect('selected-date-changed', (_calendar, datetime) => {
+        this._calendar.connectObject('selected-date-changed', (_calendar, datetime) => {
             // Make the button reactive only if the selected date is not the
             // current date.
             this.reactive = !_isToday(_gDateTimeToDate(datetime));
-        });
+        }, this);
+    }
+
+    destroy() {
+        this._calendar.disconnectObject(this);
+        super.destroy();
     }
 
     vfunc_clicked() {
@@ -129,10 +133,14 @@ class EventsSection extends St.Button {
         this.child.add_child(this._eventsList);
 
         this._appSys = Shell.AppSystem.get_default();
-        // TODO: how disconnect this signal?
-        this._appSys.connect('installed-changed',
-            this._appInstalledChanged.bind(this));
+        this._appSys.connectObject('installed-changed',
+            this._appInstalledChanged.bind(this), this);
         this._appInstalledChanged();
+    }
+
+    destroy() {
+        this._appSys.disconnectObject(this);
+        super.destroy();
     }
 
     setDate(date) {
@@ -339,6 +347,12 @@ class DateMenuButton extends PanelMenu.Button {
         this._clock.connect('notify::clock', this._updateCalendarDisplay.bind(this));
 
         this._setEventSource(new EventSource(this.settings));
+    }
+
+    destroy() {
+        this._date.destroy();
+        this._eventsItem.destroy();
+        super.destroy();
     }
 
     _getEventSource() {

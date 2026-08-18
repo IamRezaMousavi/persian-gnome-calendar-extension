@@ -18,7 +18,6 @@
 
 /* exported init */
 
-import GObject from 'gi://GObject';
 import Gio from 'gi://Gio';
 
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
